@@ -1,0 +1,75 @@
+/* FlowPass — tokens.css */
+@layer tokens {
+  :root {
+    /* Paleta base */
+    --c1: #2a2b2e;
+    --c2: #5a5a66;
+    --c3: #a4c2a8;
+    --c4: #aceb98;
+    --c4-lighter: #d9f8d0;
+    --c5: #87ff65;
+    --c6: #daa588;
+    --c8: #ee4266;
+    --c9: #fff0bd;
+    --c10: #66be4c;
+    --white: #ffffff;
+
+    --success: #0a6b3e;
+    --success-light: #e8fff1;
+    --success-lighter: #d2f6e0;
+
+    --danger: #7a0930;
+    --danger-light: #ffe4e9;
+    --danger-lighter: #ffd0dc;
+    --danger-transparent: rgba(249, 231, 237, 0.838);
+
+    --warning: #a28002;
+    --warning-light: #fff4e5;
+    --warning-lighter: #fff3b9;
+
+    --frozen: #0c4a6e;
+    --frozen-light: #e1eff9;
+    --frozen-lighter: #cfe6f6;
+
+    /* Roles */
+    --bg: #f6f7fb;
+    --text: var(--c1);
+
+    --text-success: var(--success);
+    --border-success: var(--success-lighter);
+    --bg-success: var(--success-light);
+
+    --text-danger: var(--danger);
+    --border-danger: var(--danger-lighter);
+    --bg-danger: var(--danger-light);
+
+    --text-warning: var(--warning);
+    --border-warning: var(--warning-lighter);
+    --bg-warning: var(--warning-light);
+
+    --text-frozen: var(--frozen);
+    --border-frozen: var(--frozen-lighter);
+    --bg-frozen: var(--frozen-light);
+
+    --bg-hover: var(--danger-transparent);
+    --muted: #6b7280;
+
+    /* Tokens UI */
+    --border: rgba(0, 0, 0, 0.08);
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    --radius-lg: 16px;
+    --radius-md: 12px;
+    --radius-sm: 8px;
+    --container: 1200px;
+
+    /* Spacing */
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 20px;
+    --space-6: 24px;
+    --space-7: 28px;
+    --space-8: 32px;
+  }
+}
