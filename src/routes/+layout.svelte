@@ -21,13 +21,11 @@
       label: "Ingresos",
       href: "/ingresos",
       icon: ApiKeyOutline,
-      subContent: "Pro"
     },
     {
       label: "Pagos",
       href: "/pagos",
       icon: CashOutline,
-      subContent: "3"
     }
   ];
 
@@ -56,15 +54,10 @@
         +
         <img src={default_icon} alt="FlowPass" class="h-6 w-6" />
       </SidebarBrand>
-      {#each sidebarEx1 as { label, href, icon: Icon, subContent }}
+      {#each sidebarEx1 as { label, href, icon: Icon }}
         <SidebarItem {label} {href} {spanClass}>
           {#snippet icon()}
             <Icon class="h-5 w-5 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"></Icon>
-          {/snippet}
-          {#snippet subtext()}
-            <span class="ms-3 inline-flex items-center justify-center rounded-full bg-gray-200 px-2 text-sm font-medium text-gray-800 dark:bg-gray-700 dark:text-gray-300">
-              {subContent}
-            </span>
           {/snippet}
         </SidebarItem>
       {/each}
@@ -78,7 +71,7 @@
 
     </SidebarGroup>
   </Sidebar>
-  <div class="h-96 overflow-auto px-4 md:ml-64">
+  <div class="h-full overflow-auto px-4 md:ml-64">
     <div class="rounded-lg border-2 border-dashed border-gray-200 p-4 dark:border-gray-700">
         <slot />
     </div>

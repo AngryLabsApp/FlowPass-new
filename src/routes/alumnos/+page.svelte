@@ -1,19 +1,32 @@
 <script>
   // @ts-ignore
   import { PUBLIC_API_BASE_URL } from "$env/static/public";
-  import { Alert } from "flowbite-svelte";
-  import Navbar from '../../lib/components/navbar/navbar.svelte';
+  import { Heading } from "flowbite-svelte";
+  import Navbar from "../../lib/components/navbar/navbar.svelte";
+  import Pagination from "../../lib/components/pagination/pagination.svelte";
+  import UserTable from "../../lib/components/table/table.svelte";
+
+  import { Select, Label } from "flowbite-svelte";
+  let selected = "";
+  let countries = [
+    { value: "us", name: "United States" },
+    { value: "ca", name: "Canada" },
+    { value: "de", name: "Germany" },
+    { value: "fr", name: "France", disabled: true },
+  ];
+ 
 </script>
 
 <Navbar />
-<h1>Hola Mundo 👋 desde Alumnos!!!!! porfin prueba holiii </h1>
-<p>Esta es tu primera página en FlowPass con SvelteKit.</p>
-
-<p>API Base URL: {PUBLIC_API_BASE_URL}</p>
-
-<div class="p-8">
-  <Alert>
-    <span class="font-medium">Info alert!</span>
-    Change a few things up and try submitting again.
-  </Alert>
+<div class="grid grid-cols-2 gap-4 mb-5">
+  <Heading tag="h3">Heading 3</Heading>
+  <div>
+    <Label>
+      Select an option
+      <Select class="" items={countries} bind:value={selected} />
+    </Label>
+  </div>
 </div>
+
+<UserTable />
+<Pagination />
