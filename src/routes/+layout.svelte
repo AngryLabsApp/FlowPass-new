@@ -1,8 +1,9 @@
 
 <script lang="ts">
   import favicon from "$lib/assets/favicon.svg";
-  import "../lib/styles/app.css";
-
+  import "../app.css";
+  
+  import { Alert } from "flowbite-svelte";
 
   
 </script>
@@ -20,7 +21,12 @@
     Hello world!
   </h1>
 </nav>
-
+<div class="p-8">
+  <Alert>
+    <span class="font-medium">Info alert!</span>
+    Change a few things up and try submitting again.
+  </Alert>
+</div>
 <main class="content">
   <slot />
 </main>
