@@ -1,9 +1,11 @@
 <script>
   // @ts-ignore
   import { PUBLIC_API_BASE_URL } from "$env/static/public";
-   import { Alert } from "flowbite-svelte";
+  import { Alert } from "flowbite-svelte";
+  import Navbar from '../../lib/components/navbar/navbar.svelte';
 </script>
 
+<Navbar />
 <h1>Hola Mundo 👋 desde Alumnos!!!!! porfin prueba holiii </h1>
 <p>Esta es tu primera página en FlowPass con SvelteKit.</p>
 

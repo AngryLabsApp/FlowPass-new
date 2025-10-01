@@ -2,44 +2,35 @@
 <script lang="ts">
   import favicon from "$lib/assets/favicon.svg";
   import logo_invertido from "$lib/assets/logo-flowpass-invertido.svg";
+  import default_icon from "$lib/assets/default.png";
   import "../app.css";
   
   import { Sidebar, SidebarGroup, SidebarItem, SidebarButton, uiHelpers ,SidebarBrand} from "flowbite-svelte";
   import { page } from "$app/state";
   let activeUrl = $state(page.url.pathname);
-  import { ChartOutline, GridSolid, MailBoxSolid, UserSolid } from "flowbite-svelte-icons";
- 
+  import { ApiKeyOutline, CashOutline, UsersGroupOutline,UndoOutline } from "flowbite-svelte-icons";
+
   const spanClass = "flex-1 ms-3 whitespace-nowrap";
   const sidebarEx1 = [
     {
       label: "Alumnos",
       href: "/alumnos",
-      icon: ChartOutline
+      icon: UsersGroupOutline
     },
     {
       label: "Ingresos",
       href: "/ingresos",
-      icon: GridSolid,
+      icon: ApiKeyOutline,
       subContent: "Pro"
     },
     {
       label: "Pagos",
       href: "/pagos",
-      icon: MailBoxSolid,
+      icon: CashOutline,
       subContent: "3"
-    },
-    {
-      label: "Salir",
-      href: "/",
-      icon: UserSolid
     }
   ];
-  const site = {
-    name: "FlowPass",
-    href: "/",
-    img: logo_invertido,
-  };
-  const imgClass = "h-6 w-6";
+
   const demoSidebarUi = uiHelpers();
   let isDemoOpen = $state(false);
   const closeDemoSidebar = demoSidebarUi.close;
@@ -47,7 +38,7 @@
     isDemoOpen = demoSidebarUi.isOpen;
     activeUrl = page.url.pathname;
   });
-    
+
 </script>
 
 <svelte:head>
@@ -59,7 +50,12 @@
 <div class="relative h-screen">
   <Sidebar {activeUrl} backdrop={false} isOpen={isDemoOpen} closeSidebar={closeDemoSidebar} params={{ x: 0, duration: 0 }} class="z-50 h-full" position="absolute" classes={{ nonactive: "p-2", active: "p-2" }}>
     <SidebarGroup>
-      <SidebarBrand {site} {imgClass} />
+       <SidebarBrand>
+        <img src={logo_invertido} alt="FlowPass" class="h-6 w-6" />
+        <span class="ml-2 self-center text-xl font-semibold whitespace-nowrap dark:text-white">FlowPass</span>
+        +
+        <img src={default_icon} alt="FlowPass" class="h-6 w-6" />
+      </SidebarBrand>
       {#each sidebarEx1 as { label, href, icon: Icon, subContent }}
         <SidebarItem {label} {href} {spanClass}>
           {#snippet icon()}
@@ -72,6 +68,14 @@
           {/snippet}
         </SidebarItem>
       {/each}
+    </SidebarGroup>
+    <SidebarGroup border>
+        <SidebarItem label="Salir" {spanClass} href="/logout">
+        {#snippet icon()}
+          <UndoOutline class="h-5 w-5 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white" />
+        {/snippet}
+      </SidebarItem>
+
     </SidebarGroup>
   </Sidebar>
   <div class="h-96 overflow-auto px-4 md:ml-64">
