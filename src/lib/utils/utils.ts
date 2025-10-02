@@ -60,3 +60,30 @@ export function toTitleCase(str: string) {
     return raw ?? "";
   }
   
+
+  export function mapIfPartnerUser(users: User[]): User[] {
+    let final_users:User[] = [];
+    for (let i = 0; i < users.length; i++) {
+      const user = users[i];
+      let final_user:User = { ...user };
+      if (
+        final_user?.is_plan_partner &&
+        !final_user?.is_plan_principal &&
+        final_user.partner_id
+      ) {
+        final_user.clases_tomadas = final_user.partner_clases_tomadas || 0;
+        final_user.limite_clases = final_user.partner_limite_clases || 0;
+        final_user.estado_pago = final_user.partner_estado_pago || final_user.estado_pago;
+        final_user.estado = final_user.partner_estado || final_user.estado;
+        final_user.dias_de_gracia = final_user.partner_dias_de_gracia || 0;
+        final_user.monto = final_user.partner_monto || 0;
+        final_user.fecha_inicio_plan = final_user.partner_fecha_inicio_plan || "";
+        final_user.proxima_fecha_pago = final_user.partner_proxima_fecha_pago || "";
+      
+      }
+      final_users.push(final_user);
+    };
+
+   
+    return final_users;
+  }

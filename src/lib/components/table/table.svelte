@@ -14,7 +14,7 @@
 
 <script lang="ts">
   import type { User } from "$lib/types/user";
-  import { fmtDate, getValue, statusPillClasses } from "$lib/utils/utils";
+  import { getValue, statusPillClasses } from "$lib/utils/utils";
   import {
     Table,
     TableHead,
