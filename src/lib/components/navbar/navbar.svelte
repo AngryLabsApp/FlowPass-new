@@ -18,7 +18,7 @@
     ];
 </script>
 
-<Navbar>
+<Navbar class="p-0 mb-4">
   {#snippet children({ hidden, toggle, NavContainer })}
     <NavUl class="order-0">
       <NavLi>
