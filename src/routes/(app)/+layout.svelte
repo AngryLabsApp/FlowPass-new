@@ -1,5 +1,14 @@
 
 <script lang="ts">
+  import { onMount } from 'svelte';
+  import { initAuthListener, ensureSessionOrRedirect } from '$lib/services/supabase/session';
+  
+  onMount(async () => {
+    console.log("ON MOUNT");
+    initAuthListener();          // ← se registra una sola vez
+    await ensureSessionOrRedirect(); // ← verifica sesión al entrar
+  });
+
   import favicon from "$lib/assets/favicon.svg";
   import logo_invertido from "$lib/assets/logo-flowpass-invertido.svg";
   import default_icon from "$lib/assets/default.png";

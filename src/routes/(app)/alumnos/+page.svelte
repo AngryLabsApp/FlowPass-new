@@ -1,4 +1,7 @@
 <script lang="ts">
+  import { onMount } from "svelte";
+  import { getUsers } from "$lib/services/api/users";
+
   import { Heading } from "flowbite-svelte";
   import Navbar from "../../../lib/components/navbar/navbar.svelte";
   import Pagination from "../../../lib/components/pagination/pagination.svelte";
@@ -13,8 +16,28 @@
     { value: "fr", name: "France", disabled: true },
   ];
 
-
-
+  let users: any[] = [];
+  let error = "";
+  let loading = true;
+  onMount(async () => {
+    const abort = new AbortController();
+    try {
+      const res = await getUsers(
+        `${import.meta.env.VITE_API_URL}/users`,
+        abort
+      );
+      if (res?.ok) {
+        users = await res.json();
+        console.log(users);
+      } else {
+        error = "❌ Error al cargar usuarios";
+      }
+    } catch (err: any) {
+      error = err.message;
+    } finally {
+      loading = false;
+    }
+  });
 </script>
 
 <Navbar />
@@ -28,5 +51,11 @@
   </div>
 </div>
 
-<UserTable />
-<Pagination />
+{#if loading}
+  <p>Cargando usuarios...</p>
+{:else if error}
+  <p class="text-red-600">{error}</p>
+{:else}
+  <UserTable />
+  <Pagination />
+{/if}
