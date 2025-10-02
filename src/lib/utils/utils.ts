@@ -54,7 +54,7 @@ export function toTitleCase(str: string) {
   }
 
   export function getValue(row: User, col: Column<User>) {
-    const raw = col.accessor ? col.accessor(row) : col.key ? row[col.key] : "";∫
+    const raw = col.accessor ? col.accessor(row) : col.key ? row[col.key] : "";
     if (col.type === "date") return fmtDate(raw as string);
     if (col.type === "title") return toTitleCase(raw as string);
     return raw ?? "";
