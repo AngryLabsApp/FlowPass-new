@@ -1,6 +1,4 @@
 <script lang="ts">
-
-  import { PUBLIC_API_BASE_URL } from "$env/static/public";
   import { Heading } from "flowbite-svelte";
   import Navbar from "../../../lib/components/navbar/navbar.svelte";
   import Pagination from "../../../lib/components/pagination/pagination.svelte";
