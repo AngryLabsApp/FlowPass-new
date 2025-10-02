@@ -3,11 +3,12 @@
     Navbar,
     NavLi,
     NavUl,
-    NavHamburger,
     Search,
     Button,
+    ToolbarButton,
+    Select,
   } from "flowbite-svelte";
-  import { Select } from "flowbite-svelte";
+  import { AdjustmentsHorizontalSolid } from "flowbite-svelte-icons";
 
   let selected = "all";
   let status = [
@@ -35,25 +36,29 @@
 <Navbar class="px-0 py-0 sm:px-0 mb-4">
   {#snippet children({ hidden, toggle, NavContainer })}
     <NavUl
-      class="order-0"
-      classes={{ ul: "flex flex-row items-center gap-4 p-0" }}
+      class="order-0 w-full md:w-auto"
+      classes={{ ul: "flex flex-col items-stretch gap-3 p-2 md:flex-row md:items-center md:gap-4 md:p-0" }}
     >
-      <NavLi>
-        <Search size="md" class="ms-auto" placeholder="Search..." />
+      <NavLi class="w-full md:w-auto py-0 pe-0 ps-0">
+        <Search
+          size="md"
+          class="w-full md:w-auto md:ms-auto"
+          placeholder="Search..."
+        />
       </NavLi>
-      <NavLi>
+      <NavLi class="w-full md:w-auto py-0 pe-0 ps-0">
         <Select
           size="md"
-          class="ms-auto min-w-[135px]"
+          class="w-full md:w-auto md:ms-auto md:min-w-[135px]"
           items={status}
           bind:value={selected}
           placeholder="Estado:"
         />
       </NavLi>
-      <NavLi>
+      <NavLi class="w-full md:w-auto py-0 pe-0 ps-0">
         <Select
           size="md"
-          class="ms-auto min-w-[135px]"
+          class="w-full md:w-auto md:ms-auto md:min-w-[135px]"
           items={plans}
           bind:value={selected}
           placeholder="Estado:"
@@ -63,9 +68,16 @@
 
     <div class="flex md:order-1"></div>
 
-    <div class="flex md:order-2">
+    <div class="flex md:order-2 items-center w-full md:w-auto justify-between md:justify-end gap-1">
       <Button size="lg" color="pink">Nuevo Alumno +</Button>
-      <NavHamburger />
+      <ToolbarButton
+        class="md:hidden"
+        onclick={toggle}
+        aria-label="Abrir filtros"
+        aria-expanded={!hidden}
+      >
+        <AdjustmentsHorizontalSolid class="h-5 w-5 text-gray-600" />
+      </ToolbarButton>
     </div>
   {/snippet}
 </Navbar>
