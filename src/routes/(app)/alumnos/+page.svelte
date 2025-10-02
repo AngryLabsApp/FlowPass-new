@@ -6,7 +6,7 @@
   import Navbar from "../../../lib/components/navbar/navbar.svelte";
   import Pagination from "../../../lib/components/pagination/pagination.svelte";
   import UserTable from "../../../lib/components/table/table.svelte";
-
+  import SkeletonTable from "$lib/components/skeletons/table.svelte";
   import { Select, Label } from "flowbite-svelte";
   let selected = "";
   let countries = [
@@ -42,7 +42,7 @@
 
 <Navbar />
 <div class="grid grid-cols-2 gap-4 mb-5">
-  <Heading tag="h3">Heading 3</Heading>
+  <Heading tag="h3">Alumnos</Heading>
   <div>
     <Label>
       Select an option
@@ -52,10 +52,10 @@
 </div>
 
 {#if loading}
-  <p>Cargando usuarios...</p>
+  <SkeletonTable  rows={5} cellHeights="h-4" withFooter={false} headers={["Product name", "Color", "Category", "Price"]} />
 {:else if error}
   <p class="text-red-600">{error}</p>
 {:else}
-  <UserTable />
+  <UserTable/>
   <Pagination />
 {/if}
