@@ -44,7 +44,7 @@
       <NavLi>
         <Select
           size="md"
-          class="ms-auto"
+          class="ms-auto min-w-[135px]"
           items={status}
           bind:value={selected}
           placeholder="Estado:"
@@ -53,7 +53,7 @@
       <NavLi>
         <Select
           size="md"
-          class="ms-auto"
+          class="ms-auto min-w-[135px]"
           items={plans}
           bind:value={selected}
           placeholder="Estado:"
