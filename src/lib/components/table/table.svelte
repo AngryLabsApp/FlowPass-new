@@ -1,77 +1,69 @@
-<script>
-    import { Table, TableBody, TableBodyCell, TableBodyRow, TableHead, TableHeadCell } from "flowbite-svelte";
+<script context="module" lang="ts">
+  export type Column<T> = {
+    header: string;
+    /** clave directa en el objeto (ej. 'nombre', 'plan') */
+    key?: keyof T;
+    /** tipo de render básico */
+    type?: "text" | "date" | "status" | "title";
+    /** clase opcional para la celda */
+    class?: string;
+    /** si necesitas un valor custom (gana sobre key) */
+    accessor?: (row: T) => unknown;
+  };
 </script>
 
+<script lang="ts">
+  import type { User } from "$lib/types/user";
+  import { fmtDate, getValue, statusPillClasses } from "$lib/utils/utils";
+  import {
+    Table,
+    TableHead,
+    TableHeadCell,
+    TableBody,
+    TableBodyRow,
+    TableBodyCell,
+  } from "flowbite-svelte";
+
+  export let users: User[] = [];
+  export let columns: Column<User>[] = [
+    { header: "Nombre(s)", key: "nombre", type:"title" },
+    { header: "Apellido(s)", key: "apellidos", type:"title" },
+    { header: "Plan", key: "plan" },
+    { header: "Clases realizadas", key: "clases_tomadas" },
+    { header: "Días de cortesía", key: "dias_de_gracia" },
+    { header: "Inicio de plan", key: "fecha_inicio_plan", type: "date" },
+    { header: "Fin de plan", key: "proxima_fecha_pago", type: "date" },
+    { header: "Estado", key: "estado", type: "status" },
+    { header: "Estado de pago", key: "estado_pago", type: "status" },
+  ];
+
+
+</script>
 
 <Table>
   <TableHead>
-    <TableHeadCell>Product name</TableHeadCell>
-    <TableHeadCell>Color</TableHeadCell>
-    <TableHeadCell>Category</TableHeadCell>
-    <TableHeadCell>Price</TableHeadCell>
+    {#each columns as col}
+      <TableHeadCell>{col.header}</TableHeadCell>
+    {/each}
   </TableHead>
-  <TableBody>
-    <TableBodyRow>
-      <TableBodyCell>Apple MacBook Pro 17"</TableBodyCell>
-      <TableBodyCell>Sliver</TableBodyCell>
-      <TableBodyCell>Laptop</TableBodyCell>
-      <TableBodyCell>$2999</TableBodyCell>
-    </TableBodyRow>
-    <TableBodyRow>
-      <TableBodyCell>Microsoft Surface Pro</TableBodyCell>
-      <TableBodyCell>White</TableBodyCell>
-      <TableBodyCell>Laptop PC</TableBodyCell>
-      <TableBodyCell>$1999</TableBodyCell>
-    </TableBodyRow>
-    <TableBodyRow>
-      <TableBodyCell>Magic Mouse 2</TableBodyCell>
-      <TableBodyCell>Black</TableBodyCell>
-      <TableBodyCell>Accessories</TableBodyCell>
-      <TableBodyCell>$99</TableBodyCell>
-    </TableBodyRow>
-    <TableBodyRow>
-      <TableBodyCell>Apple MacBook Pro 17"</TableBodyCell>
-      <TableBodyCell>Sliver</TableBodyCell>
-      <TableBodyCell>Laptop</TableBodyCell>
-      <TableBodyCell>$2999</TableBodyCell>
-    </TableBodyRow>
-    <TableBodyRow>
-      <TableBodyCell>Microsoft Surface Pro</TableBodyCell>
-      <TableBodyCell>White</TableBodyCell>
-      <TableBodyCell>Laptop PC</TableBodyCell>
-      <TableBodyCell>$1999</TableBodyCell>
-    </TableBodyRow>
-    <TableBodyRow>
-      <TableBodyCell>Magic Mouse 2</TableBodyCell>
-      <TableBodyCell>Black</TableBodyCell>
-      <TableBodyCell>Accessories</TableBodyCell>
-      <TableBodyCell>$99</TableBodyCell>
-    </TableBodyRow>
-    <TableBodyRow>
-      <TableBodyCell>Apple MacBook Pro 17"</TableBodyCell>
-      <TableBodyCell>Sliver</TableBodyCell>
-      <TableBodyCell>Laptop</TableBodyCell>
-      <TableBodyCell>$2999</TableBodyCell>
-    </TableBodyRow>
-    <TableBodyRow>
-      <TableBodyCell>Microsoft Surface Pro</TableBodyCell>
-      <TableBodyCell>White</TableBodyCell>
-      <TableBodyCell>Laptop PC</TableBodyCell>
-      <TableBodyCell>$1999</TableBodyCell>
-    </TableBodyRow>
-    <TableBodyRow>
-      <TableBodyCell>Magic Mouse 2</TableBodyCell>
-      <TableBodyCell>Black</TableBodyCell>
-      <TableBodyCell>Accessories</TableBodyCell>
-      <TableBodyCell>$99</TableBodyCell>
-    </TableBodyRow>
 
+  <TableBody>
+    {#each users as u}
+      <TableBodyRow>
+        {#each columns as col}
+          <TableBodyCell class={col.class}>
+            {#if col.type === "status"}
+              <span
+                class={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ${statusPillClasses(getValue(u, col))}`}
+              >
+                {getValue(u, col)}
+              </span>
+            {:else}
+              {getValue(u, col)}
+            {/if}
+          </TableBodyCell>
+        {/each}
+      </TableBodyRow>
+    {/each}
   </TableBody>
-   <tfoot>
-    <tr class="font-semibold text-gray-900 dark:text-white">
-      <th scope="row" class="px-6 py-3 text-base">Total</th>
-      <td class="px-6 py-3">3</td>
-      <td class="px-6 py-3">21,000</td>
-    </tr>
-  </tfoot>
 </Table>

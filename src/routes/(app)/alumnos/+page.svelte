@@ -1,13 +1,15 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { getUsers } from "$lib/services/api/users";
-
   import { Heading } from "flowbite-svelte";
   import Navbar from "../../../lib/components/navbar/navbar.svelte";
   import Pagination from "../../../lib/components/pagination/pagination.svelte";
   import UserTable from "../../../lib/components/table/table.svelte";
   import SkeletonTable from "$lib/components/skeletons/table.svelte";
   import { Select, Label } from "flowbite-svelte";
+  import type { getUsersResponse } from "$lib/types/api";
+  import type { User } from "$lib/types/user";
+
   let selected = "";
   let countries = [
     { value: "us", name: "United States" },
@@ -16,22 +18,23 @@
     { value: "fr", name: "France", disabled: true },
   ];
 
-  let users: any[] = [];
+  let data: getUsersResponse[] = [{ total: 0, data: [] }];
   let error = "";
   let loading = true;
+  let users:User[] = [];
   onMount(async () => {
     const abort = new AbortController();
     try {
-      const res = await getUsers(
-        `${import.meta.env.VITE_API_URL}/users`,
-        abort
-      );
-      if (res?.ok) {
-        users = await res.json();
-        console.log(users);
-      } else {
-        error = "❌ Error al cargar usuarios";
-      }
+    const res = await getUsers(abort);
+    if (res?.ok) {
+      data = await res.json();
+      const { total, data: _users } = data[0] || {};
+      users = _users || [];
+      console.log(total, users);
+
+    } else {
+      error = "❌ Error al cargar usuarios";
+    }
     } catch (err: any) {
       error = err.message;
     } finally {
@@ -56,6 +59,6 @@
 {:else if error}
   <p class="text-red-600">{error}</p>
 {:else}
-  <UserTable/>
+  <UserTable users={users} />
   <Pagination />
 {/if}
