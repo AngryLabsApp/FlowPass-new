@@ -9,6 +9,7 @@
   import { Select, Label } from "flowbite-svelte";
   import type { getUsersResponse } from "$lib/types/api";
   import type { User } from "$lib/types/user";
+  import { mapIfPartnerUser } from "$lib/utils/utils";
 
   let selected = "";
   let countries = [
@@ -29,7 +30,7 @@
     if (res?.ok) {
       data = await res.json();
       const { total, data: _users } = data[0] || {};
-      users = _users || [];
+      users = mapIfPartnerUser(_users || []);
       console.log(total, users);
 
     } else {
