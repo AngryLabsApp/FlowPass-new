@@ -41,11 +41,6 @@ export function toTitleCase(str: string) {
 
   export function statusPillClasses(value: unknown) {
     const v = String(value ?? "").toLowerCase();
-    // ajusta a tus estados reales
-    console.log(
-      v,
-      ["activo", "pagado"].some((k) => v.includes(k))
-    );
     if (["activo", "pagado"].includes(v))
       return "bg-emerald-100 text-emerald-800 border border-emerald-200";
     if (["inactivo"].includes(v))

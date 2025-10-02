@@ -1,4 +1,5 @@
 <script lang="ts">
+  import UserModal from "../../../lib/components/modal/modal.svelte";
   import { onMount } from "svelte";
   import { getUsers } from "$lib/services/api/users";
   import { Heading } from "flowbite-svelte";
@@ -41,6 +42,12 @@
       loading = false;
     }
   });
+
+  let openModal : boolean = false;
+  const tableOnclick = (user: User) => {
+    openModal = true;
+  }
+
 </script>
 
 <Navbar />
@@ -51,12 +58,12 @@
     <Select id="order-by" class="w-full max-w-xs" items={orderBy} bind:value={selected} />
   </div>
 </div>
-
+<UserModal bind:openModal={openModal} />
 {#if loading}
   <SkeletonTable  rows={5} cellHeights="h-4" withFooter={false} headers={["Product name", "Color", "Category", "Price"]} />
 {:else if error}
   <p class="text-red-600">{error}</p>
 {:else}
-  <UserTable users={users} />
+  <UserTable users={users}  onClick={tableOnclick} />
   <Pagination />
 {/if}

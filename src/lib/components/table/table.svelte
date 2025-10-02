@@ -24,6 +24,7 @@
     TableBodyCell,
   } from "flowbite-svelte";
 
+  export let onClick: (user: User) => void = () => {};
   export let users: User[] = [];
   export let columns: Column<User>[] = [
     { header: "Nombre(s)", key: "nombre", type:"title" },
@@ -37,9 +38,7 @@
     { header: "Estado de pago", key: "estado_pago", type: "status" },
   ];
 
-
 </script>
-
 <Table>
   <TableHead>
     {#each columns as col}
@@ -49,9 +48,9 @@
 
   <TableBody>
     {#each users as u}
-      <TableBodyRow>
+      <TableBodyRow onclick={() => onClick(u)} >
         {#each columns as col}
-          <TableBodyCell class={col.class}>
+          <TableBodyCell class={col.class} >
             {#if col.type === "status"}
               <span
                 class={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ${statusPillClasses(getValue(u, col))}`}
