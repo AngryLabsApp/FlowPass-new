@@ -10,7 +10,7 @@
   } from "flowbite-svelte";
   import { AdjustmentsHorizontalSolid } from "flowbite-svelte-icons";
 
-  let selected = "all";
+  let statusSelected = "all";
   let status = [
     { value: "all", name: "Estado: Todos" },
     { value: "ac", name: "Activo" },
@@ -18,6 +18,7 @@
     { value: "pa", name: "Pausado" },
   ];
 
+  let planSelected = "all";
   let plans = [
     { value: "all", name: "Plan: Todos" },
     { value: "12G", name: "12 Sesiones Mensuales" },
@@ -37,7 +38,9 @@
   {#snippet children({ hidden, toggle, NavContainer })}
     <NavUl
       class="order-0 w-full md:w-auto"
-      classes={{ ul: "flex flex-col items-stretch gap-3 p-2 md:flex-row md:items-center md:gap-4 md:p-0" }}
+      classes={{
+        ul: "flex flex-col items-stretch gap-3 p-2 md:flex-row md:items-center md:gap-4 md:p-0",
+      }}
     >
       <NavLi class="w-full md:w-auto py-0 pe-0 ps-0">
         <Search
@@ -51,7 +54,7 @@
           size="md"
           class="w-full md:w-auto md:ms-auto md:min-w-[135px]"
           items={status}
-          bind:value={selected}
+          bind:value={statusSelected}
           placeholder="Estado:"
         />
       </NavLi>
@@ -60,15 +63,17 @@
           size="md"
           class="w-full md:w-auto md:ms-auto md:min-w-[135px]"
           items={plans}
-          bind:value={selected}
-          placeholder="Estado:"
+          bind:value={planSelected}
+          placeholder="Plan:"
         />
       </NavLi>
     </NavUl>
 
     <div class="flex md:order-1"></div>
 
-    <div class="flex md:order-2 items-center w-full md:w-auto justify-between md:justify-end gap-1">
+    <div
+      class="flex md:order-2 items-center w-full md:w-auto justify-between md:justify-end gap-1"
+    >
       <Button size="lg" color="pink">Nuevo Alumno +</Button>
       <ToolbarButton
         class="md:hidden"
