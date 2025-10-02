@@ -3,7 +3,7 @@
   import favicon from "$lib/assets/favicon.svg";
   import logo_invertido from "$lib/assets/logo-flowpass-invertido.svg";
   import default_icon from "$lib/assets/default.png";
-  import "../app.css";
+  import "../../app.css";
   
   import { Sidebar, SidebarGroup, SidebarItem, SidebarButton, uiHelpers ,SidebarBrand} from "flowbite-svelte";
   import { page } from "$app/state";
