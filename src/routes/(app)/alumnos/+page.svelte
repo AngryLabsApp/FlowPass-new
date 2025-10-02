@@ -10,12 +10,11 @@
   import type { getUsersResponse } from "$lib/types/api";
   import type { User } from "$lib/types/user";
 
-  let selected = "";
-  let countries = [
-    { value: "us", name: "United States" },
-    { value: "ca", name: "Canada" },
-    { value: "de", name: "Germany" },
-    { value: "fr", name: "France", disabled: true },
+  let selected = "new";
+  let orderBy = [
+    { value: "new", name: "Usuario: más nuevo" },
+    { value: "old", name: "Usuario: más antiguo" },
+    { value: "act", name: "Actualización: más reciente" },
   ];
 
   let data: getUsersResponse[] = [{ total: 0, data: [] }];
@@ -46,11 +45,9 @@
 <Navbar />
 <div class="grid grid-cols-2 gap-4 mb-5">
   <Heading tag="h3">Alumnos</Heading>
-  <div>
-    <Label>
-      Select an option
-      <Select class="" items={countries} bind:value={selected} />
-    </Label>
+  <div class="flex items-center gap-3 justify-end">
+    <Label for="order-by" class="mb-0">Ordenar por:</Label>
+    <Select id="order-by" class="w-full max-w-xs" items={orderBy} bind:value={selected} />
   </div>
 </div>
 
