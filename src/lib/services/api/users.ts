@@ -6,6 +6,8 @@ import { buildUrl, mapIfPartnerUser } from "$lib/utils/utils";
 
 const USERS_URL =
   "https://n8n.angrylabs.app/webhook/0768a235-0d92-41e5-93f8-fcb566c57d40";
+const USERS_FORM =
+  "https://n8n.angrylabs.app/form/3858af95-5038-4d61-ba84-4ee767accee2";
 
 export async function getUsers(
   currentAbort: AbortController,
@@ -22,4 +24,8 @@ export async function getUsers(
   } else {
     throw new Error("❌ Error al cargar usuarios");
   }
+}
+
+export function newUserForm(){
+    window.open(USERS_FORM, "_self");
 }

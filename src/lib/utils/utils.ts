@@ -156,6 +156,7 @@ export function buildUrl(base: string, params: QueryParams) {
 }
 
 export function fmtClasesRestantes(user: User): string {
+  if (user.limite_clases === undefined || user.limite_clases === null) return "-";
   return `${user.clases_tomadas}/${user.limite_clases}`;
 }
 

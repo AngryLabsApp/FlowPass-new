@@ -1,6 +1,7 @@
 <script lang="ts">
   import { ESTADO_PLANES } from "$lib/catalog/estados_planes";
   import { FilterKeys } from "$lib/enums/filter_keys";
+  import { newUserForm } from "$lib/services/api/users";
   import { debounce } from "$lib/utils/utils";
   import {
     Navbar,
@@ -121,7 +122,9 @@
     <div
       class="flex md:order-2 w-full md:w-auto flex-col md:flex-row md:items-center gap-2 md:gap-1 md:justify-end"
     >
-      <Button size="lg" color="pink" class="w-full md:w-auto"
+      <Button size="lg" color="pink" class="w-full md:w-auto" onclick={() => {
+         newUserForm();
+      }}>
         >Nuevo Alumno +</Button
       >
       <ToolbarButton
