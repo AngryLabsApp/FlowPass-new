@@ -18,7 +18,7 @@
   });
 
   const tableOnclick = () => {
-
+    console.log("Table row clicked"); 
   };
 
   let currentAbort: AbortController | null = null;
