@@ -18,7 +18,7 @@
 
 
 
-  let totalPages = $state(1);
+  let pagination_values = $state({total:1,start:0, end:0, totalPages:1});
   let page = $state(1);
   let error = $state("");
   let loading = $state(true);
@@ -81,8 +81,16 @@
 
       users = res.users;
       const pageSize = 10;
-      totalPages = Math.max(1, Math.ceil(res.total / pageSize));
 
+      const start = res.total ? (page - 1) * pageSize + 1 : 0;
+      const end   = Math.min(page * pageSize, res.total);
+      const totalPages = Math.max(1, Math.ceil(res.total / pageSize));
+      pagination_values = {
+        total: res.total,
+        totalPages,
+        start,
+        end
+      };
 
     } catch (err: any) {
 
@@ -124,5 +132,5 @@
   <p class="text-red-600">{error}</p>
 {:else}
   <UserTable {users} onClick={tableOnclick} />
-  <Pagination  totalPages={totalPages} bind:page={page} onSearch={(key: FilterKeys, val: string) => setValue(key, val)}/>
+  <Pagination  pagination_values={pagination_values} bind:page={page} onSearch={(key: FilterKeys, val: string) => setValue(key, val)}/>
 {/if}

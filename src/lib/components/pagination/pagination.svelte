@@ -4,26 +4,33 @@
   import { ArrowLeftOutline, ArrowRightOutline } from "flowbite-svelte-icons";
 
   let {
-    totalPages = 1,
+    pagination_values = { total: 1, start: 0, end: 0, totalPages: 1 },
     page = $bindable(1),
     onSearch,
   } = $props<{
-    totalPages: number;
+    pagination_values: { total: number; start: number; end: number; totalPages: number };
     page: number;
     onSearch?: (key: FilterKeys, q: string) => void; 
   }>();
 
-
-
   function handlePageChange(current_page: number) {
     page = current_page;
-    // Additional logic here
     onSearch(FilterKeys.PAGE, "");
-    console.log("Page changed to:", page);
   }
 </script>
 
-<PaginationNav  visiblePages={5} currentPage={page} totalPages={totalPages} onPageChange={handlePageChange}>
+
+<div class="flex flex-col items-center justify-center gap-3">
+  <div class="flex flex-col items-center justify-center gap-2">
+    <div class="text-sm text-gray-700 dark:text-gray-400">
+      Mostrando <span class="font-semibold text-gray-900 dark:text-white">{pagination_values.start}</span>
+      -
+      <span class="font-semibold text-gray-900 dark:text-white">{pagination_values.end}</span>
+      de
+      <span class="font-semibold text-gray-900 dark:text-white">{pagination_values.total}</span>
+      
+    </div>
+  <PaginationNav  visiblePages={5} currentPage={page} totalPages={pagination_values.totalPages} onPageChange={handlePageChange}>
   {#snippet prevContent()}
     <span class="sr-only">Previous</span>
     <ArrowLeftOutline class="h-5 w-5" />
@@ -33,4 +40,8 @@
     <ArrowRightOutline class="h-5 w-5" />
   {/snippet}
 </PaginationNav>
+  </div>
+</div>
+
+
  
