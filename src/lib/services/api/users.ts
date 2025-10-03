@@ -12,7 +12,6 @@ export async function getUsers(
   queryParams: QueryParams
 ): Promise<getUsersResponse> {
   const url = buildUrl(USERS_URL, queryParams);
-  console.log("URL", url);
   const res = await fetchWithAuth(url, {}, currentAbort);
   if (res?.ok) {
     let data = await res.json();

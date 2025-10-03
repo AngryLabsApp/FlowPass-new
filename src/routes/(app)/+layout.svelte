@@ -6,7 +6,6 @@
   } from "$lib/services/supabase/session";
 
   onMount(async () => {
-    console.log("ON MOUNT");
     initAuthListener(); // ← se registra una sola vez
     await ensureSessionOrRedirect(); // ← verifica sesión al entrar
   });

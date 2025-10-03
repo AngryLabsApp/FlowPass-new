@@ -9,12 +9,10 @@ let initialized = false;
 
 /** Llama esto una sola vez (por ejemplo en el layout del app, onMount). */
 export function initAuthListener() {
-  console.log("INIT AUTH LISTENER", initialized);
   if (!browser || initialized) return;
   initialized = true;
 
   supabase.auth.onAuthStateChange((event, session) => {
-    // console.log('auth event', event)
     if (event === 'TOKEN_REFRESHED') sessionStore.set(session);
     if (event === 'SIGNED_OUT') {
       sessionStore.set(null);
