@@ -117,14 +117,17 @@
   };
 
   onMount(() => {
+    let resizeObserver: ResizeObserver | undefined;
+
     tick().then(() => {
       updateCollapse();
-      const resizeObserver = new ResizeObserver(() => updateCollapse());
+      resizeObserver = new ResizeObserver(() => updateCollapse());
       if (filtersContainerEl) resizeObserver.observe(filtersContainerEl);
       window.addEventListener("resize", updateCollapse);
     });
 
     return () => {
+      resizeObserver?.disconnect();
       window.removeEventListener("resize", updateCollapse);
     };
   });
@@ -163,16 +166,11 @@
           bind:value={planSelected}
           placeholder="Plan:"
         />
-        <Button size="lg" color="pink" class="ms-auto shrink-0"
-          >Nuevo Alumno +</Button
-        >
       </div>
 
       <!-- Inline filters for desktop screens -->
       {#if !filtersCollapsed}
-        <div
-          class="flex w-full flex-nowrap items-center gap-3 whitespace-nowrap"
-        >
+        <div class="flex w-full flex-nowrap items-center gap-3 whitespace-nowrap">
           <Search
             size="md"
             class={SEARCH_INLINE_CLASS}
@@ -196,9 +194,6 @@
             placeholder="Plan:"
             onchange={notifyPlanFilter}
           />
-          <Button size="lg" color="pink" class="ms-auto shrink-0"
-            >Nuevo Alumno +</Button
-          >
         </div>
       {/if}
     </div>
@@ -238,25 +233,31 @@
             onchange={notifyPlanFilter}
           />
         </NavLi>
-        <NavLi class="w-full py-0 pe-0 ps-0">
-          <Button size="lg" color="pink" class="w-full">Nuevo Alumno +</Button>
-        </NavLi>
       </NavUl>
     {/if}
 
     <div class="flex md:order-1"></div>
 
-    <div class="flex md:order-2 w-full md:w-auto justify-end">
+    <div class="flex md:order-2 w-full md:w-auto">
       {#if filtersCollapsed}
-        <ToolbarButton
-          class="inline-flex ms-auto"
-          onclick={toggle}
-          aria-label="Abrir filtros"
-          aria-expanded={!hidden}
-        >
-          <AdjustmentsHorizontalSolid class="h-5 w-5 text-gray-600" />
-        </ToolbarButton>
+        <div class="flex w-full justify-end pl-4 md:pl-0">
+          <ToolbarButton
+            class="inline-flex"
+            onclick={toggle}
+            aria-label="Abrir filtros"
+            aria-expanded={!hidden}
+          >
+            <AdjustmentsHorizontalSolid class="h-5 w-5 text-gray-600" />
+          </ToolbarButton>
+        </div>
       {/if}
     </div>
+    <Button
+      size="lg"
+      color="pink"
+      class="fixed top-2 right-[35px] z-50 w-auto"
+    >
+      Nuevo Alumno +
+    </Button>
   {/snippet}
 </Navbar>
