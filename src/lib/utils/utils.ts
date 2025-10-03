@@ -164,6 +164,10 @@ export function BuildQueryParams(filters: DashboardFilters): QueryParams {
     page: filters.page ?? 1,
   };
   let counter = 1;
+
+  if (typeof filters?.sort === "string" && filters.sort.length > 0) {
+      queryParams.sort = filters.sort;
+  }
   if (typeof filters?.search === "string" && filters.search.length > 0) {
     queryParams["field" + counter] = "nombre";
     queryParams["value" + counter] = filters.search;

@@ -13,13 +13,10 @@
   import { BuildQueryParams } from "$lib/utils/utils";
   import { FilterKeys } from "$lib/enums/filter_keys";
   import type { DashboardFilters } from "$lib/types/dashboardFilters";
+  import { SORT_CATALOG } from "$lib/catalog/sort_catalog";
 
-  let selected = "new";
-  let orderBy = [
-    { value: "new", name: "Usuario: más nuevo" },
-    { value: "old", name: "Usuario: más antiguo" },
-    { value: "act", name: "Actualización: más reciente" },
-  ];
+
+
 
   let error = $state("");
   let loading = $state(true);
@@ -36,8 +33,9 @@
     selected_user = user;
   };
 
-
-  let filters:DashboardFilters = {page:1, estado:"", plan:"", search:""};
+  let sort_type = $state("created_desc");
+  let filters:DashboardFilters = {page:1, estado:"", plan:"", search:"", sort:"created_desc"};
+  console.log("Filters", filters);
   let currentAbort: AbortController | null = null;
 
   async function setValue(key: FilterKeys, value: string) {
@@ -51,7 +49,9 @@
     if (key === FilterKeys.PLAN) {
       filters.plan = value;
     }
-
+    if (key === FilterKeys.SORT) {
+      filters.sort = value;
+    }
     await fetchAlumnos();
 
   }
@@ -94,8 +94,11 @@
     <Select
       id="order-by"
       class="w-full max-w-xs"
-      items={orderBy}
-      bind:value={selected}
+      items={SORT_CATALOG}
+      bind:value={sort_type}
+      onchange={() => {
+        setValue(FilterKeys.SORT, sort_type);
+      }}
     />
   </div>
 </div>

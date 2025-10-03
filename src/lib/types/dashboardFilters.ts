@@ -3,4 +3,5 @@ export interface DashboardFilters {
   estado?: string;
   plan?: string;
   page?: number;
+  sort:string;
 }
