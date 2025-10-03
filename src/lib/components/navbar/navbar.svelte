@@ -1,7 +1,6 @@
 <script lang="ts">
   import { ESTADO_PLANES } from "$lib/catalog/estados_planes";
   import { FilterKeys } from "$lib/enums/filter_keys";
-  import { newUserForm } from "$lib/services/api/users";
   import { debounce } from "$lib/utils/utils";
   import { onMount, tick } from "svelte";
   import {
@@ -31,25 +30,11 @@
   let filtersContainerEl: HTMLDivElement | undefined = $state();
   let measurementRowEl: HTMLDivElement | undefined = $state();
 
-  // Static plan options until we load them from the backend.
-  const PLAN_OPTIONS = [
-    { value: "all", name: "Plan: Todos" },
-    { value: "12G", name: "12 Sesiones Mensuales" },
-    { value: "16G", name: "16 Sesiones Mensuales" },
-    { value: "20G", name: "20 Sesiones Mensuales" },
-    { value: "cl", name: "Clase Libre" },
-    { value: "cg", name: "Clase Gratis" },
-    { value: "12P", name: "12 Sesiones Personalizadas" },
-    { value: "16P", name: "16 Sesiones Personalizadas" },
-    { value: "20P", name: "20 Sesiones Personalizadas" },
-    { value: "pa", name: "Parejas" },
-    { value: "il", name: "Ilimitado" },
-  ];
-
   // Callbacks opcionales que el padre puede pasar
-  let { onSearch, debounceMs = 350 } = $props<{
+  let { onSearch, debounceMs = 350, PLANES_CATALOG =[] } = $props<{
     onSearch?: (key: FilterKeys, q: string) => void; // se llama (debounced) mientras escribe
     debounceMs?: number;
+    PLANES_CATALOG: { value: string; name: string; }[];
   }>();
   let hasInteracted = $state(false);
   let inputEl: HTMLInputElement | undefined = $state();
@@ -162,7 +147,7 @@
         <Select
           size="md"
           class={SELECT_INLINE_CLASS}
-          items={PLAN_OPTIONS}
+          items={PLANES_CATALOG}
           bind:value={planSelected}
           placeholder="Plan:"
         />
@@ -189,7 +174,7 @@
           <Select
             size="md"
             class={SELECT_INLINE_CLASS}
-            items={PLAN_OPTIONS}
+            items={PLANES_CATALOG}
             bind:value={planSelected}
             placeholder="Plan:"
             onchange={notifyPlanFilter}
@@ -227,7 +212,7 @@
           <Select
             size="md"
             class={SELECT_STACKED_CLASS}
-            items={PLAN_OPTIONS}
+            items={PLANES_CATALOG}
             bind:value={planSelected}
             placeholder="Plan:"
             onchange={notifyPlanFilter}

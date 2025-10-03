@@ -18,7 +18,8 @@
 
 
 
-
+  let totalPages = $state(1);
+  let page = $state(1);
   let error = $state("");
   let loading = $state(true);
   let users: User[] = $state([]);
@@ -42,19 +43,24 @@
   let currentAbort: AbortController | null = null;
 
   async function setValue(key: FilterKeys, value: string) {
-    
     if (key === FilterKeys.SEARCH) {
+      page = 1;
       filters.search = value;
     }
     if (key === FilterKeys.ESTADO) {
+      page = 1;
       filters.estado = value;
     }
     if (key === FilterKeys.PLAN) {
+      page = 1;
       filters.plan = value;
     }
     if (key === FilterKeys.SORT) {
+      page = 1;
       filters.sort = value;
     }
+
+    filters.page = page;
     await fetchAlumnos();
 
   }
@@ -63,7 +69,7 @@
     currentAbort?.abort();
     const abort = new AbortController();
     currentAbort = abort;
-
+    
     let queryParams: QueryParams = BuildQueryParams(filters);
 
     try {
@@ -74,6 +80,9 @@
 
 
       users = res.users;
+      const pageSize = 10;
+      totalPages = Math.max(1, Math.ceil(res.total / pageSize));
+
 
     } catch (err: any) {
 
@@ -115,5 +124,5 @@
   <p class="text-red-600">{error}</p>
 {:else}
   <UserTable {users} onClick={tableOnclick} />
-  <Pagination />
+  <Pagination  totalPages={totalPages} bind:page={page} onSearch={(key: FilterKeys, val: string) => setValue(key, val)}/>
 {/if}

@@ -3,4 +3,5 @@ export enum FilterKeys {
   PLAN = "plan",
   SEARCH = "search",
   SORT = "sort",
+  PAGE = "page"
 }
