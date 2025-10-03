@@ -1,7 +1,11 @@
 <script lang="ts">
   import type { Column } from "$lib/types/column";
   import type { User } from "$lib/types/user";
-  import { getValue, statusPillClasses } from "$lib/utils/utils";
+  import {
+    fmtClasesRestantes,
+    getValue,
+    statusPillClasses,
+  } from "$lib/utils/utils";
   import {
     Table,
     TableHead,
@@ -17,7 +21,12 @@
     { header: "Nombre(s)", key: "nombre", type: "title" },
     { header: "Apellido(s)", key: "apellidos", type: "title" },
     { header: "Plan", key: "plan" },
-    { header: "Clases realizadas", key: "clases_tomadas" },
+    {
+      header: "Clases realizadas",
+      key: "clases_restantes",
+      type: "custom",
+      fmt: (u: User) => fmtClasesRestantes(u),
+    },
     { header: "Días de cortesía", key: "dias_de_gracia" },
     { header: "Inicio de plan", key: "fecha_inicio_plan", type: "date" },
     { header: "Fin de plan", key: "proxima_fecha_pago", type: "date" },
@@ -44,6 +53,8 @@
               >
                 {getValue(u, col)}
               </span>
+            {:else if col.type === "custom"}
+              {col.fmt ? col.fmt(u) : ""}
             {:else}
               {getValue(u, col)}
             {/if}

@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { User } from "$lib/types/user";
   import { Accordion, AccordionItem } from "flowbite-svelte";
-  import { fmtDate, formatMemberSince, toTitleCase } from "$lib/utils/utils";
+  import { fmtClasesRestantes, fmtDate, formatMemberSince, toTitleCase } from "$lib/utils/utils";
   import { Button, Modal, type ModalProps, P } from "flowbite-svelte";
 
   let { openModal = $bindable(false), user } = $props<{
@@ -21,7 +21,7 @@
     format.id = user.id ?? "";
     format.codigo_ingreso = (user.codigo_ingreso ?? "").replace(/^c-/i, "");
     format.fecha_alta = formatMemberSince(user.fecha_alta);
-    format.clases_restantes = `${user.clases_tomadas}/${user.limite_clases}`;
+    format.clases_restantes = fmtClasesRestantes(user);
     format.fecha_inicio_plan = fmtDate(user.fecha_inicio_plan);
     format.proxima_fecha_pago = fmtDate(user.proxima_fecha_pago);
     format.cumpleanos = fmtDate(user.cumpleanos);

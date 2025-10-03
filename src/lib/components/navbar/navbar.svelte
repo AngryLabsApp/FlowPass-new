@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { ESTADO_PLANES } from "$lib/catalog/estados_planes";
+  import { FilterKeys } from "$lib/enums/filter_keys";
   import { debounce } from "$lib/utils/utils";
   import {
     Navbar,
@@ -11,15 +13,10 @@
   } from "flowbite-svelte";
   import { AdjustmentsHorizontalSolid } from "flowbite-svelte-icons";
 
-  let statusSelected = "all";
-  let status = [
-    { value: "all", name: "Estado: Todos" },
-    { value: "ac", name: "Activo" },
-    { value: "in", name: "Inactivo" },
-    { value: "pa", name: "Pausado" },
-  ];
 
-  let planSelected = "all";
+  let statusSelected = $state("all");
+  let planSelected = $state("all");
+  let query = $state("");
   let plans = [
     { value: "all", name: "Plan: Todos" },
     { value: "12G", name: "12 Sesiones Mensuales" },
@@ -38,18 +35,16 @@
   let {
     onSearch,
     debounceMs = 350,
-    query = $bindable(""),
   } = $props<{
-    onSearch?: (q: string) => void; // se llama (debounced) mientras escribe
+    onSearch?: (key: FilterKeys, q: string) => void; // se llama (debounced) mientras escribe
     debounceMs?: number;
-    query: string;
   }>();
   let hasInteracted = $state(false);
   let inputEl: HTMLInputElement | undefined = $state();
 
   // util: debounce
 
-  const debouncedSearch = debounce((q: string) => onSearch?.(q), debounceMs);
+  const debouncedSearch = debounce((q: string) => onSearch?.(FilterKeys.SEARCH, q), debounceMs);
 
   // Listener de teclado sobre el INPUT nativo (usando elementRef)
   $effect(() => {
@@ -64,7 +59,7 @@
       if (!hasInteracted) hasInteracted = true;
       if (e.key === "Enter") {
         e.preventDefault();
-        onSearch?.(query);
+        onSearch?.(FilterKeys.SEARCH, query);
       }
     };
     inputEl.addEventListener("input", onInput);
@@ -98,9 +93,12 @@
         <Select
           size="md"
           class="w-full md:w-auto md:ms-auto md:min-w-[135px]"
-          items={status}
+          items={ESTADO_PLANES}
           bind:value={statusSelected}
           placeholder="Estado:"
+          onchange={() => {
+             onSearch?.(FilterKeys.ESTADO, statusSelected);
+          }}
         />
       </NavLi>
       <NavLi class="w-full md:w-auto py-0 pe-0 ps-0">
@@ -110,6 +108,10 @@
           items={plans}
           bind:value={planSelected}
           placeholder="Plan:"
+          onchange={() => {
+             onSearch?.(FilterKeys.PLAN, planSelected);
+          }}
+          
         />
       </NavLi>
     </NavUl>

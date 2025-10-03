@@ -1,4 +1,5 @@
 import type { Column } from "$lib/types/column";
+import type { DashboardFilters } from "$lib/types/dashboardFilters";
 import type { QueryParams } from "$lib/types/queryparams";
 import type { User } from "$lib/types/user";
 
@@ -153,3 +154,30 @@ export function buildUrl(base: string, params: QueryParams) {
   });
   return url.toString();
 }
+
+export function fmtClasesRestantes(user: User): string {
+  return `${user.clases_tomadas}/${user.limite_clases}`;
+}
+
+export function BuildQueryParams(filters: DashboardFilters): QueryParams {
+  let queryParams: QueryParams = {
+    page: filters.page ?? 1,
+  };
+  let counter = 1;
+  if (typeof filters?.search === "string" && filters.search.length > 0) {
+    queryParams["field" + counter] = "nombre";
+    queryParams["value" + counter] = filters.search;
+    counter++;
+  }
+  if (typeof filters?.plan === "string" && filters.plan.length > 0  && filters.plan.trim() !== "all") {
+    queryParams["field" + counter] = "plan";
+    queryParams["value" + counter] = filters.plan;
+    counter++;
+  }
+  if (typeof filters?.estado === "string" && filters.estado.length > 0 && filters.estado.trim() !== "all") {
+    queryParams["field" + counter] = "estado";
+    queryParams["value" + counter] = filters.estado;
+    counter++;
+  }
+  return queryParams;
+};
