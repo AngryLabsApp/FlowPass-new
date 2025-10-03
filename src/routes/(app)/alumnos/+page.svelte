@@ -62,11 +62,9 @@
     currentAbort = abort;
 
     let queryParams: QueryParams = BuildQueryParams(filters);
-    console.log(queryParams);
+
     try {
       loading = true;
-      //?page=1&field1=nombre&value1=angel&sort=created_desc
-
       const res = await getUsers(abort, queryParams);
 
       if (currentAbort !== abort) return;

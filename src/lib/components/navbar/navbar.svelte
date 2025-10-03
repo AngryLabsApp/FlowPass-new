@@ -1,6 +1,7 @@
 <script lang="ts">
   import { ESTADO_PLANES } from "$lib/catalog/estados_planes";
   import { FilterKeys } from "$lib/enums/filter_keys";
+  import { newUserForm } from "$lib/services/api/users";
   import { debounce } from "$lib/utils/utils";
   import { onMount, tick } from "svelte";
   import {
@@ -115,14 +116,15 @@
     filtersCollapsed = required > available;
   };
 
-  onMount(async () => {
-    await tick();
-    updateCollapse();
-    const resizeObserver = new ResizeObserver(() => updateCollapse());
-    if (filtersContainerEl) resizeObserver.observe(filtersContainerEl);
-    window.addEventListener("resize", updateCollapse);
+  onMount(() => {
+    tick().then(() => {
+      updateCollapse();
+      const resizeObserver = new ResizeObserver(() => updateCollapse());
+      if (filtersContainerEl) resizeObserver.observe(filtersContainerEl);
+      window.addEventListener("resize", updateCollapse);
+    });
+
     return () => {
-      resizeObserver.disconnect();
       window.removeEventListener("resize", updateCollapse);
     };
   });
@@ -161,12 +163,16 @@
           bind:value={planSelected}
           placeholder="Plan:"
         />
-        <Button size="lg" color="pink" class="ms-auto shrink-0">Nuevo Alumno +</Button>
+        <Button size="lg" color="pink" class="ms-auto shrink-0"
+          >Nuevo Alumno +</Button
+        >
       </div>
 
       <!-- Inline filters for desktop screens -->
       {#if !filtersCollapsed}
-        <div class="flex w-full flex-nowrap items-center gap-3 whitespace-nowrap">
+        <div
+          class="flex w-full flex-nowrap items-center gap-3 whitespace-nowrap"
+        >
           <Search
             size="md"
             class={SEARCH_INLINE_CLASS}
@@ -190,10 +196,12 @@
             placeholder="Plan:"
             onchange={notifyPlanFilter}
           />
-          <Button size="lg" color="pink" class="ms-auto shrink-0">Nuevo Alumno +</Button>
+          <Button size="lg" color="pink" class="ms-auto shrink-0"
+            >Nuevo Alumno +</Button
+          >
         </div>
       {/if}
-      </div>
+    </div>
 
     <!-- Drawer-style filters for tablet & mobile -->
     {#if filtersCollapsed}
