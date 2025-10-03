@@ -1,18 +1,5 @@
-<script context="module" lang="ts">
-  export type Column<T> = {
-    header: string;
-    /** clave directa en el objeto (ej. 'nombre', 'plan') */
-    key?: keyof T;
-    /** tipo de render básico */
-    type?: "text" | "date" | "status" | "title";
-    /** clase opcional para la celda */
-    class?: string;
-    /** si necesitas un valor custom (gana sobre key) */
-    accessor?: (row: T) => unknown;
-  };
-</script>
-
 <script lang="ts">
+  import type { Column } from "$lib/types/column";
   import type { User } from "$lib/types/user";
   import { getValue, statusPillClasses } from "$lib/utils/utils";
   import {
@@ -27,8 +14,8 @@
   export let onClick: (user: User) => void = () => {};
   export let users: User[] = [];
   export let columns: Column<User>[] = [
-    { header: "Nombre(s)", key: "nombre", type:"title" },
-    { header: "Apellido(s)", key: "apellidos", type:"title" },
+    { header: "Nombre(s)", key: "nombre", type: "title" },
+    { header: "Apellido(s)", key: "apellidos", type: "title" },
     { header: "Plan", key: "plan" },
     { header: "Clases realizadas", key: "clases_tomadas" },
     { header: "Días de cortesía", key: "dias_de_gracia" },
@@ -37,8 +24,8 @@
     { header: "Estado", key: "estado", type: "status" },
     { header: "Estado de pago", key: "estado_pago", type: "status" },
   ];
-
 </script>
+
 <Table>
   <TableHead>
     {#each columns as col}
@@ -48,9 +35,9 @@
 
   <TableBody>
     {#each users as u}
-      <TableBodyRow onclick={() => onClick(u)} >
+      <TableBodyRow onclick={() => onClick(u)}>
         {#each columns as col}
-          <TableBodyCell class={col.class} >
+          <TableBodyCell class={col.class}>
             {#if col.type === "status"}
               <span
                 class={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ${statusPillClasses(getValue(u, col))}`}

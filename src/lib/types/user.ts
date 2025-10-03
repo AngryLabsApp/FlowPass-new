@@ -11,17 +11,17 @@ export interface User {
   monto: number;
   medio_de_pago: string | null;
   codigo_ingreso: string;
-  fecha_inicio_plan: string;   // puedes usar Date si parseas
-  fecha_alta: string;          // idem
-  proxima_fecha_pago: string;  // idem
+  fecha_inicio_plan: string; // puedes usar Date si parseas
+  fecha_alta: string; // idem
+  proxima_fecha_pago: string; // idem
   cumpleanos: string | null;
   dias_de_gracia: number;
-  notificar: string;           // quizá más adelante convenga un enum: "Si" | "No"
-  estado_pago: string;         // idem: "Pagado" | "Pendiente"
-  patologias: string;
+  notificar: string; // quizá más adelante convenga un enum: "Si" | "No"
+  estado_pago: string; // idem: "Pagado" | "Pendiente"
+  patologias?: string;
   identificacion: string;
   direccion: string;
-  de_viaje: string;            // idem: "Si" | "No"
+  de_viaje: string; // idem: "Si" | "No"
   is_plan_partner: boolean;
   is_plan_principal: boolean;
   partner_id: string | null;
@@ -33,6 +33,9 @@ export interface User {
   partner_estado: string | null;
   partner_dias_de_gracia: number | null;
   partner_monto: number | null;
-  partner_fecha_inicio_plan: string | null;  // idem
+  partner_fecha_inicio_plan: string | null; // idem
   partner_proxima_fecha_pago: string | null; // idem
+
+  full_name?: string; // campo virtual, no está en la base de datos
+  clases_restantes?: string;
 }

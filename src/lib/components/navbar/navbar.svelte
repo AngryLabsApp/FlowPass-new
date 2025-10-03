@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { debounce } from "$lib/utils/utils";
   import {
     Navbar,
     NavLi,
@@ -32,6 +33,48 @@
     { value: "pa", name: "Parejas" },
     { value: "il", name: "Ilimitado" },
   ];
+
+  // Callbacks opcionales que el padre puede pasar
+  let {
+    onSearch,
+    debounceMs = 350,
+    query = $bindable(""),
+  } = $props<{
+    onSearch?: (q: string) => void; // se llama (debounced) mientras escribe
+    debounceMs?: number;
+    query: string;
+  }>();
+  let hasInteracted = $state(false);
+  let inputEl: HTMLInputElement | undefined = $state();
+
+  // util: debounce
+
+  const debouncedSearch = debounce((q: string) => onSearch?.(q), debounceMs);
+
+  // Listener de teclado sobre el INPUT nativo (usando elementRef)
+  $effect(() => {
+    if (!inputEl) return;
+
+    const onInput = () => {
+      if (!hasInteracted) hasInteracted = true;
+      debouncedSearch(query);
+    };
+
+    const handler = (e: KeyboardEvent) => {
+      if (!hasInteracted) hasInteracted = true;
+      if (e.key === "Enter") {
+        e.preventDefault();
+        onSearch?.(query);
+      }
+    };
+    inputEl.addEventListener("input", onInput);
+    inputEl.addEventListener("keydown", handler);
+    // cleanup al desmontar o cambiar el ref
+    return () => {
+      inputEl?.removeEventListener("keydown", handler);
+      inputEl?.removeEventListener("input", onInput);
+    };
+  });
 </script>
 
 <Navbar class="px-0 py-0 sm:px-0 mb-4">
@@ -47,6 +90,8 @@
           size="md"
           class="w-full md:w-auto md:ms-auto"
           placeholder="Search..."
+          bind:value={query}
+          bind:elementRef={inputEl}
         />
       </NavLi>
       <NavLi class="w-full md:w-auto py-0 pe-0 ps-0">
@@ -72,11 +117,13 @@
     <div class="flex md:order-1"></div>
 
     <div
-      class="flex md:order-2 items-center w-full md:w-auto justify-between md:justify-end gap-1"
+      class="flex md:order-2 w-full md:w-auto flex-col md:flex-row md:items-center gap-2 md:gap-1 md:justify-end"
     >
-      <Button size="lg" color="pink">Nuevo Alumno +</Button>
+      <Button size="lg" color="pink" class="w-full md:w-auto"
+        >Nuevo Alumno +</Button
+      >
       <ToolbarButton
-        class="md:hidden"
+        class="w-full md:hidden"
         onclick={toggle}
         aria-label="Abrir filtros"
         aria-expanded={!hidden}
