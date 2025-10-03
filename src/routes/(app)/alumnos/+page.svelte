@@ -10,10 +10,11 @@
   import { Select, Label } from "flowbite-svelte";
   import type { User } from "$lib/types/user";
   import type { QueryParams } from "$lib/types/queryparams";
-  import { BuildQueryParams } from "$lib/utils/utils";
+  import { BuildQueryParams, MapPlanCatalog } from "$lib/utils/utils";
   import { FilterKeys } from "$lib/enums/filter_keys";
   import type { DashboardFilters } from "$lib/types/dashboardFilters";
   import { SORT_CATALOG } from "$lib/catalog/sort_catalog";
+  import { getPlanes } from "$lib/services/api/planes";
 
 
 
@@ -21,8 +22,11 @@
   let error = $state("");
   let loading = $state(true);
   let users: User[] = $state([]);
+  let planes_catalog:{ value: string; name: string; }[] =  $state([{value:"all", name:"Planes: Todos"}]);
 
   onMount(async () => {
+    const planes = await getPlanes();
+    planes_catalog = MapPlanCatalog(planes);
     await fetchAlumnos();
   });
 
@@ -35,7 +39,6 @@
 
   let sort_type = $state("created_desc");
   let filters:DashboardFilters = {page:1, estado:"", plan:"", search:"", sort:"created_desc"};
-  console.log("Filters", filters);
   let currentAbort: AbortController | null = null;
 
   async function setValue(key: FilterKeys, value: string) {
@@ -84,7 +87,7 @@
   }
 </script>
 
-<Navbar onSearch={(key: FilterKeys, val: string) => setValue(key, val)} />
+<Navbar onSearch={(key: FilterKeys, val: string) => setValue(key, val)} PLANES_CATALOG={planes_catalog} />
 <div class="grid grid-cols-2 gap-4 mb-5">
   <Heading tag="h3">Alumnos</Heading>
   <div class="flex items-center gap-3 justify-end">
