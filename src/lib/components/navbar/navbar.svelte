@@ -18,27 +18,17 @@
   let statusSelected = $state("all");
   let planSelected = $state("all");
   let query = $state("");
-  let plans = [
-    { value: "all", name: "Plan: Todos" },
-    { value: "12G", name: "12 Sesiones Mensuales" },
-    { value: "16G", name: "16 Sesiones Mensuales" },
-    { value: "20G", name: "20 Sesiones Mensuales" },
-    { value: "cl", name: "Clase Libre" },
-    { value: "cg", name: "Clase Gratis" },
-    { value: "12P", name: "12 Sesiones Personalizadas" },
-    { value: "16P", name: "16 Sesiones Personalizadas" },
-    { value: "20P", name: "20 Sesiones Personalizadas" },
-    { value: "pa", name: "Parejas" },
-    { value: "il", name: "Ilimitado" },
-  ];
+ 
 
   // Callbacks opcionales que el padre puede pasar
   let {
     onSearch,
     debounceMs = 350,
+    PLANES_CATALOG =[],
   } = $props<{
     onSearch?: (key: FilterKeys, q: string) => void; // se llama (debounced) mientras escribe
     debounceMs?: number;
+    PLANES_CATALOG: { value: string; name: string; }[];
   }>();
   let hasInteracted = $state(false);
   let inputEl: HTMLInputElement | undefined = $state();
@@ -106,7 +96,7 @@
         <Select
           size="md"
           class="w-full md:w-auto md:ms-auto md:min-w-[135px]"
-          items={plans}
+          items={PLANES_CATALOG}
           bind:value={planSelected}
           placeholder="Plan:"
           onchange={() => {

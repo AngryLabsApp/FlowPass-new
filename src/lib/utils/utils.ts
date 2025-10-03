@@ -1,5 +1,6 @@
 import type { Column } from "$lib/types/column";
 import type { DashboardFilters } from "$lib/types/dashboardFilters";
+import type { Plan } from "$lib/types/planes";
 import type { QueryParams } from "$lib/types/queryparams";
 import type { User } from "$lib/types/user";
 
@@ -186,3 +187,16 @@ export function BuildQueryParams(filters: DashboardFilters): QueryParams {
   }
   return queryParams;
 };
+
+export function MapPlanCatalog(planes: Plan[]){
+  const sorted = planes.sort((a, b) => (Number(a.order ?? Infinity) - Number(b.order ?? Infinity)));
+  const catalog = sorted.map( (item) => {
+    return {
+       value: item.value,
+      name: item.label
+    }
+  });
+  catalog.unshift({value:"all", name:"Planes: Todos"});
+  return catalog;
+
+}
