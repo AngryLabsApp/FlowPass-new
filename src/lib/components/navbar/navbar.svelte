@@ -13,6 +13,7 @@
     Select,
   } from "flowbite-svelte";
   import { AdjustmentsHorizontalSolid } from "flowbite-svelte-icons";
+   import { newUserForm } from "$lib/services/api/users";
 
   // Layout constants keep responsive tweaks easy to tweak in one place.
   const DESKTOP_MEDIA_QUERY = "(min-width: 1024px)";
@@ -241,6 +242,9 @@
       size="lg"
       color="pink"
       class="fixed top-2 right-[35px] z-50 w-auto"
+      onclick={() => {
+         newUserForm();
+      }}
     >
       Nuevo Alumno +
     </Button>

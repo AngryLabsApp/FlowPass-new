@@ -15,6 +15,7 @@
   import type { DashboardFilters } from "$lib/types/dashboardFilters";
   import { SORT_CATALOG } from "$lib/catalog/sort_catalog";
   import { getPlanes } from "$lib/services/api/planes";
+  import { USER_TABLE_COLUMNS } from "$lib/catalog/user_table_columns";
 
 
 
@@ -125,8 +126,7 @@
   <SkeletonTable
     rows={10}
     cellHeights="h-4"
-    withFooter={false}
-    headers={["Product name", "Color", "Category", "Price"]}
+    headers={USER_TABLE_COLUMNS}
   />
 {:else if error}
   <p class="text-red-600">{error}</p>

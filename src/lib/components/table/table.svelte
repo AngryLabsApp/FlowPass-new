@@ -1,6 +1,5 @@
 <script lang="ts">
   import { USER_TABLE_COLUMNS } from "$lib/catalog/user_table_columns";
-  import type { Column } from "$lib/types/column";
   import type { User } from "$lib/types/user";
   import {
     getValue,

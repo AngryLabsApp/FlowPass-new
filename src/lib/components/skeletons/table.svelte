@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { USER_TABLE_COLUMNS } from "$lib/catalog/user_table_columns";
+  import type { Column } from "$lib/types/column";
+  import type { User } from "$lib/types/user";
   import {
     Table,
     TableHead,
@@ -10,11 +11,12 @@
   } from "flowbite-svelte";
   export let rows = 10; // cuántas filas “fake”
   export let cellHeights = "h-4"; // altura de cada skeleton
+  export let headers: Column<User>[]; // columnas de la tabla
 </script>
 
 <Table class="animate-pulse">
   <TableHead>
-    {#each USER_TABLE_COLUMNS as col}
+    {#each headers as col}
       <TableHeadCell>{col.header}</TableHeadCell>
     {/each}
   </TableHead>
@@ -22,7 +24,7 @@
   <TableBody>
     {#each Array(rows) as _}
       <TableBodyRow>
-        {#each USER_TABLE_COLUMNS as col}
+        {#each headers as col}
           <TableBodyCell>
             <div
               class={`bg-gray-200 rounded ${cellHeights} w-full max-w-[12rem]`}
