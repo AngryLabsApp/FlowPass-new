@@ -219,3 +219,9 @@ export function fmtUser(user: User): User {
 
   return format;
 }
+
+export function fmtYearMonth(date: Date): string {
+   return date
+        ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`
+        : "";
+}

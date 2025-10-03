@@ -5,3 +5,11 @@ export interface DashboardFilters {
   page?: number;
   sort:string;
 }
+
+export interface PagosFilters {
+  search?: string;
+  estado_pago?: string;
+  start_date?: string;
+  end_date?: string;
+  page?: number;
+  }

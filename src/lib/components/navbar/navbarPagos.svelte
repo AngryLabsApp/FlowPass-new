@@ -43,12 +43,12 @@
   let inputEl: HTMLInputElement | undefined = $state();
 
   const notifyStatusFilter = () => {
-    onSearch?.(FilterKeys.ESTADO, statusSelected);
+    onSearch?.(FilterKeys.ESTADO_PAGO, statusSelected);
   };
   const notifyDateFilter = () => {
     onSearch?.(
       FilterKeys.DATE,
-      selectedDate ? selectedDate.toLocaleDateString() : ""
+      selectedDate
     );
   };
 

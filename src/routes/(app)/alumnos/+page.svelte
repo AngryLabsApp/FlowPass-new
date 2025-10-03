@@ -44,7 +44,6 @@
   let currentAbort: AbortController | null = null;
 
   async function setValue(key: FilterKeys, value: string) {
-    console.log("setValue called with", key, value);
     if (key === FilterKeys.SEARCH) {
       page = 1;
       filters.search = value;
