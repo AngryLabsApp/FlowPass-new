@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { ESTADO_PLANES } from "$lib/catalog/estados_planes";
   import { FilterKeys } from "$lib/enums/filter_keys";
   import { debounce } from "$lib/utils/utils";
   import { onMount, tick } from "svelte";
@@ -11,9 +10,12 @@
     Button,
     ToolbarButton,
     Select,
+    Datepicker,
+    P,
   } from "flowbite-svelte";
   import { AdjustmentsHorizontalSolid } from "flowbite-svelte-icons";
-   import { newUserForm } from "$lib/services/api/users";
+  import { newUserForm } from "$lib/services/api/users";
+  import { ESTADO_PAGOS } from "$lib/catalog/estados_pagos";
 
   // Layout constants keep responsive tweaks easy to tweak in one place.
   const DESKTOP_MEDIA_QUERY = "(min-width: 1024px)";
@@ -23,38 +25,31 @@
 
   // Reactive state for the three filters + responsive layout toggle.
   let statusSelected = $state("all");
-  let planSelected = $state("all");
   let query = $state("");
   let filtersCollapsed = $state(true);
+  // <P class="mt-4">Selected date: {selectedDate ? selectedDate.toLocaleDateString() : "None"}</P>
 
   // DOM refs used to calculate when the inline filters overflow.
   let filtersContainerEl: HTMLDivElement | undefined = $state();
   let measurementRowEl: HTMLDivElement | undefined = $state();
 
   // Callbacks opcionales que el padre puede pasar
-  let { onSearch, debounceMs = 350, PLANES_CATALOG =[] } = $props<{
+  let { onSearch, debounceMs = 350, selectedDate = $bindable<Date | undefined>(new Date()) } = $props<{
     onSearch?: (key: FilterKeys, q: string) => void; // se llama (debounced) mientras escribe
     debounceMs?: number;
-    PLANES_CATALOG: { value: string; name: string; }[];
+    selectedDate: Date | undefined;
   }>();
   let hasInteracted = $state(false);
   let inputEl: HTMLInputElement | undefined = $state();
 
-  // util: debounce
-
-  // Fire search callback with a tiny delay so we don't spam requests.
-  const debouncedSearch = debounce(
-    (q: string) => onSearch?.(FilterKeys.SEARCH, q),
-    debounceMs
-  );
-
-  // Convenience helpers so template remains tidy.
   const notifyStatusFilter = () => {
     onSearch?.(FilterKeys.ESTADO, statusSelected);
   };
-
-  const notifyPlanFilter = () => {
-    onSearch?.(FilterKeys.PLAN, planSelected);
+  const notifyDateFilter = () => {
+    onSearch?.(
+      FilterKeys.DATE,
+      selectedDate ? selectedDate.toLocaleDateString() : ""
+    );
   };
 
   // Listener de teclado sobre el INPUT nativo (usando elementRef)
@@ -81,6 +76,10 @@
       inputEl?.removeEventListener("input", onInput);
     };
   });
+  const debouncedSearch = debounce(
+    (q: string) => onSearch?.(FilterKeys.SEARCH, q),
+    debounceMs
+  );
 
   // Decide whether we render the inline row or the stacked drawer version.
   const updateCollapse = () => {
@@ -139,25 +138,27 @@
           bind:value={query}
           bind:elementRef={inputEl}
         />
-        <Select
-          size="md"
-          class={SELECT_INLINE_CLASS}
-          items={ESTADO_PLANES}
-          bind:value={statusSelected}
-          placeholder="Estado:"
+        <Datepicker
+          bind:value={selectedDate}
+          onchange={() => onSearch?.(FilterKeys.DATE, selectedDate)}
+
         />
+
         <Select
           size="md"
           class={SELECT_INLINE_CLASS}
-          items={PLANES_CATALOG}
-          bind:value={planSelected}
-          placeholder="Plan:"
+          items={ESTADO_PAGOS}
+          bind:value={statusSelected}
+          placeholder="Estado del pago:"
+          onchange={notifyStatusFilter}
         />
       </div>
 
       <!-- Inline filters for desktop screens -->
       {#if !filtersCollapsed}
-        <div class="flex w-full flex-nowrap items-center gap-3 whitespace-nowrap">
+        <div
+          class="flex w-full flex-nowrap items-center gap-3 whitespace-nowrap"
+        >
           <Search
             size="md"
             class={SEARCH_INLINE_CLASS}
@@ -165,21 +166,15 @@
             bind:value={query}
             bind:elementRef={inputEl}
           />
+          <Datepicker bind:value={selectedDate} onselect={notifyDateFilter} />
+
           <Select
             size="md"
             class={SELECT_INLINE_CLASS}
-            items={ESTADO_PLANES}
+            items={ESTADO_PAGOS}
             bind:value={statusSelected}
-            placeholder="Estado:"
+            placeholder="Estado del pago:"
             onchange={notifyStatusFilter}
-          />
-          <Select
-            size="md"
-            class={SELECT_INLINE_CLASS}
-            items={PLANES_CATALOG}
-            bind:value={planSelected}
-            placeholder="Plan:"
-            onchange={notifyPlanFilter}
           />
         </div>
       {/if}
@@ -201,23 +196,16 @@
           />
         </NavLi>
         <NavLi class="w-full py-0 pe-0 ps-0">
-          <Select
-            size="md"
-            class={SELECT_STACKED_CLASS}
-            items={ESTADO_PLANES}
-            bind:value={statusSelected}
-            placeholder="Estado:"
-            onchange={notifyStatusFilter}
-          />
+          <Datepicker bind:value={selectedDate} onselect={notifyDateFilter} />
         </NavLi>
         <NavLi class="w-full py-0 pe-0 ps-0">
           <Select
             size="md"
             class={SELECT_STACKED_CLASS}
-            items={PLANES_CATALOG}
-            bind:value={planSelected}
-            placeholder="Plan:"
-            onchange={notifyPlanFilter}
+            items={ESTADO_PAGOS}
+            bind:value={statusSelected}
+            placeholder="Estado del pago:"
+            onchange={notifyStatusFilter}
           />
         </NavLi>
       </NavUl>
@@ -244,10 +232,10 @@
       color="pink"
       class="fixed top-2 right-[35px] z-50 w-auto"
       onclick={() => {
-         newUserForm();
+        newUserForm();
       }}
     >
-      Nuevo Alumno +
+      Descargar historial
     </Button>
   {/snippet}
 </Navbar>
