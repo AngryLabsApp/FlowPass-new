@@ -199,4 +199,23 @@ export function MapPlanCatalog(planes: Plan[]){
   catalog.unshift({value:"all", name:"Planes: Todos"});
   return catalog;
 
+  }
+
+export function fmtUser(user: User): User {
+  const format = { ...user } as User;
+
+  format.full_name =
+    `${toTitleCase(user?.nombre ?? "")} ${toTitleCase(user?.apellidos ?? "")}`.trim();
+
+  format.id = user.id ?? "";
+  format.codigo_ingreso = (user.codigo_ingreso ?? "").replace(/^c-/i, "");
+  format.fecha_alta = formatMemberSince(user.fecha_alta);
+  format.clases_restantes = fmtClasesRestantes(user);
+  format.fecha_inicio_plan = fmtDate(user.fecha_inicio_plan);
+  format.proxima_fecha_pago = fmtDate(user.proxima_fecha_pago);
+  format.cumpleanos = fmtDate(user.cumpleanos ?? "");
+  format.notificar = user.notificar ?? "No";
+  format.patologias = user?.patologias?.length ? user.patologias : "-";
+
+  return format;
 }

@@ -23,7 +23,6 @@
     onSearch(FilterKeys.PAGE, "");
   }
 </script>
-
 <div class="flex items-center justify-between gap-3">
   <!-- Texto a la derecha -->
   <div class="text-sm text-gray-700 dark:text-gray-400">
