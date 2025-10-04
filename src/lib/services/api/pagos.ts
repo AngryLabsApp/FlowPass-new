@@ -3,7 +3,7 @@ import type { getPagosResponse, getPagosTotalByMonthResponse } from "$lib/types/
 
 import type { QueryParams } from "$lib/types/queryparams";
 
-import { buildUrl, mapIfPartnerUser } from "$lib/utils/utils";
+import { buildUrl } from "$lib/utils/utils";
 
 const PAGOS_URL = "https://n8n.angrylabs.app/webhook/bcfb0eb3-b085-4413-a1a3-358cdff22b43";
 
