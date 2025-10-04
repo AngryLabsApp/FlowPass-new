@@ -60,14 +60,10 @@
     currentAbort = abort;
 
     let queryParams: QueryParams = BuildQueryParamsPagos(filters);
-    console.log("Fetching pagos with params:", queryParams);
     try {
       loading = true;
       const res = await getPagos(abort, queryParams);
-      console.log(res);
       if (currentAbort !== abort) return;
-
-
       pagos = res.pagos;
       const pageSize = 10;
 

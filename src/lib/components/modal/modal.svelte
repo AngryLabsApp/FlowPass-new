@@ -105,7 +105,6 @@
     <Button
       color="alternative"
       onclick={() => {
-        console.log("ACTUALIZO");
         show_renovar_plan = !show_renovar_plan
 
       }}
