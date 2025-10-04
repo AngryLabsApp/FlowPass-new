@@ -6,7 +6,7 @@ import type { QueryParams } from "$lib/types/queryparams";
 import { buildUrl } from "$lib/utils/utils";
 
 const PAGOS_URL = "https://n8n.angrylabs.app/webhook/bcfb0eb3-b085-4413-a1a3-358cdff22b43";
-
+const FORM_PAGOS_URL = "https://n8n.angrylabs.app/form/1d2dd8b6-8778-4783-962f-71386411932b";
 
 export async function getPagos(
   currentAbort: AbortController,
@@ -40,3 +40,6 @@ export async function getTotalByMonth(
   }
 }
 
+export function descargarPagos(){
+    window.open(FORM_PAGOS_URL, "_other");
+}

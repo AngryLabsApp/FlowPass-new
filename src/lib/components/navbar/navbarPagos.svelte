@@ -11,11 +11,11 @@
     ToolbarButton,
     Select,
     Datepicker,
-    P,
+
   } from "flowbite-svelte";
   import { AdjustmentsHorizontalSolid } from "flowbite-svelte-icons";
-  import { newUserForm } from "$lib/services/api/users";
   import { ESTADO_PAGOS } from "$lib/catalog/estados_pagos";
+  import { descargarPagos } from "$lib/services/api/pagos";
 
   // Layout constants keep responsive tweaks easy to tweak in one place.
   const DESKTOP_MEDIA_QUERY = "(min-width: 1024px)";
@@ -232,7 +232,7 @@
       color="pink"
       class="fixed top-2 right-[35px] z-50 w-auto"
       onclick={() => {
-        newUserForm();
+        descargarPagos();
       }}
     >
       Descargar historial
