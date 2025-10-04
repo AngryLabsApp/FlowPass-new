@@ -1,5 +1,5 @@
 import type { Column } from "$lib/types/column";
-import type { DashboardFilters } from "$lib/types/dashboardFilters";
+import type { DashboardFilters, PagosFilters } from "$lib/types/dashboardFilters";
 import type { Plan } from "$lib/types/planes";
 import type { QueryParams } from "$lib/types/queryparams";
 import type { User } from "$lib/types/user";
@@ -36,7 +36,7 @@ export function fmtDate(value: string) {
 }
 
 export function toTitleCase(str: string) {
-  return str.toLowerCase().replace(/(?:^|\s)\p{L}/gu, (c) => c.toUpperCase());
+  return str ? str.toLowerCase().replace(/(?:^|\s)\p{L}/gu, (c) => c.toUpperCase()): "";
 }
 
 export function statusPillClasses(value: unknown) {
@@ -183,6 +183,27 @@ export function BuildQueryParams(filters: DashboardFilters): QueryParams {
   if (typeof filters?.estado === "string" && filters.estado.length > 0 && filters.estado.trim() !== "all") {
     queryParams["field" + counter] = "estado";
     queryParams["value" + counter] = filters.estado;
+    counter++;
+  }
+  return queryParams;
+};
+
+export function BuildQueryParamsPagos(filters: PagosFilters): QueryParams {
+  let queryParams: QueryParams = {
+    page: filters.page ?? 1,
+  };
+  filters.start_date && (queryParams.start_date = filters.start_date);
+  filters.end_date && (queryParams.end_date = filters.end_date);
+  let counter = 1;
+  if (typeof filters?.search === "string" && filters.search.length > 0) {
+
+    queryParams["field" + counter] = "nombre";
+    queryParams["value" + counter] = filters.search;
+    counter++;
+  }
+  if (typeof filters?.estado_pago === "string" && filters.estado_pago.length > 0   && filters.estado_pago.trim() !== "all") {
+    queryParams["field" + counter] = "estado_pago";
+    queryParams["value" + counter] = filters.estado_pago;
     counter++;
   }
   return queryParams;

@@ -131,6 +131,6 @@
 {:else if error}
   <p class="text-red-600">{error}</p>
 {:else}
-  <UserTable {users} onClick={tableOnclick} />
+  <UserTable data={users} onClick={tableOnclick}  headers={USER_TABLE_COLUMNS}/>
   <Pagination  pagination_values={pagination_values} bind:page={page} onSearch={(key: FilterKeys, val: string) => setValue(key, val)}/>
 {/if}

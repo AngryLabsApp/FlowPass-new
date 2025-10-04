@@ -1,6 +1,0 @@
-@layer reset, tokens, typography, global;
-
-@import "./reset.css" layer(reset);
-@import "./tokens.css" layer(tokens);
-@import "./typography.css" layer(typography);
-@import "./global.css" layer(global);

@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { USER_TABLE_COLUMNS } from "$lib/catalog/user_table_columns";
-  import type { User } from "$lib/types/user";
+  import type { Column } from "$lib/types/column";
   import {
     getValue,
     statusPillClasses,
@@ -14,22 +13,23 @@
     TableBodyCell,
   } from "flowbite-svelte";
 
-  export let onClick: (user: User) => void = () => {};
-  export let users: User[] = [];
+  export let onClick: (item: any) => void = () => {};
+  export let data: any[] = [];
+  export let headers: Column<any>[]; 
 
 </script>
 
 <Table>
   <TableHead>
-    {#each USER_TABLE_COLUMNS as col}
+    {#each headers as col}
       <TableHeadCell>{col.header}</TableHeadCell>
     {/each}
   </TableHead>
 
   <TableBody>
-    {#each users as u}
+    {#each data as u}
       <TableBodyRow onclick={() => onClick(u)}>
-        {#each USER_TABLE_COLUMNS as col}
+        {#each headers as col}
           <TableBodyCell class={col.class}>
             {#if col.type === "status"}
               <span
