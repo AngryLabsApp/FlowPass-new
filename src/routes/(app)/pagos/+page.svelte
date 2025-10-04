@@ -65,6 +65,7 @@
       const res = await getPagos(abort, queryParams);
       if (currentAbort !== abort) return;
       pagos = res.pagos;
+
       const pageSize = 10;
 
       const start = res.total ? (page - 1) * pageSize + 1 : 0;

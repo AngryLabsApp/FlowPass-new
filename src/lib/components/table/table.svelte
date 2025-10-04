@@ -1,9 +1,6 @@
 <script lang="ts">
   import type { Column } from "$lib/types/column";
-  import {
-    getValue,
-    statusPillClasses,
-  } from "$lib/utils/utils";
+  import { getValue, statusPillClasses } from "$lib/utils/utils";
   import {
     Table,
     TableHead,
@@ -15,8 +12,7 @@
 
   export let onClick: (item: any) => void = () => {};
   export let data: any[] = [];
-  export let headers: Column<any>[]; 
-
+  export let headers: Column<any>[];
 </script>
 
 <Table>
@@ -46,5 +42,10 @@
         {/each}
       </TableBodyRow>
     {/each}
+    {#if data.length <= 0}
+      <TableBodyRow>
+        <TableBodyCell>Sin Registros</TableBodyCell>
+      </TableBodyRow>
+    {/if}
   </TableBody>
 </Table>
