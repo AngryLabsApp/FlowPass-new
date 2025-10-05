@@ -1,5 +1,6 @@
 <script lang="ts">
   import Loader from "$lib/components/loader/loader.svelte";
+  import IngresoModal from "$lib/components/modal/ingreso_modal.svelte";
   import { ingresoByCode } from "$lib/services/api/ingreso";
   import type { IngresoResponse } from "$lib/types/ingresoResponse";
   import type { QueryParams } from "$lib/types/queryparams";
@@ -20,7 +21,7 @@
   } from "flowbite-svelte-icons";
 
   let error_message = $state("");
-  let open_modal = $state(false);
+  let openModal = $state(false);
   let code_value = $state("");
   let elementRef = $state() as HTMLInputElement;
   let loading = $state(false);
@@ -79,6 +80,7 @@
     let user = null;
 
     try {
+      openModal= false;
       loading = true;
       const response: IngresoResponse = await ingresoByCode(queryParams);
       const ok = !response.error;
@@ -96,7 +98,8 @@
           return;
         }
 
-        open_modal = true;
+
+        showIngresoModal();
 
         onClean("all");
         elementRef?.focus();
@@ -150,6 +153,16 @@
     clearTimeout((showError as any).timeout);
     (showError as any).timeout = setTimeout(() => {
       error_message = "";
+    }, duration);
+  }
+
+  function showIngresoModal(duration = 5000) {
+    openModal = true;
+    
+    // limpiar cualquier timeout previo
+    clearTimeout((showIngresoModal as any).timeout);
+    (showIngresoModal as any).timeout = setTimeout(() => {
+      openModal = false;
     }, duration);
   }
 </script>
@@ -228,4 +241,5 @@
     </form>
   </Card>
 </div>
+<IngresoModal bind:openModal></IngresoModal>
 <Loader bind:openModal={loading} title={"Registrando ingreso"}></Loader>
