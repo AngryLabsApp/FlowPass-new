@@ -1,13 +1,35 @@
 <script lang="ts">
-  import { Card, Avatar, Button, Heading, Label, Input } from "flowbite-svelte";
+  import Loader from "$lib/components/loader/loader.svelte";
+  import { ingresoByCode } from "$lib/services/api/ingreso";
+  import type { IngresoResponse } from "$lib/types/ingresoResponse";
+  import type { QueryParams } from "$lib/types/queryparams";
+  import { fmtDate } from "$lib/utils/utils";
+  import {
+    Card,
+    Avatar,
+    Button,
+    Heading,
+    Label,
+    Input,
+    Alert,
+  } from "flowbite-svelte";
   import {
     ArrowLeftOutline,
     LockOutline,
     TrashBinOutline,
   } from "flowbite-svelte-icons";
 
+  let error_message = $state("");
+  let open_modal = $state(false);
   let code_value = $state("");
   let elementRef = $state() as HTMLInputElement;
+  let loading = $state(false);
+  function buildNonActiveMsg(user: any) {
+    const estado = String(user?.estado || "").trim();
+    const estadoMostrar = estado || "desconocido";
+    return `Tu suscripción está en estado ${estadoMostrar}. Por favor activa tu suscripción de nuevo.`;
+  }
+
   const onClickPad = (value: string) => {
     if (/^\d$/.test(value)) {
       code_value += value;
@@ -40,6 +62,85 @@
 
     code_value = sanitized;
   };
+
+  const onSubmit = async (e: any) => {
+    const event = e as InputEvent;
+    //event.preventDefault();
+
+    if (code_value && (code_value.length < 4 || code_value.length > 6)) {
+      //condigo no existe
+      error_message = "El código no existe.";
+      onClean("all");
+      elementRef?.focus();
+      return;
+    }
+    const queryParams: QueryParams = { code: code_value };
+    let user = null;
+    error_message = "";
+    try {
+      loading = true;
+      const response: IngresoResponse = await ingresoByCode(queryParams);
+      const ok = !response.error;
+      if (ok) {
+        const u = response.user;
+        const estado = String(u?.estado || "")
+          .trim()
+          .toLowerCase();
+        // Validación SIEMPRE: si no está activo, mostrar mensaje y no abrir modal
+        if (u && estado && estado !== "activo") {
+          const text = buildNonActiveMsg(u);
+          error_message = text;
+          onClean("all");
+          elementRef?.focus();
+          return;
+        }
+
+        open_modal = true;
+
+        onClean("all");
+        elementRef?.focus();
+      } else {
+        user = response.user;
+        throw new Error(response.reason);
+      }
+      onClean("all");
+      elementRef?.focus();
+    } catch (error: any) {
+      console.log(error.message);
+      error_message = error.message;
+      let text = "El código no existe.";
+
+      // Prioriza errores por estado cuando el backend responde error
+      const estado = String(user?.estado || "")
+        .trim()
+        .toLowerCase();
+      if (user && estado && estado !== "activo") {
+        text = buildNonActiveMsg(user);
+      } else {
+        // Si el estado es activo (o desconocido), cae a razones específicas
+        switch (error_message) {
+          case "PLAN_VENCIDO":
+            console.log("entro");
+            text = `El plan de ${user?.nombre || ""} ${
+              user?.apellidos || ""
+            } venció el ${fmtDate(user?.proxima_fecha_pago as string)}.`.trim();
+            break;
+          case "LIMITE_CLASES_SUPERADO":
+            text = `Has usado todas tus clases disponibles (${user?.clases_tomadas} de ${user?.limite_clases}).`;
+            break;
+          default:
+            // deja el mensaje por defecto si no matchea
+            break;
+        }
+      }
+      error_message = text;
+      console.log(error_message);
+      onClean("all");
+      elementRef?.focus();
+    } finally {
+      loading = false;
+    }
+  };
 </script>
 
 <div class="grid grid-cols-2 gap-4 mb-5">
@@ -54,12 +155,12 @@
       </Button>
     </div>
     <div class="flex flex-col items-center pb-4">
-      <Avatar size="lg" src="/images/profile-picture-3.webp" />
+      <Avatar size="lg" src="src/lib/assets/push-ups.webp" />
       <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">
         ¡Bienvenido!
       </h5>
     </div>
-    <form>
+    <form onsubmit={(e) => onSubmit(e)}>
       <Label class="space-y-2">
         <div>Ingresa tu código:</div>
         <Input
@@ -70,17 +171,18 @@
           bind:value={code_value}
           oninput={(e) => onInput(e)}
           onkeydown={(e) => {
-            if (e.key === "Enter") {
-              console.log("Enter pressed");
-            }
-
             if (e.key === "Delete") {
               onClean("all");
             }
           }}
         />
       </Label>
-
+      {#if error_message && error_message.length > 0}
+        <Alert color="red" class="mt-2">
+          <span class="font-medium">Ups!</span>
+          {error_message}
+        </Alert>
+      {/if}
       <div class="md:grid-cols-2 flex items-center justify-center pt-7">
         <Button size="xl" outline onclick={() => onClickPad("1")}>1</Button>
         <Button size="xl" outline onclick={() => onClickPad("2")}>2</Button>
@@ -115,3 +217,4 @@
     </form>
   </Card>
 </div>
+<Loader bind:openModal={loading} title={"Registrando ingreso"}></Loader>
