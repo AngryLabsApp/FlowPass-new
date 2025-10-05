@@ -65,18 +65,19 @@
 
   const onSubmit = async (e: any) => {
     const event = e as InputEvent;
+    error_message = "";
     //event.preventDefault();
 
     if (code_value && (code_value.length < 4 || code_value.length > 6)) {
       //condigo no existe
-      error_message = "El código no existe.";
+      showError("El código no existe.");
       onClean("all");
       elementRef?.focus();
       return;
     }
     const queryParams: QueryParams = { code: code_value };
     let user = null;
-    error_message = "";
+
     try {
       loading = true;
       const response: IngresoResponse = await ingresoByCode(queryParams);
@@ -89,7 +90,7 @@
         // Validación SIEMPRE: si no está activo, mostrar mensaje y no abrir modal
         if (u && estado && estado !== "activo") {
           const text = buildNonActiveMsg(u);
-          error_message = text;
+          showError(text);
           onClean("all");
           elementRef?.focus();
           return;
@@ -107,7 +108,7 @@
       elementRef?.focus();
     } catch (error: any) {
       console.log(error.message);
-      error_message = error.message;
+      let message = error.message;
       let text = "El código no existe.";
 
       // Prioriza errores por estado cuando el backend responde error
@@ -118,7 +119,7 @@
         text = buildNonActiveMsg(user);
       } else {
         // Si el estado es activo (o desconocido), cae a razones específicas
-        switch (error_message) {
+        switch (message) {
           case "PLAN_VENCIDO":
             console.log("entro");
             text = `El plan de ${user?.nombre || ""} ${
@@ -133,14 +134,24 @@
             break;
         }
       }
-      error_message = text;
-      console.log(error_message);
+      showError(text);
       onClean("all");
       elementRef?.focus();
     } finally {
       loading = false;
     }
   };
+
+
+  function showError(message: string, duration = 3000) {
+    error_message = message;
+
+    // limpiar cualquier timeout previo
+    clearTimeout((showError as any).timeout);
+    (showError as any).timeout = setTimeout(() => {
+      error_message = "";
+    }, duration);
+  }
 </script>
 
 <div class="grid grid-cols-2 gap-4 mb-5">
