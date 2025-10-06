@@ -93,9 +93,11 @@
       <!-- DESKTOP: Inline -->
       {#if !filter.uiState.filtersCollapsed}
         <div
-          class="flex w-full flex-nowrap items-center gap-3 whitespace-nowrap"
+          class="flex w-full flex-nowrap items-center gap-3 whitespace-nowrap justify-between"
         >
-          {@render filterGroup("desktop")}
+          <div class="flex items-center gap-3">
+            {@render filterGroup("desktop")}
+          </div>
           <Button size="lg" color="pink" class="" onclick={newUserForm}>
             Nuevo Alumno +
           </Button>
