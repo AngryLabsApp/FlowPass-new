@@ -2,7 +2,10 @@
   import Loader from "$lib/components/loader/loader.svelte";
   import IngresoModal from "$lib/components/modal/ingreso_modal.svelte";
   import { ingresoByCode } from "$lib/services/api/ingreso";
-  import type { IngresoResponse, IngresoUser } from "$lib/types/ingresoResponse";
+  import type {
+    IngresoResponse,
+    IngresoUser,
+  } from "$lib/types/ingresoResponse";
   import type { QueryParams } from "$lib/types/queryparams";
   import { fmtDate } from "$lib/utils/utils";
   import {
@@ -19,6 +22,7 @@
     LockOutline,
     TrashBinOutline,
   } from "flowbite-svelte-icons";
+  import { tick } from "svelte";
 
   let error_message = $state("");
   let openModal = $state(false);
@@ -48,6 +52,22 @@
     }
   };
 
+  $effect(() => {
+    if (!loading && !openModal) {
+      focusInputSafely();
+    }
+  });
+
+  async function focusInputSafely() {
+    await tick();
+    elementRef.focus({ preventScroll: true });
+    requestAnimationFrame(() =>
+      setTimeout(() => {
+        elementRef.focus({ preventScroll: true });
+      }, 200)
+    );
+  }
+
   const onInput = (e: any) => {
     const input = e.currentTarget as HTMLInputElement;
     const value = input.value;
@@ -67,20 +87,21 @@
   };
 
   const onSubmit = async (e: any) => {
+    e.preventDefault();
+
     error_message = "";
 
     if (code_value && (code_value.length < 4 || code_value.length > 6)) {
       //condigo no existe
       showError("El código no existe.");
       onClean("all");
-      elementRef?.focus();
       return;
     }
     const queryParams: QueryParams = { code: code_value };
     let user: IngresoUser = {} as IngresoUser;
 
     try {
-      openModal= false;
+      openModal = false;
       loading = true;
       const response: IngresoResponse = await ingresoByCode(queryParams);
       const ok = !response.error;
@@ -94,21 +115,17 @@
           const text = buildNonActiveMsg(user);
           showError(text);
           onClean("all");
-          elementRef?.focus();
           return;
         }
 
-     
         showIngresoModal();
         user_selected = user;
 
         onClean("all");
-        elementRef?.focus();
       } else {
         throw new Error(response.reason);
       }
       onClean("all");
-      elementRef?.focus();
     } catch (error: any) {
       console.log(error.message);
       let message = error.message;
@@ -139,13 +156,11 @@
       }
       showError(text);
       onClean("all");
-      elementRef?.focus();
     } finally {
       loading = false;
+      console.log(elementRef);
     }
   };
-
-
   function showError(message: string, duration = 3000) {
     error_message = message;
 
@@ -158,10 +173,10 @@
 
   function showIngresoModal(duration = 4000) {
     openModal = true;
-    
+
     // limpiar cualquier timeout previo
     clearTimeout((showIngresoModal as any).timeout);
-    (showIngresoModal as any).timeout = setTimeout(() => {
+    (showIngresoModal as any).timeout = setTimeout(async () => {
       openModal = false;
     }, duration);
   }
@@ -236,7 +251,9 @@
       </div>
 
       <div class="mt-4 flex space-y-2 lg:mt-6 rtl:space-x-reverse">
-        <Button size="xl" type="submit" disabled={code_value.length <= 0}>Registrar ingreso</Button>
+        <Button size="xl" type="submit" disabled={code_value.length <= 0}
+          >Registrar ingreso</Button
+        >
       </div>
     </form>
   </Card>
