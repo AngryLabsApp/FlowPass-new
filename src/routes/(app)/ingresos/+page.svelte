@@ -156,13 +156,13 @@
     }, duration);
   }
 
-  function showIngresoModal(duration = 5000) {
+  function showIngresoModal(duration = 4000) {
     openModal = true;
     
     // limpiar cualquier timeout previo
     clearTimeout((showIngresoModal as any).timeout);
     (showIngresoModal as any).timeout = setTimeout(() => {
-      //openModal = false;
+      openModal = false;
     }, duration);
   }
 </script>
