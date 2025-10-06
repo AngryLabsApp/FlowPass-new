@@ -1,7 +1,10 @@
 export interface IngresoResponse {
   error: boolean;
   reason: string;
-  user?: {
+  user?: IngresoUser;
+}
+
+export interface IngresoUser{
     nombre: string;
     apellidos: string;
     clases_tomadas: number;
@@ -11,5 +14,4 @@ export interface IngresoResponse {
     estado: string;
     partner_nombre: string;
     partner_apellido: string;
-  };
 }

@@ -2,7 +2,7 @@
   import Loader from "$lib/components/loader/loader.svelte";
   import IngresoModal from "$lib/components/modal/ingreso_modal.svelte";
   import { ingresoByCode } from "$lib/services/api/ingreso";
-  import type { IngresoResponse } from "$lib/types/ingresoResponse";
+  import type { IngresoResponse, IngresoUser } from "$lib/types/ingresoResponse";
   import type { QueryParams } from "$lib/types/queryparams";
   import { fmtDate } from "$lib/utils/utils";
   import {
@@ -25,6 +25,8 @@
   let code_value = $state("");
   let elementRef = $state() as HTMLInputElement;
   let loading = $state(false);
+  let user_selected: IngresoUser = $state({} as IngresoUser);
+
   function buildNonActiveMsg(user: any) {
     const estado = String(user?.estado || "").trim();
     const estadoMostrar = estado || "desconocido";
@@ -65,9 +67,7 @@
   };
 
   const onSubmit = async (e: any) => {
-    const event = e as InputEvent;
     error_message = "";
-    //event.preventDefault();
 
     if (code_value && (code_value.length < 4 || code_value.length > 6)) {
       //condigo no existe
@@ -77,34 +77,34 @@
       return;
     }
     const queryParams: QueryParams = { code: code_value };
-    let user = null;
+    let user: IngresoUser = {} as IngresoUser;
 
     try {
       openModal= false;
       loading = true;
       const response: IngresoResponse = await ingresoByCode(queryParams);
       const ok = !response.error;
+      user = response.user as IngresoUser;
       if (ok) {
-        const u = response.user;
-        const estado = String(u?.estado || "")
+        const estado = String(user?.estado || "")
           .trim()
           .toLowerCase();
         // Validación SIEMPRE: si no está activo, mostrar mensaje y no abrir modal
-        if (u && estado && estado !== "activo") {
-          const text = buildNonActiveMsg(u);
+        if (user && estado && estado !== "activo") {
+          const text = buildNonActiveMsg(user);
           showError(text);
           onClean("all");
           elementRef?.focus();
           return;
         }
 
-
+     
         showIngresoModal();
+        user_selected = user;
 
         onClean("all");
         elementRef?.focus();
       } else {
-        user = response.user;
         throw new Error(response.reason);
       }
       onClean("all");
@@ -162,7 +162,7 @@
     // limpiar cualquier timeout previo
     clearTimeout((showIngresoModal as any).timeout);
     (showIngresoModal as any).timeout = setTimeout(() => {
-      openModal = false;
+      //openModal = false;
     }, duration);
   }
 </script>
@@ -236,10 +236,10 @@
       </div>
 
       <div class="mt-4 flex space-y-2 lg:mt-6 rtl:space-x-reverse">
-        <Button size="xl" type="submit">Registrar ingreso</Button>
+        <Button size="xl" type="submit" disabled={code_value.length <= 0}>Registrar ingreso</Button>
       </div>
     </form>
   </Card>
 </div>
-<IngresoModal bind:openModal></IngresoModal>
+<IngresoModal bind:openModal user={user_selected}></IngresoModal>
 <Loader bind:openModal={loading} title={"Registrando ingreso"}></Loader>
