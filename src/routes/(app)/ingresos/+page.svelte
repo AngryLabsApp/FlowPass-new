@@ -21,9 +21,12 @@
     ArrowLeftOutline,
     LockOutline,
     TrashBinOutline,
+    LockOpenOutline,
   } from "flowbite-svelte-icons";
-  import { tick } from "svelte";
+  import { getContext, tick } from "svelte";
+  import type { Writable } from "svelte/store";
 
+  const lock = getContext<Writable<boolean>>('lock');
   let error_message = $state("");
   let openModal = $state(false);
   let code_value = $state("");
@@ -41,6 +44,7 @@
     if (/^\d$/.test(value)) {
       code_value += value;
     }
+    focusInputSafely();
   };
 
   const onClean = (type: "all" | "single") => {
@@ -50,6 +54,7 @@
     if (type == "single") {
       code_value = code_value.slice(0, -1);
     }
+    focusInputSafely();
   };
 
   $effect(() => {
@@ -141,7 +146,6 @@
         // Si el estado es activo (o desconocido), cae a razones específicas
         switch (message) {
           case "PLAN_VENCIDO":
-            console.log("entro");
             text = `El plan de ${user?.nombre || ""} ${
               user?.apellidos || ""
             } venció el ${fmtDate(user?.proxima_fecha_pago as string)}.`.trim();
@@ -158,7 +162,6 @@
       onClean("all");
     } finally {
       loading = false;
-      console.log(elementRef);
     }
   };
   function showError(message: string, duration = 3000) {
@@ -180,6 +183,11 @@
       openModal = false;
     }, duration);
   }
+
+  function togleLock(){
+    lock.update(v => !v);
+    focusInputSafely();
+  }
 </script>
 
 <div class="grid grid-cols-2 gap-4 mb-5">
@@ -189,8 +197,12 @@
 <div class="flex items-center justify-center">
   <Card class="p-4 sm:p-5 md:p-7" size="lg">
     <div class="flex justify-end">
-      <Button pill={true} outline={true} class="p-2!" size="xl">
-        <LockOutline class="text-primary-700 h-6 w-6" />
+      <Button pill={true} outline={true} class="p-2!" size="xl" onclick={()=> togleLock() }>
+        {#if $lock}
+          <LockOutline class="text-primary-700 h-6 w-6" />
+        {:else}
+          <LockOpenOutline class="text-primary-700 h-6 w-6" />
+        {/if}
       </Button>
     </div>
     <div class="flex flex-col items-center pb-4">
