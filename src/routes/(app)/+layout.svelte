@@ -71,6 +71,7 @@
 
 <svelte:head>
   <link rel="icon" href={favicon} />
+  <title>FlowPass</title>
 </svelte:head>
 
 <SidebarButton onclick={demoSidebarUi.toggle} class="mb-2" />
