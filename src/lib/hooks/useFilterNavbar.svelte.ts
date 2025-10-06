@@ -151,18 +151,11 @@ export function useFilterNavbar(options: UseFilterNavbarOptions = {}) {
     updateCollapseState();
   });
 
-  const hasActiveFilters = $derived(
-    filterState.status !== DEFAULT_CONFIG.defaultFilterValues.status ||
-      filterState.plan !== DEFAULT_CONFIG.defaultFilterValues.plan ||
-      filterState.query !== DEFAULT_CONFIG.defaultFilterValues.query
-  );
-
   // API pública del hook
   return {
     // Estado
     filterState,
     uiState,
-
     // Referencias
     refs: {
       filterContainer: {
@@ -190,14 +183,9 @@ export function useFilterNavbar(options: UseFilterNavbarOptions = {}) {
         },
       },
     },
-
     // Handlers
     handlers: filterHandlers,
-
     // Acciones
     resetFilters,
-
-    // Valores computados
-    hasActiveFilters,
   };
 }
