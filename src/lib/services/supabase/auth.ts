@@ -1,6 +1,6 @@
 import { supabase } from '$lib/services/supabase/client';
 import { goto } from '$app/navigation';
-import { PUBLIC_BD_URL, PUBLIC_BD_API } from '$env/static/public';
+import { PUBLIC_BD_URL } from '$env/static/public';
 export const ADMIN_PATH = '/alumnos';  // cambia si quieres
 export const LOGIN_PATH = '/login'; 
 /** Si ya hay sesión, redirige al panel. */
@@ -53,7 +53,7 @@ type LogoutOpts = {
 };
 
 /** Cerrar sesión con fallback de limpieza de storage y redirección. */
-export async function logout(opts: LogoutOpts = {}) {
+export async function logout(opts: LogoutOpts = {}, with_redirect = true) {
   const scope = opts.scope ?? 'local';
   const redirectTo = opts.redirectTo ?? LOGIN_PATH;
 
@@ -74,6 +74,7 @@ export async function logout(opts: LogoutOpts = {}) {
     // En cualquier error, limpia y continúa
     clearSupabaseStorage(PUBLIC_BD_URL);
   } finally {
-    goto(redirectTo);
+    if (with_redirect)
+      goto(redirectTo);
   }
 }

@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Card, Label, Input, Button, Alert, Spinner } from "flowbite-svelte";
+  import LOGO from "$lib/assets/logo-flowpass.svg";
   import {
     loginWithEmail,
     sendResetPasswordEmail,
@@ -45,11 +46,17 @@
 </script>
 
 <Card class="w-full max-w-md p-4 sm:p-6 md:p-8">
+  <header class="text-center mb-6">
+    <a
+      href="/"
+      class="flex items-center justify-center gap-2 text-xl font-bold text-gray-800"
+    >
+      <img src={LOGO} alt="FlowPass" class="h-8 w-8" />
+      <span>FlowPass</span>
+    </a>
+    <h1 class="text-2xl font-semibold mt-4">Acceso al panel</h1>
+  </header>
   <form class="flex flex-col space-y-6" on:submit={onSubmit} novalidate>
-    <h3 class="text-xl font-medium text-gray-900 dark:text-white">
-      Acceso al panel
-    </h3>
-
     {#if msg}
       <Alert color={msgType === "error" ? "red" : "green"} class="text-sm">
         {msg}
