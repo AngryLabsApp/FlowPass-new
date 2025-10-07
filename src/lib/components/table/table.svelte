@@ -27,7 +27,7 @@
       <TableBodyRow onclick={() => onClick(u)}>
         {#each headers as col}
           <TableBodyCell class={col.class}>
-            {#if col.type === "status"}
+            {#if col.type === "status" && getValue(u, col) !== ""}
               <span
                 class={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ${statusPillClasses(getValue(u, col))}`}
               >
@@ -37,6 +37,9 @@
               {col.fmt ? col.fmt(u) : ""}
             {:else}
               {getValue(u, col)}
+            {/if}
+            {#if col.icon && col.icon(u)}
+              <svelte:component this={col.icon(u)} class="w-4 h-4" />
             {/if}
           </TableBodyCell>
         {/each}
