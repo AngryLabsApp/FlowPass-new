@@ -31,9 +31,9 @@
     { value: "all", name: "Planes: Todos" },
   ]);
   let toast: ToastInterface = $state({
-        type: "error",
-        text: "asdasdasd",
-        show: true,
+        type: "success",
+        text: "",
+        show: false,
     });
 
   onMount(async () => {
@@ -141,10 +141,12 @@
     try {
       const response = await ingresoById(user.id, nuevasTomadas);
       if (response.response == "Success") {
+        setToast("¡Se registró el ingreso correctamente!", true);
         selected_user.clases_tomadas = nuevasTomadas;
         fetchAlumnos();
       }
     } catch (error) {
+      setToast("Ha ocurrido un error inesperadoHubo un problema al actualizar. Reintenta en unos segundos.", false);
     } finally {
       toast.show = true;
       setLoadingModal(false);
@@ -153,6 +155,13 @@
 
   function setLoadingModal(loading: boolean, title?: string) {
     modal_loading = { loading, title: title || "" };
+  }
+  function setToast(title?: string, success: boolean = true) {
+    toast = {
+      type: success ? "success" : "error",
+      text: title || "",
+      show: true,
+    };
   }
 </script>
 
