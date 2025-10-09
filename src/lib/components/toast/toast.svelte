@@ -1,10 +1,7 @@
 <script lang="ts">
     import type { ToastInterface } from "$lib/types/toast";
     import { Toast } from "flowbite-svelte";
-    import {
-        CheckCircleSolid,
-        FireOutline,
-    } from "flowbite-svelte-icons";
+    import { CheckCircleSolid, FireOutline } from "flowbite-svelte-icons";
 
     let {
         toast = $bindable({
@@ -18,7 +15,7 @@
 </script>
 
 {#if toast.type == "success"}
-    <Toast color="green" bind:toastStatus={toast.show}>
+    <Toast color="green" bind:toastStatus={toast.show} position="bottom-right">
         {#snippet icon()}
             <CheckCircleSolid class="h-5 w-5" />
             <span class="sr-only">Check icon</span>
@@ -28,6 +25,7 @@
 {/if}
 {#if toast.type == "error"}
     <Toast
+        position="bottom-right"
         bind:toastStatus={toast.show}
         color={undefined}
         class="bg-pink-100 text-pink-500 dark:bg-pink-800 dark:text-pink-200"
