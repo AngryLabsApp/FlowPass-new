@@ -18,6 +18,8 @@
   import { USER_TABLE_COLUMNS } from "$lib/catalog/user_table_columns";
   import { ingresoById } from "$lib/services/api/ingreso";
   import Loader from "$lib/components/loader/loader.svelte";
+  import Toast from "$lib/components/toast/toast.svelte";
+    import type { ToastInterface } from "$lib/types/toast";
 
   let pagination_values = $state({ total: 1, start: 0, end: 0, totalPages: 1 });
   let page = $state(1);
@@ -28,6 +30,11 @@
   let planes_catalog: { value: string; name: string }[] = $state([
     { value: "all", name: "Planes: Todos" },
   ]);
+  let toast: ToastInterface = $state({
+        type: "error",
+        text: "asdasdasd",
+        show: true,
+    });
 
   onMount(async () => {
     const planes = await getPlanes();
@@ -139,6 +146,7 @@
       }
     } catch (error) {
     } finally {
+      toast.show = true;
       setLoadingModal(false);
     }
   };
@@ -182,3 +190,4 @@
 {/if}
 <Loader bind:openModal={modal_loading.loading} title={modal_loading.title}
 ></Loader>
+<Toast bind:toast={toast}></Toast>
