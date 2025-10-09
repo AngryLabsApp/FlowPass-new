@@ -16,6 +16,7 @@
   import { SORT_CATALOG } from "$lib/catalog/sort_catalog";
   import { getPlanes } from "$lib/services/api/planes";
   import { USER_TABLE_COLUMNS } from "$lib/catalog/user_table_columns";
+    import { ingresoById } from "$lib/services/api/ingreso";
 
   let pagination_values = $state({ total: 1, start: 0, end: 0, totalPages: 1 });
   let page = $state(1);
@@ -104,6 +105,39 @@
       if (currentAbort === abort) loading = false;
     }
   }
+
+  const registrarIngreso = async (user:User)  =>{
+    const tomadas = Number(user.clases_tomadas) || 0;
+    const limite = Number(user.limite_clases);
+    const estadoPlan = String(user.estado || '').trim().toLowerCase();
+
+    // Si el plan no está activo, no permitir registrar
+    if (estadoPlan !== 'activo') {
+      //setCheckInButtonDisabled(true);
+      return;
+    }
+
+    // Validación: bloquear y mostrar chip desde que llega al límite (>=)
+    const limiteValido = Number.isFinite(limite) && limite > 0; // solo aplica si hay límite positivo
+    if (limiteValido && tomadas >= limite) {
+      //setCheckInWarning(true, `El usuario llegó al máximo de clases que puede tomar (${tomadas}/${limite})`);
+      //setCheckInButtonDisabled(true);
+      return;
+    }
+
+    const nuevasTomadas = tomadas + 1;
+
+    try {
+      const response = await ingresoById(user.id, nuevasTomadas);
+      if (response.response == "Success"){
+        selected_user.clases_tomadas = nuevasTomadas;
+        fetchAlumnos();
+      }
+
+    } catch (error) {
+      
+    }
+  }
 </script>
 
 <Navbar
@@ -125,7 +159,7 @@
     />
   </div>
 </div>
-<UserModal bind:openModal user={selected_user} />
+<UserModal bind:openModal user={selected_user} registrarIngreso={registrarIngreso}/>
 {#if loading}
   <SkeletonTable rows={10} cellHeights="h-4" headers={USER_TABLE_COLUMNS} />
 {:else if error}

@@ -16,9 +16,10 @@
   } from "flowbite-svelte-icons";
   import type { CatalogItem } from "$lib/types/catalogItem";
 
-  let { openModal = $bindable(false), user } = $props<{
+  let { openModal = $bindable(false), user, registrarIngreso } = $props<{
     openModal: boolean;
     user: User;
+    registrarIngreso: (user:User)=> void;
   }>();
   let size: ModalProps["size"] = $state("lg"); // Set default value
 
@@ -101,7 +102,7 @@
   </div>
 
   {#snippet footer()}
-    <Button type="submit">Registrar ingreso</Button>
+    <Button onclick={()=> registrarIngreso(user)}>Registrar ingreso</Button>
     <Button
       color="alternative"
       onclick={() => {

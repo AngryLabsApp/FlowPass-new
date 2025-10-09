@@ -8,6 +8,7 @@ const USERS_URL =
   "https://n8n.angrylabs.app/webhook/0768a235-0d92-41e5-93f8-fcb566c57d40";
 const USERS_FORM =
   "https://n8n.angrylabs.app/form/3858af95-5038-4d61-ba84-4ee767accee2";
+export const USER_UPDATE = "https://n8n.angrylabs.app/webhook/e1b1b332-23b4-4a96-97a4-912ec7d73ffc";
 
 export async function getUsers(
   currentAbort: AbortController,
