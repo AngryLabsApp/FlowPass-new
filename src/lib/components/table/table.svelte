@@ -15,7 +15,7 @@
   export let headers: Column<any>[];
 </script>
 
-<Table>
+<Table hoverable={true}>
   <TableHead>
     {#each headers as col}
       <TableHeadCell>{col.header}</TableHeadCell>
