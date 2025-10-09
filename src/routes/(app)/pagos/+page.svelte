@@ -132,7 +132,7 @@
   {#if loading_total}
     <Skeleton size="sm" class="my-2" />
   {:else}
-    <GiftBoxSolid class="mb-3 h-8 w-8 text-gray-500 dark:text-gray-400" />
+    <GiftBoxSolid class="mb-3 h-8 w-8 text-secondary-500 dark:text-gray-400" />
     <span>
       <h5
         class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white"
@@ -143,7 +143,7 @@
     <p class="mb-3 font-normal text-gray-500 dark:text-gray-400">
       Ingresos totales
     </p>
-    <p class="text-primary-600 inline-flex items-center">mes</p>
+    <p class="text-secondary-600 inline-flex items-center">mes</p>
   {/if}
 </Card>
 

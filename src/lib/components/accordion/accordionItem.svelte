@@ -36,6 +36,7 @@
           <span>{item.label}</span>
           {#if canEditField(item)}
             <Button
+              color="secondary"
               pill={true}
               outline={true}
               class="p-3! h-5 w-5"

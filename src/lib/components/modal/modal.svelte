@@ -104,7 +104,7 @@
   {#snippet footer()}
     <Button onclick={()=> registrarIngreso(user)}>Registrar ingreso</Button>
     <Button
-      color="alternative"
+      color="secondary"
       onclick={() => {
         show_renovar_plan = !show_renovar_plan;
       }}>Renovar plan</Button

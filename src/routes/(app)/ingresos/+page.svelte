@@ -197,11 +197,11 @@
 <div class="flex items-center justify-center">
   <Card class="p-4 sm:p-5 md:p-7" size="lg">
     <div class="flex justify-end">
-      <Button pill={true} outline={true} class="p-2!" size="xl" onclick={()=> togleLock() }>
+      <Button pill={true} outline={true} class="p-2!" size="xl" onclick={()=> togleLock() } color="secondary">
         {#if $lock}
-          <LockOutline class="text-primary-700 h-6 w-6" />
+          <LockOutline class="text-secondary-700 h-6 w-6" />
         {:else}
-          <LockOpenOutline class="text-primary-700 h-6 w-6" />
+          <LockOpenOutline class="text-secondary-700 h-6 w-6" />
         {/if}
       </Button>
     </div>
@@ -235,29 +235,29 @@
         </Alert>
       {/if}
       <div class="md:grid-cols-2 flex items-center justify-center pt-7">
-        <Button size="xl" outline onclick={() => onClickPad("1")}>1</Button>
-        <Button size="xl" outline onclick={() => onClickPad("2")}>2</Button>
-        <Button size="xl" outline onclick={() => onClickPad("3")}>3</Button>
+        <Button size="xl" outline onclick={() => onClickPad("1")} color="secondary">1</Button>
+        <Button size="xl" outline onclick={() => onClickPad("2")} color="secondary">2</Button>
+        <Button size="xl" outline onclick={() => onClickPad("3")} color="secondary">3</Button>
       </div>
 
       <div class="md:grid-cols-2 flex items-center justify-center">
-        <Button size="xl" outline onclick={() => onClickPad("4")}>4</Button>
-        <Button size="xl" outline onclick={() => onClickPad("5")}>5</Button>
-        <Button size="xl" outline onclick={() => onClickPad("6")}>6</Button>
+        <Button size="xl" outline onclick={() => onClickPad("4")} color="secondary">4</Button>
+        <Button size="xl" outline onclick={() => onClickPad("5")} color="secondary">5</Button>
+        <Button size="xl" outline onclick={() => onClickPad("6")} color="secondary">6</Button>
       </div>
 
       <div class="md:grid-cols-2 flex items-center justify-center">
-        <Button size="xl" outline onclick={() => onClickPad("7")}>7</Button>
-        <Button size="xl" outline onclick={() => onClickPad("8")}>8</Button>
-        <Button size="xl" outline onclick={() => onClickPad("9")}>9</Button>
+        <Button size="xl" outline onclick={() => onClickPad("7")} color="secondary">7</Button>
+        <Button size="xl" outline onclick={() => onClickPad("8")} color="secondary">8</Button>
+        <Button size="xl" outline onclick={() => onClickPad("9")} color="secondary">9</Button>
       </div>
 
       <div class="md:grid-cols-2 flex items-center justify-center">
-        <Button size="xl" outline onclick={() => onClean("all")}
+        <Button size="xl" outline onclick={() => onClean("all")} color="secondary"
           ><TrashBinOutline /></Button
         >
-        <Button size="xl" outline onclick={() => onClickPad("0")}>0</Button>
-        <Button size="xl" outline onclick={() => onClean("single")}
+        <Button size="xl" outline onclick={() => onClickPad("0")} color="secondary">0</Button>
+        <Button size="xl" outline onclick={() => onClean("single")} color="secondary"
           ><ArrowLeftOutline /></Button
         >
       </div>
