@@ -184,8 +184,13 @@ export function useFilterNavbar(options: UseFilterNavbarOptions = {}) {
     updateCollapseState();
   });
 
+
+  function onMonthChange(value: Date){    
+    onSearch?.(resolvedFilterKeys.date, value);
+  }
   // API pública del hook
   return {
+    onMonthChange,
     // Estado
     filterState,
     uiState,

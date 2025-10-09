@@ -4,7 +4,6 @@
   import { descargarPagos } from "$lib/services/api/pagos";
   import {
     Button,
-    Datepicker,
     Navbar,
     NavLi,
     NavUl,
@@ -13,6 +12,7 @@
     ToolbarButton,
   } from "flowbite-svelte";
   import { AdjustmentsHorizontalSolid } from "flowbite-svelte-icons";
+  import MonthPicker from "$lib/components/month_picker/month_picker.svelte";
 
   import { ESTADO_PAGOS } from "$lib/catalog/estados_pagos";
 
@@ -59,6 +59,8 @@
       filter.filterState.date = selectedDate;
     }
   });
+
+
 </script>
 
 {#snippet searchInput(classes: string)}
@@ -83,12 +85,14 @@
 {/snippet}
 
 {#snippet dateSelect(classes: string)}
-  <Datepicker
+ <!-- <Datepicker
     class={classes}
     bind:value={filter.filterState.date}
     onchange={handleDateChange}
     onselect={handleDateChange}
   />
+-->
+  <MonthPicker onChange={filter.onMonthChange} bind:value={filter.filterState.date}></MonthPicker>
 {/snippet}
 
 {#snippet filterGroup(layout: "desktop" | "mobile")}
