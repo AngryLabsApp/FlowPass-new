@@ -1,6 +1,5 @@
 import type { IngresoResponse } from "$lib/types/ingresoResponse";
 import type { QueryParams } from "$lib/types/queryparams";
-import type { User } from "$lib/types/user";
 import { buildUrl } from "$lib/utils/utils";
 
 import { fetchWithAuth } from "./base";

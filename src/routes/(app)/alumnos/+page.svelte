@@ -16,12 +16,14 @@
   import { SORT_CATALOG } from "$lib/catalog/sort_catalog";
   import { getPlanes } from "$lib/services/api/planes";
   import { USER_TABLE_COLUMNS } from "$lib/catalog/user_table_columns";
-    import { ingresoById } from "$lib/services/api/ingreso";
+  import { ingresoById } from "$lib/services/api/ingreso";
+  import Loader from "$lib/components/loader/loader.svelte";
 
   let pagination_values = $state({ total: 1, start: 0, end: 0, totalPages: 1 });
   let page = $state(1);
   let error = $state("");
   let loading = $state(true);
+  let modal_loading = $state({ loading: false, title: "" });
   let users: User[] = $state([]);
   let planes_catalog: { value: string; name: string }[] = $state([
     { value: "all", name: "Planes: Todos" },
@@ -106,13 +108,15 @@
     }
   }
 
-  const registrarIngreso = async (user:User)  =>{
+  const registrarIngreso = async (user: User) => {
     const tomadas = Number(user.clases_tomadas) || 0;
     const limite = Number(user.limite_clases);
-    const estadoPlan = String(user.estado || '').trim().toLowerCase();
+    const estadoPlan = String(user.estado || "")
+      .trim()
+      .toLowerCase();
 
     // Si el plan no está activo, no permitir registrar
-    if (estadoPlan !== 'activo') {
+    if (estadoPlan !== "activo") {
       //setCheckInButtonDisabled(true);
       return;
     }
@@ -126,17 +130,21 @@
     }
 
     const nuevasTomadas = tomadas + 1;
-
+    setLoadingModal(true, "Registrando ingreso");
     try {
       const response = await ingresoById(user.id, nuevasTomadas);
-      if (response.response == "Success"){
+      if (response.response == "Success") {
         selected_user.clases_tomadas = nuevasTomadas;
         fetchAlumnos();
       }
-
     } catch (error) {
-      
+    } finally {
+      setLoadingModal(false);
     }
+  };
+
+  function setLoadingModal(loading: boolean, title?: string) {
+    modal_loading = { loading, title: title || "" };
   }
 </script>
 
@@ -159,7 +167,7 @@
     />
   </div>
 </div>
-<UserModal bind:openModal user={selected_user} registrarIngreso={registrarIngreso}/>
+<UserModal bind:openModal user={selected_user} {registrarIngreso} />
 {#if loading}
   <SkeletonTable rows={10} cellHeights="h-4" headers={USER_TABLE_COLUMNS} />
 {:else if error}
@@ -172,3 +180,5 @@
     onSearch={(key: FilterKeys, val: string) => setValue(key, val)}
   />
 {/if}
+<Loader bind:openModal={modal_loading.loading} title={modal_loading.title}
+></Loader>
