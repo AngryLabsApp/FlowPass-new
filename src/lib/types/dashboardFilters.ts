@@ -1,16 +1,16 @@
 export interface DashboardFilters {
-  search?: string;
-  estado?: string;
-  plan?: string;
+  search?: string | Date;
+  estado?: string | Date;
+  plan?: string | Date;
   page?: number;
-  sort:string;
+  sort: string | Date;
 }
 
 export interface PagosFilters {
-  search?: string;
-  estado_pago?: string;
+  search?: string | Date;
+  estado_pago?: string | Date;
   start_date?: string;
   end_date?: string;
   page?: number;
-  type?:string;
-  }
+  type?: string;
+}

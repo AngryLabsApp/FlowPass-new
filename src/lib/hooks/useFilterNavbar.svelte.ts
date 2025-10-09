@@ -6,6 +6,7 @@ export type FilterState = {
   status: string;
   plan: string;
   query: string;
+  date: Date | undefined;
 };
 
 type UIState = {
@@ -14,9 +15,15 @@ type UIState = {
 };
 
 interface UseFilterNavbarOptions {
-  onSearch?: (key: FilterKeys, value: string) => void;
+  onSearch?: (key: FilterKeys, value: string | Date) => void;
   debounceMs?: number;
   defaultValues?: Partial<FilterState>;
+  filterKeys?: Partial<{
+    status: FilterKeys;
+    plan: FilterKeys;
+    search: FilterKeys;
+    date: FilterKeys;
+  }>;
 }
 
 const DEFAULT_CONFIG = {
@@ -24,8 +31,16 @@ const DEFAULT_CONFIG = {
   defaultFilterValues: {
     status: "all",
     plan: "all",
+    date: new Date(),
     query: "",
   },
+} as const;
+
+const DEFAULT_FILTER_KEYS = {
+  status: FilterKeys.ESTADO,
+  plan: FilterKeys.PLAN,
+  search: FilterKeys.SEARCH,
+  date: FilterKeys.DATE,
 } as const;
 
 /**
@@ -35,7 +50,17 @@ const DEFAULT_CONFIG = {
  */
 
 export function useFilterNavbar(options: UseFilterNavbarOptions = {}) {
-  const { onSearch, debounceMs = 350, defaultValues = {} } = options;
+  const {
+    onSearch,
+    debounceMs = 350,
+    defaultValues = {},
+    filterKeys = {},
+  } = options;
+
+  const resolvedFilterKeys = {
+    ...DEFAULT_FILTER_KEYS,
+    ...filterKeys,
+  };
 
   let filterState = $state<FilterState>({
     ...DEFAULT_CONFIG.defaultFilterValues,
@@ -55,13 +80,20 @@ export function useFilterNavbar(options: UseFilterNavbarOptions = {}) {
     onSearch?.(key, value);
   };
 
+  const notifyDateChange = (selectedDate?: Date) => {
+    if (!selectedDate) return;
+    onSearch?.(resolvedFilterKeys.date, selectedDate);
+  };
+
   const filterHandlers = {
     search: debounce(
-      (searchText) => notifyFilterChange(FilterKeys.SEARCH, searchText),
+      (searchText) => notifyFilterChange(resolvedFilterKeys.search, searchText),
       debounceMs
     ),
-    status: () => notifyFilterChange(FilterKeys.ESTADO, filterState.status),
-    plan: () => notifyFilterChange(FilterKeys.PLAN, filterState.plan),
+    status: () =>
+      notifyFilterChange(resolvedFilterKeys.status, filterState.status),
+    plan: () => notifyFilterChange(resolvedFilterKeys.plan, filterState.plan),
+    date: () => notifyDateChange(filterState.date),
   };
 
   function resetFilters() {
@@ -70,9 +102,10 @@ export function useFilterNavbar(options: UseFilterNavbarOptions = {}) {
       ...defaultValues,
     };
 
-    notifyFilterChange(FilterKeys.ESTADO, filterState.status);
-    notifyFilterChange(FilterKeys.PLAN, filterState.plan);
-    notifyFilterChange(FilterKeys.SEARCH, filterState.query);
+    notifyFilterChange(resolvedFilterKeys.status, filterState.status);
+    notifyFilterChange(resolvedFilterKeys.plan, filterState.plan);
+    notifyFilterChange(resolvedFilterKeys.search, filterState.query);
+    if (filterState.date) notifyDateChange(filterState.date);
   }
 
   function setupInputListeners(input: HTMLInputElement) {
@@ -85,7 +118,7 @@ export function useFilterNavbar(options: UseFilterNavbarOptions = {}) {
       if (!uiState.hasInteracted) uiState.hasInteracted = true;
       if (event.key === "Enter") {
         event.preventDefault();
-        notifyFilterChange(FilterKeys.SEARCH, filterState.query);
+        notifyFilterChange(resolvedFilterKeys.search, filterState.query);
       }
     }
 

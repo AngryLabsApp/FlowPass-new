@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { Heading, Skeleton } from "flowbite-svelte";
-  import Navbar from "../../../lib/components/navbar/navbarPagos.svelte";
+  import Navbar from "../../../lib/components/navbar/navbar.pagos.svelte";
   import Pagination from "../../../lib/components/pagination/pagination.svelte";
   import Table from "../../../lib/components/table/table.svelte";
   import SkeletonTable from "$lib/components/skeletons/table.svelte";
@@ -21,7 +21,7 @@
   let loading = $state(true);
   let loading_total = $state(true);
   let total_by_month = $state(0);
-  let selectedDate = $state<Date | undefined>(new Date());
+  let selectedDate = $state<Date>(new Date());
   let pagos: Payment[] = $state([]);
   let filters: PagosFilters = {
     page: 1,
@@ -40,7 +40,7 @@
     console.log("Table row clicked");
   };
 
-  async function setValue(key: FilterKeys, value: string) {
+  async function setValue(key: FilterKeys, value: string | Date) {
     if (key === FilterKeys.SEARCH) {
       page = 1;
       filters.search = value;
@@ -51,6 +51,7 @@
     }
     if (key === FilterKeys.DATE) {
       page = 1;
+      selectedDate = value as Date;
       filters.start_date = fmtYearMonth(selectedDate as Date);
       filters.end_date = fmtYearMonth(selectedDate as Date);
       fetchTotalMes();
@@ -121,10 +122,10 @@
 </script>
 
 <Navbar
-  onSearch={(key: FilterKeys, val: string) => {
+  onSearch={(key: FilterKeys, val: string | Date) => {
     setValue(key, val);
   }}
-  bind:selectedDate
+  bind:selectedDate={selectedDate}
 />
 
 <Card class="p-4 sm:p-6 md:p-8 mt-5" size="xs">

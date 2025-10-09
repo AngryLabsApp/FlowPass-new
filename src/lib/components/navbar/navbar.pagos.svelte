@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { ESTADO_PLANES } from "$lib/catalog/estados_planes";
-  import type { FilterKeys } from "$lib/enums/filter_keys";
+  import { FilterKeys } from "$lib/enums/filter_keys";
   import { useFilterNavbar } from "$lib/hooks/useFilterNavbar.svelte";
-  import { newUserForm } from "$lib/services/api/users";
+  import { descargarPagos } from "$lib/services/api/pagos";
   import {
     Button,
+    Datepicker,
     Navbar,
     NavLi,
     NavUl,
@@ -14,23 +14,50 @@
   } from "flowbite-svelte";
   import { AdjustmentsHorizontalSolid } from "flowbite-svelte-icons";
 
+  import { ESTADO_PAGOS } from "$lib/catalog/estados_pagos";
+
   const STYLES = {
     searchWidthDesktop: "w-[240px]",
-    selectWidthDesktop: "min-w-[160px]",
-    selectWidthMobile: "w-full min-w-[135px]",
+    selectWidthDesktop: "min-w-[190px]",
+    selectWidthMobile: "w-full min-w-[150x]",
   } as const;
 
   interface Props {
     onSearch?: (key: FilterKeys, value: string | Date) => void;
     debounceMs?: number;
-    PLANES_CATALOG?: { value: string; name: string }[];
+    selectedDate?: Date;
   }
 
-  let { onSearch, debounceMs = 350, PLANES_CATALOG = [] }: Props = $props();
+  let {
+    onSearch,
+    debounceMs = 350,
+    selectedDate = $bindable<Date | undefined>(new Date()),
+  }: Props = $props();
 
   const filter = useFilterNavbar({
     onSearch,
     debounceMs,
+    filterKeys: {
+      status: FilterKeys.ESTADO_PAGO,
+      date: FilterKeys.DATE,
+    },
+    defaultValues: {
+      date: selectedDate ?? new Date(),
+      status: "all",
+    },
+  });
+
+  function handleDateChange() {
+    selectedDate = filter.filterState.date;
+    filter.handlers.date();
+  }
+
+  $effect(() => {
+    if (!selectedDate) return;
+    const current = filter.filterState.date;
+    if (!current || current.getTime() !== selectedDate.getTime()) {
+      filter.filterState.date = selectedDate;
+    }
   });
 </script>
 
@@ -48,38 +75,36 @@
   <Select
     size="md"
     class={classes}
-    items={ESTADO_PLANES}
+    items={ESTADO_PAGOS}
     bind:value={filter.filterState.status}
-    placeholder="Estado:"
+    placeholder="Estado del pago:"
     onchange={filter.handlers.status}
   />
 {/snippet}
 
-{#snippet planSelect(classes: string)}
-  <Select
-    size="md"
+{#snippet dateSelect(classes: string)}
+  <Datepicker
     class={classes}
-    items={PLANES_CATALOG}
-    bind:value={filter.filterState.plan}
-    placeholder="Plan:"
-    onchange={filter.handlers.plan}
+    bind:value={filter.filterState.date}
+    onchange={handleDateChange}
+    onselect={handleDateChange}
   />
 {/snippet}
 
 {#snippet filterGroup(layout: "desktop" | "mobile")}
   {#if layout === "desktop"}
     {@render searchInput(STYLES.searchWidthDesktop)}
+    {@render dateSelect(STYLES.selectWidthDesktop)}
     {@render statusSelect(STYLES.selectWidthDesktop)}
-    {@render planSelect(STYLES.selectWidthDesktop)}
   {:else}
     <NavLi class="w-full py-0 pe-0 ps-0">
       {@render searchInput("w-full")}
     </NavLi>
     <NavLi class="w-full py-0 pe-0 ps-0">
-      {@render statusSelect(STYLES.selectWidthMobile)}
+      {@render dateSelect(STYLES.selectWidthMobile)}
     </NavLi>
     <NavLi class="w-full py-0 pe-0 ps-0">
-      {@render planSelect(STYLES.selectWidthMobile)}
+      {@render statusSelect(STYLES.selectWidthMobile)}
     </NavLi>
   {/if}
 {/snippet}
@@ -90,6 +115,15 @@
       class="order-0 w-full relative"
       bind:this={filter.refs.filterContainer.current}
     >
+      <div
+        aria-hidden="true"
+        class="pointer-events-none absolute -z-50 flex w-full flex-nowrap items-center gap-3 whitespace-nowrap opacity-0"
+        bind:this={filter.refs.measurementRow.current}
+      >
+        {@render searchInput(STYLES.searchWidthDesktop)}
+        {@render dateSelect(STYLES.selectWidthDesktop)}
+        {@render statusSelect(STYLES.selectWidthDesktop)}
+      </div>
       <!-- DESKTOP: Inline -->
       {#if !filter.uiState.filtersCollapsed}
         <div
@@ -98,8 +132,8 @@
           <div class="flex items-center gap-3">
             {@render filterGroup("desktop")}
           </div>
-          <Button size="lg" color="pink" class="" onclick={newUserForm}>
-            Nuevo Alumno +
+          <Button size="lg" color="pink" class="" onclick={descargarPagos}>
+            Descargar historial
           </Button>
         </div>
       {/if}
@@ -119,8 +153,8 @@
     <div class="flex md:order-2 w-full md:w-auto">
       {#if filter.uiState.filtersCollapsed}
         <div class="flex w-full justify-between md:pl-0 gap-3">
-          <Button size="lg" color="pink" class="" onclick={newUserForm}>
-            Nuevo Alumno +
+          <Button size="lg" color="pink" class="" onclick={descargarPagos}>
+            Descargar historial
           </Button>
           <ToolbarButton
             class="inline-flex items-center"

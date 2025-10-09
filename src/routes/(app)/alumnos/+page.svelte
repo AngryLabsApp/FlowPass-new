@@ -17,14 +17,14 @@
   import { getPlanes } from "$lib/services/api/planes";
   import { USER_TABLE_COLUMNS } from "$lib/catalog/user_table_columns";
 
-
-
-  let pagination_values = $state({total:1,start:0, end:0, totalPages:1});
+  let pagination_values = $state({ total: 1, start: 0, end: 0, totalPages: 1 });
   let page = $state(1);
   let error = $state("");
   let loading = $state(true);
   let users: User[] = $state([]);
-  let planes_catalog:{ value: string; name: string; }[] =  $state([{value:"all", name:"Planes: Todos"}]);
+  let planes_catalog: { value: string; name: string }[] = $state([
+    { value: "all", name: "Planes: Todos" },
+  ]);
 
   onMount(async () => {
     const planes = await getPlanes();
@@ -40,10 +40,16 @@
   };
 
   let sort_type = $state("created_desc");
-  let filters:DashboardFilters = {page:1, estado:"", plan:"", search:"", sort:"created_desc"};
+  let filters: DashboardFilters = {
+    page: 1,
+    estado: "",
+    plan: "",
+    search: "",
+    sort: "created_desc",
+  };
   let currentAbort: AbortController | null = null;
 
-  async function setValue(key: FilterKeys, value: string) {
+  async function setValue(key: FilterKeys, value: string | Date) {
     if (key === FilterKeys.SEARCH) {
       page = 1;
       filters.search = value;
@@ -63,14 +69,13 @@
 
     filters.page = page;
     await fetchAlumnos();
-
   }
 
   async function fetchAlumnos() {
     currentAbort?.abort();
     const abort = new AbortController();
     currentAbort = abort;
-    
+
     let queryParams: QueryParams = BuildQueryParams(filters);
 
     try {
@@ -79,33 +84,32 @@
 
       if (currentAbort !== abort) return;
 
-
       users = res.users;
       const pageSize = 10;
 
       const start = res.total ? (page - 1) * pageSize + 1 : 0;
-      const end   = Math.min(page * pageSize, res.total);
+      const end = Math.min(page * pageSize, res.total);
       const totalPages = Math.max(1, Math.ceil(res.total / pageSize));
       pagination_values = {
         total: res.total,
         totalPages,
         start,
-        end
+        end,
       };
-
     } catch (err: any) {
-
       if (err?.name === "AbortError") return;
 
       error = err?.message ?? "❌ Error al cargar usuarios";
     } finally {
-     
       if (currentAbort === abort) loading = false;
     }
   }
 </script>
 
-<Navbar onSearch={(key: FilterKeys, val: string) => setValue(key, val)} PLANES_CATALOG={planes_catalog} />
+<Navbar
+  onSearch={(key: FilterKeys, val: string | Date) => setValue(key, val)}
+  PLANES_CATALOG={planes_catalog}
+/>
 <div class="grid grid-cols-2 gap-4 mb-5">
   <Heading tag="h3">Alumnos</Heading>
   <div class="flex items-center gap-3 justify-end">
@@ -123,14 +127,14 @@
 </div>
 <UserModal bind:openModal user={selected_user} />
 {#if loading}
-  <SkeletonTable
-    rows={10}
-    cellHeights="h-4"
-    headers={USER_TABLE_COLUMNS}
-  />
+  <SkeletonTable rows={10} cellHeights="h-4" headers={USER_TABLE_COLUMNS} />
 {:else if error}
   <p class="text-red-600">{error}</p>
 {:else}
-  <UserTable data={users} onClick={tableOnclick}  headers={USER_TABLE_COLUMNS}/>
-  <Pagination  pagination_values={pagination_values} bind:page={page} onSearch={(key: FilterKeys, val: string) => setValue(key, val)}/>
+  <UserTable data={users} onClick={tableOnclick} headers={USER_TABLE_COLUMNS} />
+  <Pagination
+    {pagination_values}
+    bind:page
+    onSearch={(key: FilterKeys, val: string) => setValue(key, val)}
+  />
 {/if}
