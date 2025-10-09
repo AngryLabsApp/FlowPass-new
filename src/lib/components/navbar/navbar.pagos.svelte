@@ -132,7 +132,7 @@
           <div class="flex items-center gap-3">
             {@render filterGroup("desktop")}
           </div>
-          <Button size="lg" color="pink" class="" onclick={descargarPagos}>
+          <Button size="lg" class="" onclick={descargarPagos}>
             Descargar historial
           </Button>
         </div>
@@ -153,7 +153,7 @@
     <div class="flex md:order-2 w-full md:w-auto">
       {#if filter.uiState.filtersCollapsed}
         <div class="flex w-full justify-between md:pl-0 gap-3">
-          <Button size="lg" color="pink" class="" onclick={descargarPagos}>
+          <Button size="lg" class="" onclick={descargarPagos}>
             Descargar historial
           </Button>
           <ToolbarButton
