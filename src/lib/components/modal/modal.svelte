@@ -3,7 +3,6 @@
   import { Accordion, Badge } from "flowbite-svelte";
   import { fmtUser, toTitleCase } from "$lib/utils/utils";
   import { Button, Modal, type ModalProps } from "flowbite-svelte";
-  import RenovarPlan from "$lib/components/form/RenovarPlan.svelte";
   import AccordionUserItem from "$lib/components/accordion/accordionItem.svelte";
   import {
     DATOS_INFO,
@@ -15,24 +14,37 @@
     UsersOutline,
   } from "flowbite-svelte-icons";
   import type { CatalogItem } from "$lib/types/catalogItem";
+  import { getFieldComponent, type FormFieldCatalogItem } from "$lib/catalog/form_component_catalog";
+  import { UserKeys } from "$lib/enums/user_keys";
 
-  let { openModal = $bindable(false), user, registrarIngreso } = $props<{
+  let {
+    openModal = $bindable(false),
+    user,
+    registrarIngreso,
+  } = $props<{
     openModal: boolean;
     user: User;
-    registrarIngreso: (user:User)=> void;
+    registrarIngreso: (user: User) => void;
   }>();
   let size: ModalProps["size"] = $state("lg"); // Set default value
+  let form_selected: {key:UserKeys, form: any} | null= $state(null);
+  let show_form = $state(false);
 
   const formated_user = $derived.by<User>(() => {
     if (!user?.id) return {} as User;
     return fmtUser(user);
   });
 
-  let show_renovar_plan = $state(false);
-
   function editField(item: CatalogItem) {
-    // Lógica para editar el campo
-    console.log("Editar campo");
+    selectForm(item.key);
+  }
+  function selectForm(key: UserKeys){
+    if (show_form && form_selected && form_selected.key == key) {
+      show_form= false;
+      return;
+    }
+    form_selected = {key, form: getFieldComponent(key)};
+    show_form = true;
   }
 
   function isClassLimitFull() {
@@ -56,7 +68,7 @@
         {/if}
         <Badge large color="gray">
           <UsersOutline />Compañero: {toTitleCase(
-            formated_user.partner_nombre || ""
+            formated_user.partner_nombre || "",
           )}
           {toTitleCase(formated_user.partner_apellidos || "")}</Badge
         >
@@ -96,17 +108,17 @@
         />
       </Accordion>
     {/if}
-    {#if show_renovar_plan}
-      <RenovarPlan></RenovarPlan>
+    {#if form_selected && show_form}
+        <form_selected.form.component {...form_selected.form.props} />
     {/if}
   </div>
 
   {#snippet footer()}
-    <Button onclick={()=> registrarIngreso(user)}>Registrar ingreso</Button>
+    <Button onclick={() => registrarIngreso(user)}>Registrar ingreso</Button>
     <Button
       color="secondary"
       onclick={() => {
-        show_renovar_plan = !show_renovar_plan;
+        selectForm(UserKeys.PLAN);
       }}>Renovar plan</Button
     >
   {/snippet}

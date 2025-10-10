@@ -1,5 +1,3 @@
-import type { ESTADO_PAGOS } from "$lib/catalog/estados_pagos";
-
 export enum FilterKeys {
   ESTADO = "estado",
   PLAN = "plan",
