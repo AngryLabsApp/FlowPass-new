@@ -1,7 +1,8 @@
 // src/lib/catalog/form_component_catalog.ts
- import RenovarPlan from "$lib/components/form/RenovarPlan.svelte";
- import RenovarClases from "$lib/components/form/RenovarClases.svelte";
- import EstadoPLan from "$lib/components/form/ActualizaEstadoPlan.svelte";
+import RenovarPlan from "$lib/components/form/RenovarPlan.svelte";
+import RenovarClases from "$lib/components/form/RenovarClases.svelte";
+import EstadoPLan from "$lib/components/form/ActualizaEstadoPlan.svelte";
+import RenovarRechaPLan from "$lib/components/form/RenovarFechaPlan.svelte";
 import { UserKeys } from "$lib/enums/user_keys";
 
 
@@ -24,19 +25,23 @@ export type FormFieldCatalogItem = {
  * pero puedes fijar algunas por defecto aquí si te sirve.
  */
 export const FORM_COMPONENT_CATALOG: Partial<Record<UserKeys, FormFieldCatalogItem>> = {
-    // === PLAN_INFO ===
-    [UserKeys.PLAN]: {
-        component: RenovarPlan,
-        props: {},
-    },
-    [UserKeys.CLASES_RESTANTES]: {
-        component: RenovarClases,
-        props: { type: "number", min: 0, placeholder: "Selecciona un plan" },
-    },
-     [UserKeys.ESTADO]: {
-        component: EstadoPLan,
-        props: {},
-    },
+  // === PLAN_INFO ===
+  [UserKeys.PLAN]: {
+    component: RenovarPlan,
+    props: {},
+  },
+  [UserKeys.CLASES_RESTANTES]: {
+    component: RenovarClases,
+    props: { type: "number", min: 0, placeholder: "Selecciona un plan" },
+  },
+  [UserKeys.ESTADO]: {
+    component: EstadoPLan,
+    props: {},
+  },
+  [UserKeys.FECHA_INICIO_PLAN]: {
+    component: RenovarRechaPLan,
+    props: {},
+  },
 
 };
 
