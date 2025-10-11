@@ -4,40 +4,34 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-
-
-
-  --color-primary-50: #f7fff5;
-  --color-primary-100: #efffeb;
-  --color-primary-200: #dbffd1;
-  --color-primary-300: #c3ffb2;
-  --color-primary-400: #98ff7a;
-  --color-primary-500: #60ff33;
-  /* base viva */
-  --color-primary-600: #40ff0a;
-  --color-primary-700: #32e000;
-  --color-primary-800: #29b800;
-  --color-primary-900: #208f00;
+  --color-primary-50: #f8fff5;
+  --color-primary-100: #ecffdf;
+  --color-primary-200: #d4ffba;
+  --color-primary-300: #b9ff90;
+  --color-primary-400: #a1ff74;
+  --color-primary-500: #87ff65; /* color principal */
+  --color-primary-600: #6ce54f;
+  --color-primary-700: #52c53b;
+  --color-primary-800: #3ca12b;
+  --color-primary-900: #2a7a1e;
 
   /* Secondary — teal/azul que contrasta bien con el verde */
-  --color-secondary-50: #eefcff;
-  --color-secondary-100: #d8f7ff;
-  --color-secondary-200: #b9effe;
-  --color-secondary-300: #86e4fd;
-  --color-secondary-400: #49d0f8;
-  --color-secondary-500: #12b6eb;
-  /* un poco más “teal” que #0ea5e9 */
-  --color-secondary-600: #0a90c5;
-  --color-secondary-700: #0b74a1;
-  --color-secondary-800: #0f5e83;
-  --color-secondary-900: #124e6b;
+  --color-secondary-50: #ffd9e0;
+  --color-secondary-100: #ffd9e0;
+  --color-secondary-200: #ffb3c0;
+  --color-secondary-300: #ff8ca0;
+  --color-secondary-400: #f95c7e;
+  --color-secondary-500: #ee4266; /* color principal */
+  --color-secondary-600: #d3365a;
+  --color-secondary-700: #b32d4e;
+  --color-secondary-800: #912541; /* color de boton */
+  --color-secondary-900: #661930;
 }
 
 @source "../node_modules/flowbite-svelte/dist";
 @source "../node_modules/flowbite-svelte-icons/dist";
 
 @layer base {
-
   /* disable chrome cancel button */
   input[type="search"]::-webkit-search-cancel-button {
     display: none;
