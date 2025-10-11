@@ -1,25 +1,48 @@
 <script lang="ts">
-  import { Button,Card, Label, Input, Checkbox } from "flowbite-svelte";
+  import {
+    Button,
+    Card,
+    Label,
+    Input,
+    Select,
+  } from "flowbite-svelte";
 </script>
 
 <Card class="p-4 sm:p-6 md:p-8">
   <form class="flex flex-col space-y-6" action="/">
-    <h3 class="text-xl font-medium text-gray-900 dark:text-white">Sign in to our platform</h3>
+    <h3 class="text-xl font-medium text-gray-900 dark:text-white">
+      Renovar Plan
+    </h3>
     <Label class="space-y-2">
-      <span>Email</span>
-      <Input type="email" name="email" placeholder="name@company.com" required />
+      <span>Plan</span>
+      <Select size="md" items={[]} placeholder="Selecciona..." onchange={() => {}} required />
+    </Label>
+
+    <Label class="space-y-2">
+      <span>Monto de pago</span>
+      <Input type="number" name="monto" placeholder="0.0" required />
+    </Label>
+
+    <Label class="space-y-2">
+      <span>Días de gracia</span>
+      <Input type="number" name="dias_gracia" placeholder="0" />
+    </Label>
+
+    <Label class="space-y-2">
+      <span>Método de pago</span>
+      <Select size="md" items={[]} placeholder="Selecciona..." onchange={() => {}} />
     </Label>
     <Label class="space-y-2">
-      <span>Your password</span>
-      <Input type="password" name="password" placeholder="•••••" required />
+      <span>Estado de pago</span>
+      <Select
+        size="md"
+        items={[]}
+        placeholder="Selecciona..."
+        onchange={() => {}}
+        required
+      />
     </Label>
-    <div class="flex items-start">
-      <Checkbox>Remember me</Checkbox>
-      <a href="/" class="text-primary-700 dark:text-primary-500 ms-auto text-sm hover:underline">Lost password?</a>
-    </div>
-    <Button type="submit" class="w-full">Login to your account</Button>
-    <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
-      Not registered? <a href="/" class="text-primary-700 dark:text-primary-500 hover:underline">Create account</a>
-    </div>
+
+    <Button type="submit" class="w-full">Guardar cambios</Button>
   </form>
 </Card>

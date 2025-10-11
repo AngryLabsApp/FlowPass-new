@@ -68,7 +68,7 @@
       <Input
         type="email"
         name="email"
-        placeholder="name@company.com"
+        placeholder="tu@email.com"
         required
         bind:value={email}
         class="focus:ring-2 focus:ring-emerald-200"
@@ -80,7 +80,7 @@
       <Input
         type="password"
         name="password"
-        placeholder="•••••"
+        placeholder="•••••••••"
         required
         bind:value={password}
         class="focus:ring-2 focus:ring-emerald-200"

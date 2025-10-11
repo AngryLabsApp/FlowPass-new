@@ -1,5 +1,7 @@
 // src/lib/catalog/form_component_catalog.ts
  import RenovarPlan from "$lib/components/form/RenovarPlan.svelte";
+ import RenovarClases from "$lib/components/form/RenovarClases.svelte";
+ import EstadoPLan from "$lib/components/form/ActualizaEstadoPlan.svelte";
 import { UserKeys } from "$lib/enums/user_keys";
 
 
@@ -28,8 +30,12 @@ export const FORM_COMPONENT_CATALOG: Partial<Record<UserKeys, FormFieldCatalogIt
         props: {},
     },
     [UserKeys.CLASES_RESTANTES]: {
-        component: Input,
+        component: RenovarClases,
         props: { type: "number", min: 0, placeholder: "Selecciona un plan" },
+    },
+     [UserKeys.ESTADO]: {
+        component: EstadoPLan,
+        props: {},
     },
 
 };
