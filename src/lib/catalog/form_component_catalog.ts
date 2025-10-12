@@ -16,6 +16,7 @@ import RenovarEstadoPago from "$lib/components/form/RenovarEstadoPago.svelte";
 
 // Flowbite-Svelte (ajusta según lo que ya uses en tu proyecto)
 import { Input } from "flowbite-svelte";
+import type { User } from "$lib/types/user";
 
 
 /**
@@ -25,7 +26,14 @@ import { Input } from "flowbite-svelte";
 export type FormFieldCatalogItem = {
   component: any;
   /** Props por defecto que recibirá el componente (placeholder, disabled, etc.) */
-  props?: Record<string, unknown>;
+  props?: FormProps;
+};
+
+export interface FormProps {
+  user?: User,
+  setLoadingModal?: (loading: boolean, title?: string) => void,
+  setToast?: (title: string, success: boolean) => void,
+  closeForm?: () => void,
 };
 
 /**
@@ -37,11 +45,13 @@ export const FORM_COMPONENT_CATALOG: Partial<Record<UserKeys, FormFieldCatalogIt
   // === PLAN_INFO ===
   [UserKeys.PLAN]: {
     component: RenovarPlan,
-    props: {},
+    props: {
+
+    },
   },
   [UserKeys.CLASES_RESTANTES]: {
     component: RenovarClases,
-    props: { type: "number", min: 0, placeholder: "Selecciona un plan" },
+    props: {},
   },
   [UserKeys.ESTADO]: {
     component: EstadoPLan,
@@ -51,27 +61,27 @@ export const FORM_COMPONENT_CATALOG: Partial<Record<UserKeys, FormFieldCatalogIt
     component: RenovarRechaPLan,
     props: {},
   },
-    [UserKeys.IDENTIFICACION]: {
+  [UserKeys.IDENTIFICACION]: {
     component: RenovarIdentificacion,
     props: {},
   },
-    [UserKeys.TELEFONO]: {
+  [UserKeys.TELEFONO]: {
     component: RenovarTelefono,
     props: {},
   },
-    [UserKeys.EMAIL]: {
+  [UserKeys.EMAIL]: {
     component: RenovarEmail,
     props: {},
   },
-      [UserKeys.DIRECCION]: {
+  [UserKeys.DIRECCION]: {
     component: RenovarDireccion,
     props: {},
   },
-      [UserKeys.CUMPLEANOS]: {
+  [UserKeys.CUMPLEANOS]: {
     component: RenovarCumple,
     props: {},
   },
-        [UserKeys.NOTIFICAR]: {
+  [UserKeys.NOTIFICAR]: {
     component: RenovarNotificar,
     props: {},
   },
@@ -79,11 +89,11 @@ export const FORM_COMPONENT_CATALOG: Partial<Record<UserKeys, FormFieldCatalogIt
     component: RenovarDeViaje,
     props: {},
   },
-    [UserKeys.PATOLOGIAS]: {
+  [UserKeys.PATOLOGIAS]: {
     component: RenovarPatologia,
     props: {},
   },
-      [UserKeys.ESTADO_PAGO]: {
+  [UserKeys.ESTADO_PAGO]: {
     component: RenovarEstadoPago,
     props: {},
   },
@@ -94,9 +104,21 @@ export const FORM_COMPONENT_CATALOG: Partial<Record<UserKeys, FormFieldCatalogIt
  * Si no hay entrada definida, devuelve un fallback básico de Input.
  */
 export function getFieldComponent(
-  key: UserKeys
+  key: UserKeys,
+  user: User,
+  setLoadingModal: (loading: boolean, title?: string) => void,
+  setToast: (title: string, success: boolean) => void,
+  closeForm: () => void,
 ): FormFieldCatalogItem {
   const item = FORM_COMPONENT_CATALOG[key];
-  if (item) return item;
-  return { component: Input, props: { placeholder: String(key) } };
+  if (item) {
+    item.props = {
+      user,
+      setLoadingModal,
+      setToast,
+      closeForm
+    };
+    return item
+  };
+  return { component: Input, props: {} };
 }

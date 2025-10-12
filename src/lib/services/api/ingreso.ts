@@ -35,7 +35,6 @@ export async function ingresoById(
       method: "MANUAL"
     })
   });
-  console.log("rest", res);
   if (res?.ok) {
     let data = await res.json();
     return data;

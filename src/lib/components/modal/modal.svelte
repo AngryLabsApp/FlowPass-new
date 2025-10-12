@@ -14,17 +14,21 @@
     UsersOutline,
   } from "flowbite-svelte-icons";
   import type { CatalogItem } from "$lib/types/catalogItem";
-  import { getFieldComponent, type FormFieldCatalogItem } from "$lib/catalog/form_component_catalog";
+  import { getFieldComponent } from "$lib/catalog/form_component_catalog";
   import { UserKeys } from "$lib/enums/user_keys";
 
   let {
     openModal = $bindable(false),
     user,
     registrarIngreso,
+    setLoadingModal,
+    setToast,
   } = $props<{
     openModal: boolean;
     user: User;
     registrarIngreso: (user: User) => void;
+    setLoadingModal:(loading: boolean, title?: string) =>void,
+    setToast:(title: string, success: boolean) =>void,
   }>();
   let size: ModalProps["size"] = $state("lg"); // Set default value
   let form_selected: {key:UserKeys, form: any} | null= $state(null);
@@ -43,7 +47,7 @@
       show_form= false;
       return;
     }
-    form_selected = {key, form: getFieldComponent(key)};
+    form_selected = {key, form: getFieldComponent(key, user, setLoadingModal, setToast,closeForm)};
     show_form = true;
   }
 
@@ -56,9 +60,13 @@
       return false;
     return formated_user.clases_tomadas >= formated_user.limite_clases;
   }
+
+  function closeForm(){
+    show_form = false;
+  }
 </script>
 
-<Modal bind:open={openModal} {size}>
+<Modal bind:open={openModal} {size} onclose={()=> closeForm()}>
   {#snippet header()}
     <div class="flex items-center gap-2">
       {formated_user.full_name}

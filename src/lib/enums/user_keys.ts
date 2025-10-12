@@ -7,6 +7,9 @@ export enum UserKeys {
   PROXIMA_FECHA_PAGO = "proxima_fecha_pago",
   DIAS_DE_GRACIA = "dias_de_gracia",
 
+  LIMITE_CLASES = "limite_clases",
+  CLASES_TOMADAS = "clases_tomadas",
+
   // DATOS_INFO
   CODIGO_INGRESO = "codigo_ingreso",
   IDENTIFICACION = "identificacion",

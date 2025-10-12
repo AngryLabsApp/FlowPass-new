@@ -146,12 +146,15 @@
         fetchAlumnos();
       }
     } catch (error) {
-      setToast("Ha ocurrido un error inesperadoHubo un problema al actualizar. Reintenta en unos segundos.", false);
+      setToast("Hubo un problema al actualizar. Reintenta en unos segundos.", false);
     } finally {
-      toast.show = true;
       setLoadingModal(false);
     }
   };
+
+  function onUpdateUser(){
+    
+  }
 
   function setLoadingModal(loading: boolean, title?: string) {
     modal_loading = { loading, title: title || "" };
@@ -184,7 +187,7 @@
     />
   </div>
 </div>
-<UserModal bind:openModal user={selected_user} {registrarIngreso} />
+<UserModal bind:openModal user={selected_user} {registrarIngreso} {setToast} {setLoadingModal}/>
 {#if loading}
   <SkeletonTable rows={10} cellHeights="h-4" headers={USER_TABLE_COLUMNS} />
 {:else if error}
