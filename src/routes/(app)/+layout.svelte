@@ -10,7 +10,7 @@
     await ensureSessionOrRedirect(); // ← verifica sesión al entrar
   });
 
-  import favicon from "$lib/assets/favicon.svg";
+  import logo_flowpass from "$lib/assets/logo-flowpass.svg";
   import logo_invertido from "$lib/assets/logo-flowpass-invertido.svg";
   import default_icon from "$lib/assets/default.png";
   import "../../app.css";
@@ -70,7 +70,7 @@
 </script>
 
 <svelte:head>
-  <link rel="icon" href={favicon} />
+  <link rel="icon" href={logo_flowpass} />
   <title>FlowPass</title>
 </svelte:head>
 
