@@ -1,14 +1,34 @@
 <script lang="ts">
+  import type { FormProps } from "$lib/catalog/form_component_catalog";
+  import { UserKeys } from "$lib/enums/user_keys";
+  import {
+    useFormUpdateHook,
+    type UpdateFormItem,
+  } from "$lib/hooks/useFormUpdate.svelte";
   import { Button, Card, Label, Textarea } from "flowbite-svelte";
+
+  let { user, setLoadingModal, setToast, closeForm }: FormProps = $props();
+
+  let updateItemValues: UpdateFormItem[] = $state([
+    { key: UserKeys.PATOLOGIAS, value: user.patologias || "" },
+  ]);
+  const onUpdated = () => {
+    user.patologias = updateItemValues[0].value as string;
+    closeForm();
+  };
+  const actions = useFormUpdateHook({ setLoadingModal, setToast, onUpdated });
 </script>
 
 <Card class="p-4 sm:p-6 md:p-8">
-  <form class="flex flex-col space-y-6" action="/">
+  <form
+    class="flex flex-col space-y-6"
+    onsubmit={(e) => actions.onUpdateSingleForm(updateItemValues, user.id, e)}
+  >
     <h3 class="text-xl font-medium text-gray-900 dark:text-white">
       Enfermedad / Patología
     </h3>
     <Label class="space-y-2">
-      <Textarea name="enfermedad" placeholder=""   class="w-full" required />
+      <Textarea name="enfermedad" placeholder="" class="w-full" bind:value={updateItemValues[0].value as string}/>
     </Label>
 
     <Button type="submit" class="w-full">Guardar cambios</Button>

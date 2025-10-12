@@ -17,7 +17,7 @@ interface UseFormUPdateOptions {
  */
 export interface UpdateFormItem {
     key: UserKeys;
-    value: string | number ;
+    value: string | number;
 }
 export function useFormUpdateHook(options: UseFormUPdateOptions = {
     setLoadingModal: function (loading: boolean, title?: string): void {
@@ -31,13 +31,14 @@ export function useFormUpdateHook(options: UseFormUPdateOptions = {
     }
 }) {
 
-    const onUpdateSingleForm = async (values: UpdateFormItem[], id: string) => {
+    const onUpdateSingleForm = async (values: UpdateFormItem[], id: string, e?: any) => {
+        e?.preventDefault();
         const fields: any = {
         };
         values.forEach((item) => {
-            if (item.value) {
-                fields[item.key] = {value: item.value};
-            }
+
+            fields[item.key] = { value: item.value };
+
         });
 
         options.setLoadingModal(true, "Actualizando valores");

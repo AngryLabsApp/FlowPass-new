@@ -22,7 +22,7 @@
 </script>
 
 <Card class="p-4 sm:p-6 md:p-8">
-  <form class="flex flex-col space-y-6" action="/">
+  <form class="flex flex-col space-y-6" onsubmit={(e)=>actions.onUpdateSingleForm(updateItemValues, user.id, e)}>
     <h3 class="text-xl font-medium text-gray-900 dark:text-white">Clases</h3>
 
     <Label class="space-y-2">
@@ -47,7 +47,7 @@
     </Label>
 
     <Button
-      onclick={() => actions.onUpdateSingleForm(updateItemValues, user.id)}
+      type ="submit"
       class="w-full">Guardar cambios</Button
     >
   </form>
