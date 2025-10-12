@@ -17,12 +17,22 @@ type GetPlanesOpts = {
   maxAgeMs?: number;
 };
 
+export function getCachedPlanes(
+): Plan[] {
+  const keyData = 'plans:data';
+  const keyEtag = 'plans:etag';
+  const keyTs = 'plans:ts';
+
+  const cached = getCached({ keyData, keyEtag, keyTs });
+  return cached?.data;
+}
+
 export async function getPlanes(
   { force = false, maxAgeMs = 60 * 60 * 1000 }: GetPlanesOpts = {}
 ): Promise<Plan[]> {
   const keyData = 'plans:data';
   const keyEtag = 'plans:etag';
-  const keyTs   = 'plans:ts';
+  const keyTs = 'plans:ts';
 
   const cached = getCached({ keyData, keyEtag, keyTs });
   const headers: Record<string, string> = {};

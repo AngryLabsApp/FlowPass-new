@@ -209,7 +209,7 @@ export function BuildQueryParamsPagos(filters: PagosFilters): QueryParams {
   return queryParams;
 };
 
-export function MapPlanCatalog(planes: Plan[]) {
+export function MapPlanCatalog(planes: Plan[], only_values:boolean = false) {
   const sorted = planes.sort((a, b) => (Number(a.order ?? Infinity) - Number(b.order ?? Infinity)));
   const catalog = sorted.map((item) => {
     return {
@@ -217,7 +217,8 @@ export function MapPlanCatalog(planes: Plan[]) {
       name: item.label
     }
   });
-  catalog.unshift({ value: "all", name: "Planes: Todos" });
+  if (!only_values)
+    catalog.unshift({ value: "all", name: "Planes: Todos" });
   return catalog;
 
 }
