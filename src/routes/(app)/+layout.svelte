@@ -28,14 +28,15 @@
   import { page } from "$app/state";
   let activeUrl = $state(page.url.pathname);
   import {
-    ApiKeyOutline,
     CashOutline,
     UsersGroupOutline,
     UndoOutline,
   } from "flowbite-svelte-icons";
 
+  import { KeyRound } from "@lucide/svelte";
+
   const spanClass = "flex-1 ms-3 whitespace-nowrap";
-  const sidebarEx1 = [
+  const MenuItems = [
     {
       label: "Alumnos",
       href: "/alumnos",
@@ -44,7 +45,7 @@
     {
       label: "Ingresos",
       href: "/ingresos",
-      icon: ApiKeyOutline,
+      icon: KeyRound,
     },
     {
       label: "Pagos",
@@ -89,7 +90,10 @@
     >
       <SidebarGroup>
         <SidebarBrand>
-          <div class="p-1 rounded-md" style="background-color: var(--color-primary-500)">
+          <div
+            class="p-1 rounded-md"
+            style="background-color: var(--color-primary-500)"
+          >
             <img src={logo_invertido} alt="FlowPass" class="h-6 w-6" />
           </div>
 
@@ -100,11 +104,11 @@
           &nbsp;+&nbsp;
           <img src={default_icon} alt="FlowPass" class="h-6 w-6" />
         </SidebarBrand>
-        {#each sidebarEx1 as { label, href, icon: Icon }}
+        {#each MenuItems as { label, href, icon: Icon }}
           <SidebarItem {label} {href} {spanClass}>
             {#snippet icon()}
               <Icon
-                class="h-5 w-5 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
+                class="h-5 w-5 text-gray-600 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
               ></Icon>
             {/snippet}
           </SidebarItem>
