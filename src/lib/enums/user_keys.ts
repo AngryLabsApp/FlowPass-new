@@ -25,4 +25,7 @@ export enum UserKeys {
   MEDIO_DE_PAGO = "medio_de_pago",
   MONTO = "monto",
   ESTADO_PAGO = "estado_pago",
+
+  PARTNER_CODE ="partner_code"
+
 }

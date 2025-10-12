@@ -11,9 +11,15 @@
   import { getCachedPlanes } from "$lib/services/api/planes";
   import { MapPlanCatalog } from "$lib/utils/utils";
 
+  const getPlan = (plan: string) => {
+    return PLANES.find((item) => item.value == plan);
+  };
+
   let { user, setLoadingModal, setToast, closeForm }: FormProps = $props();
+
   const PLANES = getCachedPlanes();
   const PLANES_CATAOGS = MapPlanCatalog(PLANES, true);
+  let requiere_partner_code = $state(getPlan(user.plan)?.partners || false);
 
   let updateItemValues: UpdateFormItem[] = $state([
     { key: UserKeys.PLAN, value: user.plan || "" },
@@ -21,20 +27,21 @@
     { key: UserKeys.DIAS_DE_GRACIA, value: 0 },
     { key: UserKeys.MEDIO_DE_PAGO, value: user.medio_de_pago || "" },
     { key: UserKeys.ESTADO_PAGO, value: user.estado_pago || "" },
+    { key: UserKeys.PARTNER_CODE, value: "" },
   ]);
   const onUpdated = () => {
-    //user.estado_pago = updateItemValues[0].value as string;
     closeForm(true);
   };
   const actions = useFormUpdateHook({ setLoadingModal, setToast, onUpdated });
 
-  const onChangePlan = () =>{
+  const onChangePlan = () => {
     const plan_value = updateItemValues[0].value;
-    const plan_selected = PLANES.find(item => item.value == plan_value);
-    if (plan_selected){
+    const plan_selected = getPlan(plan_value as string);
+    if (plan_selected) {
       updateItemValues[1].value = plan_selected.amount;
+      requiere_partner_code = plan_selected.partners;
     }
-  }
+  };
 </script>
 
 <Card class="p-4 sm:p-6 md:p-8">
@@ -56,12 +63,23 @@
 
     <Label class="space-y-2">
       <span>Monto de pago</span>
-      <Input type="number" name="monto" placeholder="0.0" required  bind:value={updateItemValues[1].value}/>
+      <Input
+        type="number"
+        name="monto"
+        placeholder="0.0"
+        required
+        bind:value={updateItemValues[1].value}
+      />
     </Label>
 
     <Label class="space-y-2">
       <span>Días de gracia</span>
-      <Input type="number" name="dias_gracia" placeholder="0"  bind:value={updateItemValues[2].value}/>
+      <Input
+        type="number"
+        name="dias_gracia"
+        placeholder="0"
+        bind:value={updateItemValues[2].value}
+      />
     </Label>
 
     <Label class="space-y-2">
@@ -84,6 +102,18 @@
       />
     </Label>
 
+    {#if requiere_partner_code}
+      <Label class="space-y-2">
+        <span>Código de ingreso de pareja a vincular</span>
+        <Input
+          type="text"
+          name="partner_code"
+          placeholder="0000"
+          bind:value={updateItemValues[5].value}
+          required
+        />
+      </Label>
+    {/if}
     <Button type="submit" class="w-full">Guardar cambios</Button>
   </form>
 </Card>
