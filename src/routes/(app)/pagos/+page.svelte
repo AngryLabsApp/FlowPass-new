@@ -13,7 +13,9 @@
   import { getPagos, getTotalByMonth } from "$lib/services/api/pagos";
   import type { Payment } from "$lib/types/pagos";
   import { Card } from "flowbite-svelte";
-  import { GiftBoxSolid } from "flowbite-svelte-icons";
+  import { Wallet } from "@lucide/svelte";
+  import { CurrencyKeys } from "$lib/enums/currency_keys";
+  import { toTitleCase } from "$lib/utils/utils";
 
   let pagination_values = $state({ total: 1, start: 0, end: 0, totalPages: 1 });
   let page = $state(1);
@@ -30,6 +32,7 @@
     end_date: fmtYearMonth(new Date()),
     search: "",
   };
+  let card_payment_text = "Ingresos totales";
 
   onMount(async () => {
     fetchPagos();
@@ -125,25 +128,33 @@
   onSearch={(key: FilterKeys, val: string | Date) => {
     setValue(key, val);
   }}
-  bind:selectedDate={selectedDate}
+  bind:selectedDate
 />
 
 <Card class="p-4 sm:p-6 md:p-8 mt-5" size="xs">
   {#if loading_total}
     <Skeleton size="sm" class="my-2" />
   {:else}
-    <GiftBoxSolid class="mb-3 h-8 w-8 text-secondary-500 dark:text-gray-400" />
+    <div class="bg-primary-200 p-2 w-fit rounded-md">
+      <Wallet class="h-10 w-10 text-primary-900  dark:text-gray-400" />
+    </div>
     <span>
       <h5
         class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white"
       >
-        {total_by_month}
+        {CurrencyKeys.PEN}{" "}{total_by_month}
       </h5>
     </span>
     <p class="mb-3 font-normal text-gray-500 dark:text-gray-400">
-      Ingresos totales
+      {card_payment_text.toUpperCase()}
     </p>
-    <p class="text-secondary-600 inline-flex items-center">mes</p>
+    <p class="text-secondary-600 inline-flex items-center">
+      {toTitleCase(
+        new Date(selectedDate).toLocaleString("es-ES", { month: "long" })
+      )}
+      {" "}
+      {new Date(selectedDate).getFullYear()}
+    </p>
   {/if}
 </Card>
 
