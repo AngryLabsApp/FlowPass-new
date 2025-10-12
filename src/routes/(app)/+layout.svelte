@@ -89,12 +89,15 @@
     >
       <SidebarGroup>
         <SidebarBrand>
-          <img src={logo_invertido} alt="FlowPass" class="h-6 w-6" />
+          <div class="p-1 rounded-md" style="background-color: var(--color-primary-500)">
+            <img src={logo_invertido} alt="FlowPass" class="h-6 w-6" />
+          </div>
+
           <span
             class="ml-2 self-center text-xl font-semibold whitespace-nowrap dark:text-white"
             >FlowPass</span
           >
-          +
+          &nbsp;+&nbsp;
           <img src={default_icon} alt="FlowPass" class="h-6 w-6" />
         </SidebarBrand>
         {#each sidebarEx1 as { label, href, icon: Icon }}
