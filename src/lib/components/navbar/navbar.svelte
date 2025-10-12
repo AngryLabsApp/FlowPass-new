@@ -13,6 +13,7 @@
     ToolbarButton,
   } from "flowbite-svelte";
   import { AdjustmentsHorizontalSolid } from "flowbite-svelte-icons";
+  import { UserRoundPlus } from "@lucide/svelte";
 
   const STYLES = {
     searchWidthDesktop: "w-[240px]",
@@ -98,8 +99,14 @@
           <div class="flex items-center gap-3">
             {@render filterGroup("desktop")}
           </div>
-          <Button size="lg" onclick={newUserForm}>
-            Nuevo Alumno +
+          <Button
+            color="secondary"
+            size="lg"
+            onclick={newUserForm}
+            class="flex gap-2 items-center"
+          >
+            Nuevo Alumno
+            <UserRoundPlus />
           </Button>
         </div>
       {/if}
@@ -119,8 +126,13 @@
     <div class="flex md:order-2 w-full md:w-auto">
       {#if filter.uiState.filtersCollapsed}
         <div class="flex w-full justify-between md:pl-0 gap-3">
-          <Button size="lg" onclick={newUserForm}>
-            Nuevo Alumno +
+          <Button
+            color="secondary"
+            size="lg"
+            onclick={newUserForm}
+            class="flex gap-2 items-center"
+            >Nuevo Alumno
+            <UserRoundPlus />
           </Button>
           <ToolbarButton
             class="inline-flex items-center"
