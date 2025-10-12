@@ -153,7 +153,7 @@
   };
 
   function onUpdateUser(){
-    
+      fetchAlumnos();
   }
 
   function setLoadingModal(loading: boolean, title?: string) {
@@ -187,7 +187,7 @@
     />
   </div>
 </div>
-<UserModal bind:openModal user={selected_user} {registrarIngreso} {setToast} {setLoadingModal}/>
+<UserModal bind:openModal user={selected_user} {registrarIngreso} {setToast} {setLoadingModal} {onUpdateUser}/>
 {#if loading}
   <SkeletonTable rows={10} cellHeights="h-4" headers={USER_TABLE_COLUMNS} />
 {:else if error}

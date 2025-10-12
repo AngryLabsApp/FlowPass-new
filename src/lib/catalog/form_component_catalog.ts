@@ -30,10 +30,10 @@ export type FormFieldCatalogItem = {
 };
 
 export interface FormProps {
-  user?: User,
-  setLoadingModal?: (loading: boolean, title?: string) => void,
-  setToast?: (title: string, success: boolean) => void,
-  closeForm?: () => void,
+  user: User,
+  setLoadingModal: (loading: boolean, title?: string) => void,
+  setToast: (title: string, success: boolean) => void,
+  closeForm: (reload?: boolean) => void,
 };
 
 /**
@@ -45,57 +45,53 @@ export const FORM_COMPONENT_CATALOG: Partial<Record<UserKeys, FormFieldCatalogIt
   // === PLAN_INFO ===
   [UserKeys.PLAN]: {
     component: RenovarPlan,
-    props: {
 
-    },
   },
   [UserKeys.CLASES_RESTANTES]: {
     component: RenovarClases,
-    props: {},
   },
   [UserKeys.ESTADO]: {
     component: EstadoPLan,
-    props: {},
   },
   [UserKeys.FECHA_INICIO_PLAN]: {
     component: RenovarRechaPLan,
-    props: {},
+
   },
   [UserKeys.IDENTIFICACION]: {
     component: RenovarIdentificacion,
-    props: {},
+
   },
   [UserKeys.TELEFONO]: {
     component: RenovarTelefono,
-    props: {},
+
   },
   [UserKeys.EMAIL]: {
     component: RenovarEmail,
-    props: {},
+
   },
   [UserKeys.DIRECCION]: {
     component: RenovarDireccion,
-    props: {},
+
   },
   [UserKeys.CUMPLEANOS]: {
     component: RenovarCumple,
-    props: {},
+
   },
   [UserKeys.NOTIFICAR]: {
     component: RenovarNotificar,
-    props: {},
+
   },
   [UserKeys.DE_VIAJE]: {
     component: RenovarDeViaje,
-    props: {},
+
   },
   [UserKeys.PATOLOGIAS]: {
     component: RenovarPatologia,
-    props: {},
+
   },
   [UserKeys.ESTADO_PAGO]: {
     component: RenovarEstadoPago,
-    props: {},
+
   },
 };
 
@@ -108,7 +104,7 @@ export function getFieldComponent(
   user: User,
   setLoadingModal: (loading: boolean, title?: string) => void,
   setToast: (title: string, success: boolean) => void,
-  closeForm: () => void,
+  closeForm: (reload?: boolean) => void,
 ): FormFieldCatalogItem {
   const item = FORM_COMPONENT_CATALOG[key];
   if (item) {
@@ -120,5 +116,5 @@ export function getFieldComponent(
     };
     return item
   };
-  return { component: Input, props: {} };
+  return { component: Input };
 }

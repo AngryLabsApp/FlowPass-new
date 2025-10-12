@@ -1,26 +1,21 @@
 <script lang="ts">
+    import type { FormProps } from "$lib/catalog/form_component_catalog";
   import { UserKeys } from "$lib/enums/user_keys";
   import {
     useFormUpdateHook,
     type UpdateFormItem,
   } from "$lib/hooks/useFormUpdate.svelte";
-  import type { User } from "$lib/types/user";
   import { Button, Card, Label, Input } from "flowbite-svelte";
 
-  let { user, setLoadingModal, setToast, closeForm } = $props<{
-    user: User;
-    setLoadingModal: (loading: boolean, title?: string) => void;
-    setToast: (title: string, success: boolean) => void;
-    closeForm: () => void;
-  }>();
+  let { user, setLoadingModal, setToast, closeForm }: FormProps = $props();
 
   let updateItemValues: UpdateFormItem[] = $state([
     { key: UserKeys.CLASES_TOMADAS, value: user.clases_tomadas || 0 },
     { key: UserKeys.LIMITE_CLASES, value: user.limite_clases || 0 },
   ]);
   const onUpdated = () => {
-    user.clases_tomadas = updateItemValues[0].value;
-    user.limite_clases = updateItemValues[1].value;
+    user.clases_tomadas = updateItemValues[0].value as number;
+    user.limite_clases = updateItemValues[1].value as number;
     closeForm();
   };
   const actions = useFormUpdateHook({ setLoadingModal, setToast, onUpdated });

@@ -32,7 +32,6 @@ export async function getTotalByMonth(
   const res = await fetchWithAuth(url, {}, currentAbort);
   if (res?.ok) {
     let data = await res.json();
-    console.log("response",data);
     const { total} = data[0] || {};
     return { total };
   } else {

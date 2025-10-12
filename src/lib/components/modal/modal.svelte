@@ -23,12 +23,14 @@
     registrarIngreso,
     setLoadingModal,
     setToast,
+    onUpdateUser
   } = $props<{
     openModal: boolean;
     user: User;
     registrarIngreso: (user: User) => void;
     setLoadingModal:(loading: boolean, title?: string) =>void,
     setToast:(title: string, success: boolean) =>void,
+    onUpdateUser:() => void,
   }>();
   let size: ModalProps["size"] = $state("lg"); // Set default value
   let form_selected: {key:UserKeys, form: any} | null= $state(null);
@@ -47,7 +49,7 @@
       show_form= false;
       return;
     }
-    form_selected = {key, form: getFieldComponent(key, user, setLoadingModal, setToast,closeForm)};
+    form_selected = {key, form: getFieldComponent(key, user, setLoadingModal, setToast, onUpdate)};
     show_form = true;
   }
 
@@ -64,6 +66,15 @@
   function closeForm(){
     show_form = false;
   }
+  
+   function onUpdate(reload?: boolean){
+    closeForm();
+    if (reload){
+      openModal = false;
+    }
+    onUpdateUser();
+  }
+
 </script>
 
 <Modal bind:open={openModal} {size} onclose={()=> closeForm()}>

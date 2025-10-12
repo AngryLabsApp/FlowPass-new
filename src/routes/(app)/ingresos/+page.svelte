@@ -132,7 +132,6 @@
       }
       onClean("all");
     } catch (error: any) {
-      console.log(error.message);
       let message = error.message;
       let text = "El código no existe.";
 

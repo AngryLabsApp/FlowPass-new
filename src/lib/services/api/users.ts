@@ -33,14 +33,11 @@ export async function updateSingleField(
 ): Promise<any> {
 
   const payload = { ...fields, id, type: "SINGLE" };
-  console.log("payload",payload);
   const res = await fetchWithAuth(USER_UPDATE, {
     method: "POST", body: JSON.stringify(payload)
   });
-    console.log("data",res);
   if (res?.ok) {
     let data = await res.json();
-      console.log("data",data);
     return data;
 
   } else {
