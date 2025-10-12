@@ -27,6 +27,14 @@
     closeForm(true);
   };
   const actions = useFormUpdateHook({ setLoadingModal, setToast, onUpdated });
+
+  const onChangePlan = () =>{
+    const plan_value = updateItemValues[0].value;
+    const plan_selected = PLANES.find(item => item.value == plan_value);
+    if (plan_selected){
+      updateItemValues[1].value = plan_selected.amount;
+    }
+  }
 </script>
 
 <Card class="p-4 sm:p-6 md:p-8">
@@ -40,7 +48,7 @@
         size="md"
         items={PLANES_CATAOGS}
         placeholder="Selecciona..."
-        onchange={() => {}}
+        onchange={() => onChangePlan()}
         required
         bind:value={updateItemValues[0].value}
       />
