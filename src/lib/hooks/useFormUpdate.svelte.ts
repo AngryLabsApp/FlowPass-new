@@ -1,5 +1,5 @@
 import type { UserKeys } from "$lib/enums/user_keys";
-import { updateSingleField } from "$lib/services/api/users";
+import { updateSingleField, updateUserPlan } from "$lib/services/api/users";
 import type { User } from "$lib/types/user";
 
 
@@ -57,7 +57,33 @@ export function useFormUpdateHook(options: UseFormUPdateOptions = {
         }
     }
 
+    const onUpdatePlanForm = async (values: UpdateFormItem[], id: string, e?: any) => {
+        e?.preventDefault();
+        const fields: any = {
+        };
+        values.forEach((item) => {
+            if (item.value)
+                fields[item.key] = { value: item.value };
+        });
+
+        options.setLoadingModal(true, "Actualizando valores");
+
+        try {
+            const response = await updateUserPlan(id, fields);
+            if (response.response == "success") {
+                options.setToast("¡Actualizamos con éxito!", true);
+                options.onUpdated();
+
+            }
+        } catch (error) {
+            options.setToast("Hubo un problema al actualizar. Reintenta en unos segundos.", false);
+        } finally {
+            options.setLoadingModal(false);
+        }
+    }
+
     return {
-        onUpdateSingleForm
+        onUpdateSingleForm,
+        onUpdatePlanForm
     };
 }

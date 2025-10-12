@@ -41,7 +41,25 @@ export async function updateSingleField(
     return data;
 
   } else {
-    throw new Error("Error al registrar ingreso");
+    throw new Error("Error al actualizar");
+  }
+
+}
+
+export async function updateUserPlan(
+  id: string, fields: any
+): Promise<any> {
+
+  const payload = { ...fields, id};
+  const res = await fetchWithAuth(USER_UPDATE, {
+    method: "POST", body: JSON.stringify(payload)
+  });
+  if (res?.ok) {
+    let data = await res.json();
+    return data;
+
+  } else {
+    throw new Error("Error al actualizar");
   }
 
 }

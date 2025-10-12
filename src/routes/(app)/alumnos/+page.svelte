@@ -143,6 +143,7 @@
       if (response.response == "Success") {
         setToast("¡Se registró el ingreso correctamente!", true);
         selected_user.clases_tomadas = nuevasTomadas;
+        openModal = false;
         fetchAlumnos();
       }
     } catch (error) {
