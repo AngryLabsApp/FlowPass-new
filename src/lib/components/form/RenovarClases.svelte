@@ -16,7 +16,7 @@
   const onUpdated = () => {
     user.clases_tomadas = updateItemValues[0].value as number;
     user.limite_clases = updateItemValues[1].value as number;
-    closeForm();
+    closeForm(true);
   };
   const actions = useFormUpdateHook({ setLoadingModal, setToast, onUpdated });
 </script>
