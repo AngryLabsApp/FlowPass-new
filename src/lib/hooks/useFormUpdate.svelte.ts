@@ -17,7 +17,7 @@ interface UseFormUPdateOptions {
  */
 export interface UpdateFormItem {
     key: UserKeys;
-    value: string | number;
+    value: string | number ;
 }
 export function useFormUpdateHook(options: UseFormUPdateOptions = {
     setLoadingModal: function (loading: boolean, title?: string): void {

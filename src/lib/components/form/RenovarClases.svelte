@@ -32,7 +32,7 @@
         name="clases_realizadas"
         placeholder="0"
         required
-        bind:value={updateItemValues[0].value}
+        bind:value={updateItemValues[0].value as number}
       />
     </Label>
 
@@ -42,7 +42,7 @@
         type="number"
         name="limite_calses"
         placeholder="0"
-        bind:value={updateItemValues[1].value}
+        bind:value={updateItemValues[1].value as number}
       />
     </Label>
 

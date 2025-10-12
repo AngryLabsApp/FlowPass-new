@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ESTADO_PLANES } from "$lib/catalog/estados_planes";
+  import { GET_ESTADO_PLANES } from "$lib/catalog/estados_planes";
   import type { FormProps } from "$lib/catalog/form_component_catalog";
   import { UserKeys } from "$lib/enums/user_keys";
   import {
@@ -29,7 +29,7 @@
       <span>Estado</span>
       <Select
         size="md"
-        items={ESTADO_PLANES}
+        items={GET_ESTADO_PLANES()}
         bind:value={updateItemValues[0].value}
         placeholder="Selecciona..."
         required
@@ -43,7 +43,7 @@
         name="dias_extra"
         placeholder="0"
         required
-        bind:value={updateItemValues[1].value}
+        bind:value={updateItemValues[1].value as number}
       />
     </Label>
 

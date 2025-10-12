@@ -36,7 +36,7 @@ export function fmtDate(value: string) {
 }
 
 export function toTitleCase(str: string) {
-  return str ? str.toLowerCase().replace(/(?:^|\s)\p{L}/gu, (c) => c.toUpperCase()): "";
+  return str ? str.toLowerCase().replace(/(?:^|\s)\p{L}/gu, (c) => c.toUpperCase()) : "";
 }
 
 export function statusPillClasses(value: unknown) {
@@ -168,14 +168,14 @@ export function BuildQueryParams(filters: DashboardFilters): QueryParams {
   let counter = 1;
 
   if (typeof filters?.sort === "string" && filters.sort.length > 0) {
-      queryParams.sort = filters.sort;
+    queryParams.sort = filters.sort;
   }
   if (typeof filters?.search === "string" && filters.search.length > 0) {
     queryParams["field" + counter] = "nombre";
     queryParams["value" + counter] = filters.search;
     counter++;
   }
-  if (typeof filters?.plan === "string" && filters.plan.length > 0  && filters.plan.trim() !== "all") {
+  if (typeof filters?.plan === "string" && filters.plan.length > 0 && filters.plan.trim() !== "all") {
     queryParams["field" + counter] = "plan";
     queryParams["value" + counter] = filters.plan;
     counter++;
@@ -201,7 +201,7 @@ export function BuildQueryParamsPagos(filters: PagosFilters): QueryParams {
     queryParams["value" + counter] = filters.search;
     counter++;
   }
-  if (typeof filters?.estado_pago === "string" && filters.estado_pago.length > 0   && filters.estado_pago.trim() !== "all") {
+  if (typeof filters?.estado_pago === "string" && filters.estado_pago.length > 0 && filters.estado_pago.trim() !== "all") {
     queryParams["field" + counter] = "estado_pago";
     queryParams["value" + counter] = filters.estado_pago;
     counter++;
@@ -209,18 +209,18 @@ export function BuildQueryParamsPagos(filters: PagosFilters): QueryParams {
   return queryParams;
 };
 
-export function MapPlanCatalog(planes: Plan[]){
+export function MapPlanCatalog(planes: Plan[]) {
   const sorted = planes.sort((a, b) => (Number(a.order ?? Infinity) - Number(b.order ?? Infinity)));
-  const catalog = sorted.map( (item) => {
+  const catalog = sorted.map((item) => {
     return {
-       value: item.value,
+      value: item.value,
       name: item.label
     }
   });
-  catalog.unshift({value:"all", name:"Planes: Todos"});
+  catalog.unshift({ value: "all", name: "Planes: Todos" });
   return catalog;
 
-  }
+}
 
 export function fmtUser(user: User): User {
   const format = { ...user } as User;
@@ -242,7 +242,11 @@ export function fmtUser(user: User): User {
 }
 
 export function fmtYearMonth(date: Date): string {
-   return date
-        ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`
-        : "";
+  return date
+    ? `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`
+    : "";
+}
+
+export function fmtDateToString(date: Date) {
+  return date.toISOString().split('T')[0];
 }
