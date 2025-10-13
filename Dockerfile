@@ -1,23 +1,18 @@
-# ---------- base ----------
-FROM node:20-alpine AS base
+# Etapa 1: compilamos la app de SvelteKit
+FROM node:20-alpine AS build
 WORKDIR /app
 
 ENV PNPM_HOME="/pnpm" \
     PATH="$PNPM_HOME:$PATH" \
     COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 RUN corepack enable pnpm && pnpm config set store-dir /pnpm/store
-
 COPY package.json pnpm-lock.yaml* ./
-COPY .npmrc .npmrc
-# Pre-descarga dependencias para aprovechar la cache entre builds
-RUN pnpm fetch
-
-# ---------- build ----------
-FROM base AS build
+COPY .npmrc ./
+RUN pnpm install --frozen-lockfile
 COPY . .
-RUN pnpm install --offline --frozen-lockfile && pnpm build
+RUN pnpm build
 
-# ---------- runtime ----------
+# Etapa 2: imagen final mínima con nginx
 FROM nginx:1.27-alpine-slim AS runtime
 ENV NODE_ENV=production
 COPY nginx.conf /etc/nginx/conf.d/default.conf
