@@ -99,7 +99,7 @@
         {/if}
         <Badge large color="gray">
           <UsersOutline />Compañero: {toTitleCase(
-            formated_user.partner_nombre || ""
+            formated_user.partner_nombre || "",
           )}
           {toTitleCase(formated_user.partner_apellidos || "")}</Badge
         >
@@ -122,6 +122,8 @@
           {user}
           {formated_user}
           {editField}
+          {setLoadingModal}
+          {setToast}
         />
         <AccordionUserItem
           title="Datos personales"
@@ -129,6 +131,8 @@
           {user}
           {formated_user}
           {editField}
+          {setLoadingModal}
+          {setToast}
         />
         <AccordionUserItem
           title="Detalle del ultimo pago"
@@ -136,6 +140,8 @@
           {user}
           {formated_user}
           {editField}
+          {setLoadingModal}
+          {setToast}
         />
       </Accordion>
     {/if}

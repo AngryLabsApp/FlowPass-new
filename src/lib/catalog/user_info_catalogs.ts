@@ -19,7 +19,7 @@ import {
   CreditCardOutline,
   DollarOutline,
 } from "flowbite-svelte-icons";
-
+import WAButton from "$lib/components/button/whatsapp_button.svelte";
 
 export const PLAN_INFO: CatalogItem[] = [
   {
@@ -70,6 +70,7 @@ export const DATOS_INFO: CatalogItem[] = [
     key: UserKeys.CODIGO_INGRESO,
     icon: FingerprintOutline,
     editable: false,
+    actionComponent:WAButton
   },
   {
     label: "DNI/Pasaporte/CE",

@@ -4,12 +4,14 @@
   import type { User } from "$lib/types/user";
   import { EditOutline } from "flowbite-svelte-icons";
 
-  let { title, items, user, formated_user, editField } = $props<{
+  let { title, items, user, formated_user, editField,setLoadingModal,setToast} = $props<{
     title: string;
     items: CatalogItem[];
     user: User;
     formated_user: User;
     editField: (item: CatalogItem) => void;
+    setLoadingModal: (loading: boolean, title?: string) => void;
+    setToast: (title: string, success: boolean) => void;
   }>();
 
   function canEditField(item: CatalogItem) {
@@ -48,6 +50,9 @@
         </div>
         <div class="text-gray-500 dark:text-gray-400">
           {formated_user[item.key as keyof User] || "-"}
+          {#if item.actionComponent}
+            <item.actionComponent {user} {setLoadingModal}{setToast}/>
+          {/if}
         </div>
       </div>
     {/each}
