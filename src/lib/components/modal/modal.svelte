@@ -33,7 +33,7 @@
     setToast: (title: string, success: boolean) => void;
     onUpdateUser: () => void;
   }>();
-  let size: ModalProps["size"] = $state("lg"); // Set default value
+  // let size: ModalProps["size"] = $state("xs"); // Set default value
   let form_selected: { key: UserKeys; form: any } | null = $state(null);
   let show_form = $state(false);
 
@@ -89,7 +89,7 @@
   }
 </script>
 
-<Modal bind:open={openModal} {size} onclose={() => closeForm()}>
+<Modal bind:open={openModal} size="md" onclose={() => closeForm()}>
   {#snippet header()}
     <div class="flex items-center gap-2">
       {formated_user.full_name}
@@ -117,6 +117,7 @@
     {#if user.id && user.id.length > 0}
       <Accordion multiple>
         <AccordionUserItem
+          open={true}
           title="Plan actual"
           items={PLAN_INFO}
           {user}

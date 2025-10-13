@@ -73,7 +73,7 @@ export const DATOS_INFO: CatalogItem[] = [
     actionComponent:WAButton
   },
   {
-    label: "DNI/Pasaporte/CE",
+    label: "DNI/Pasaporte /C.E.",
     key: UserKeys.IDENTIFICACION,
     icon: ProfileCardOutline,
     editable: true,
