@@ -1,7 +1,8 @@
 import type { Plan } from '$lib/types/planes';
 import { fetchWithAuth } from './base';
 
-const PLANES_URL = 'https://n8n.angrylabs.app/webhook/e2b33545-4130-4699-8549-a30b03e39b16';
+import { PUBLIC_PLANES_URL} from '$env/static/public';
+
 
 type Reviver = (this: any, key: string, value: any) => any;
 type Replacer = (this: any, key: string, value: any) => any;
@@ -41,7 +42,7 @@ export async function getPlanes(
   // Cache-first si está fresco y no forzaste
   if (!force && isFresh(cached, maxAgeMs)) {
     // Revalidación en segundo plano (opcional)
-    const res = (await fetchWithAuth(PLANES_URL, { headers })) as Response;
+    const res = (await fetchWithAuth(PUBLIC_PLANES_URL, { headers })) as Response;
     if (res.status === 200) {
       const data: any = await res.json();
       const planes = data.planes;
@@ -52,7 +53,7 @@ export async function getPlanes(
   }
 
   // Descarga/revalida
-  const res = (await fetchWithAuth(PLANES_URL, { headers })) as Response;
+  const res = (await fetchWithAuth(PUBLIC_PLANES_URL, { headers })) as Response;
   if (res.status === 304 && cached) return cached.data;
   if (!res.ok) {
     if (cached) return cached.data as Plan[];

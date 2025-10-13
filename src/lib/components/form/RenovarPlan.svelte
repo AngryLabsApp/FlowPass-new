@@ -30,7 +30,6 @@
     { key: UserKeys.PARTNER_CODE, value: "" },
   ]);
   const onUpdated = () => {
-    console.log("entroo");
     closeForm(true);
   };
   const actions = useFormUpdateHook({ setLoadingModal, setToast, onUpdated });
