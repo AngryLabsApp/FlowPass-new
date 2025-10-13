@@ -32,7 +32,7 @@
     end_date: fmtYearMonth(new Date()),
     search: "",
   };
-  let card_payment_text = "Ingresos totales";
+  let card_payment_text = "Ingresos totales"
 
   onMount(async () => {
     fetchPagos();
@@ -131,7 +131,7 @@
   bind:selectedDate
 />
 
-<Card class="p-4 sm:p-6 md:p-8 mt-5" size="xs">
+<Card class="p-5 flex gap-0.5 justify-center w-1/6" size="xs">
   {#if loading_total}
     <Skeleton size="sm" class="my-2" />
   {:else}
@@ -145,7 +145,7 @@
         {CurrencyKeys.PEN}{" "}{total_by_month}
       </h5>
     </span>
-    <p class="mb-3 font-normal text-gray-500 dark:text-gray-400">
+    <p class="font-normal text-gray-500 dark:text-gray-400">
       {card_payment_text.toUpperCase()}
     </p>
     <p class="text-secondary-600 inline-flex items-center">

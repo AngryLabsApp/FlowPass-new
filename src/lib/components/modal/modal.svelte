@@ -16,6 +16,7 @@
   import type { CatalogItem } from "$lib/types/catalogItem";
   import { getFieldComponent } from "$lib/catalog/form_component_catalog";
   import { UserKeys } from "$lib/enums/user_keys";
+  import { ArrowRight, ClipboardClock } from "@lucide/svelte";
 
   let {
     openModal = $bindable(false),
@@ -23,17 +24,17 @@
     registrarIngreso,
     setLoadingModal,
     setToast,
-    onUpdateUser
+    onUpdateUser,
   } = $props<{
     openModal: boolean;
     user: User;
     registrarIngreso: (user: User) => void;
-    setLoadingModal:(loading: boolean, title?: string) =>void,
-    setToast:(title: string, success: boolean) =>void,
-    onUpdateUser:() => void,
+    setLoadingModal: (loading: boolean, title?: string) => void;
+    setToast: (title: string, success: boolean) => void;
+    onUpdateUser: () => void;
   }>();
   let size: ModalProps["size"] = $state("lg"); // Set default value
-  let form_selected: {key:UserKeys, form: any} | null= $state(null);
+  let form_selected: { key: UserKeys; form: any } | null = $state(null);
   let show_form = $state(false);
 
   const formated_user = $derived.by<User>(() => {
@@ -44,12 +45,15 @@
   function editField(item: CatalogItem) {
     selectForm(item.key);
   }
-  function selectForm(key: UserKeys){
+  function selectForm(key: UserKeys) {
     if (show_form && form_selected && form_selected.key == key) {
-      show_form= false;
+      show_form = false;
       return;
     }
-    form_selected = {key, form: getFieldComponent(key, user, setLoadingModal, setToast, onUpdate)};
+    form_selected = {
+      key,
+      form: getFieldComponent(key, user, setLoadingModal, setToast, onUpdate),
+    };
     show_form = true;
   }
 
@@ -63,21 +67,29 @@
     return formated_user.clases_tomadas >= formated_user.limite_clases;
   }
 
-  function closeForm(){
+  function userHasPlan() {
+    return formated_user.plan !== null;
+  }
+
+  function isActivePlan() {
+    console.log(formated_user.estado);
+    return formated_user.estado === "Activo";
+  }
+
+  function closeForm() {
     show_form = false;
   }
-  
-   function onUpdate(reload?: boolean){
+
+  function onUpdate(reload?: boolean) {
     closeForm();
-    if (reload){
+    if (reload) {
       openModal = false;
     }
     onUpdateUser();
   }
-
 </script>
 
-<Modal bind:open={openModal} {size} onclose={()=> closeForm()}>
+<Modal bind:open={openModal} {size} onclose={() => closeForm()}>
   {#snippet header()}
     <div class="flex items-center gap-2">
       {formated_user.full_name}
@@ -87,7 +99,7 @@
         {/if}
         <Badge large color="gray">
           <UsersOutline />Compañero: {toTitleCase(
-            formated_user.partner_nombre || "",
+            formated_user.partner_nombre || ""
           )}
           {toTitleCase(formated_user.partner_apellidos || "")}</Badge
         >
@@ -128,17 +140,29 @@
       </Accordion>
     {/if}
     {#if form_selected && show_form}
-        <form_selected.form.component {...form_selected.form.props} />
+      <form_selected.form.component {...form_selected.form.props} />
     {/if}
   </div>
 
   {#snippet footer()}
-    <Button onclick={() => registrarIngreso(user)}>Registrar ingreso</Button>
-    <Button
-      color="secondary"
-      onclick={() => {
-        selectForm(UserKeys.PLAN);
-      }}>Renovar plan</Button
-    >
+    <div class="flex justify-between w-full gap-4">
+      <Button
+        onclick={() => registrarIngreso(user)}
+        class="flex gap-2 items-center w-full"
+        disabled={isClassLimitFull() || !userHasPlan() || !isActivePlan()}
+      >
+        <ClipboardClock size="18" />
+        Registrar ingreso
+      </Button>
+      <Button
+        color="secondary"
+        onclick={() => {
+          selectForm(UserKeys.PLAN);
+        }}
+        class="flex gap-2 items-center w-full"
+        >Renovar plan
+        <ArrowRight size="18" />
+      </Button>
+    </div>
   {/snippet}
 </Modal>
