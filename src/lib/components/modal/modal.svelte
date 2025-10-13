@@ -136,7 +136,7 @@
           {setToast}
         />
         <AccordionUserItem
-          title="Detalle del ultimo pago"
+          title="Detalle del último pago"
           items={PAGO_INFO}
           {user}
           {formated_user}

@@ -3,6 +3,8 @@
   import { AccordionItem, Button } from "flowbite-svelte";
   import type { User } from "$lib/types/user";
   import { EditOutline } from "flowbite-svelte-icons";
+  import { UserKeys } from "$lib/enums/user_keys";
+  import { CurrencyKeys } from "$lib/enums/currency_keys";
 
   let {
     title,
@@ -42,18 +44,16 @@
   {/snippet}
 
   <div
-    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-6 text-sm"
+    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-2 gap-y-4 text-sm"
   >
     {#each items as item}
-      <div class="space-y-1x">
+      <div class="flex flex-col justify-between space-y-1x">
         <div
           class="flex items-start justify-between gap-1 text-gray-900 dark:text-gray-100 font-semibold"
         >
           <div class="flex gap-1">
-            <item.icon class="w-5 h-5" />
-            <span class="wrap-break-word"
-              >{item.label}</span
-            >
+            <item.icon />
+            <span class="wrap-break-word">{item.label}</span>
           </div>
 
           {#if canEditField(item)}
@@ -61,15 +61,20 @@
               color="secondary"
               pill={true}
               outline={true}
-              class=" h-2 w-2"
+              class="p-1"
               onclick={() => editField(item)}
             >
               <EditOutline size="sm" />
             </Button>
           {/if}
         </div>
-        <div class="text-gray-500 dark:text-gray-400">
-          {formated_user[item.key as keyof User] || "-"}
+        <div class="text-gray-500 dark:text-gray-400 flex gap-2 justify-start">
+          {#if item.key === "monto"}
+            {CurrencyKeys.PEN}{formated_user[item.key as keyof User] || "-"}
+          {:else}
+            {formated_user[item.key as keyof User] || "-"}
+          {/if}
+
           {#if item.actionComponent}
             <item.actionComponent {user} {setLoadingModal} {setToast} />
           {/if}

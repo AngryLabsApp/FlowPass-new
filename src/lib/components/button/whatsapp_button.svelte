@@ -30,6 +30,6 @@
     };
 </script>
 
-<Button class="ml-3 p-2!" onclick={() => onClick()}>
-    <WhatsappSolid class="h-5 w-5 mr-2" /> Enviar código
+<Button color="green" class="flex p-1.5 w-fit gap-1" onclick={() => onClick()} size="xs">
+    <WhatsappSolid size="sm" /> Enviar código
 </Button>
