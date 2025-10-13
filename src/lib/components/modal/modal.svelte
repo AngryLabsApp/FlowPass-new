@@ -17,6 +17,7 @@
   import { getFieldComponent } from "$lib/catalog/form_component_catalog";
   import { UserKeys } from "$lib/enums/user_keys";
   import { ArrowRight, ClipboardClock } from "@lucide/svelte";
+  import { useMediaQuery } from "flowbite-svelte";
 
   let {
     openModal = $bindable(false),
@@ -87,9 +88,22 @@
     }
     onUpdateUser();
   }
+
+  const isTablet = useMediaQuery("(min-width: 640px)"); // tablet (sm)
+  const isDesktop = useMediaQuery("(min-width: 1024px)"); // desktop (lg)
+
+  let modalSize = $state<ModalProps["size"]>("md");
+
+  $effect(() => {
+    if (isDesktop())
+      modalSize = "lg"; // desktop
+    else if (isTablet())
+      modalSize = "sm"; // tablet
+    else modalSize = "xs"; // mobile
+  });
 </script>
 
-<Modal bind:open={openModal} size="md" onclose={() => closeForm()}>
+<Modal bind:open={openModal} size={modalSize} onclose={() => closeForm()}>
   {#snippet header()}
     <div class="flex items-center gap-2">
       {formated_user.full_name}
@@ -99,7 +113,7 @@
         {/if}
         <Badge large color="gray">
           <UsersOutline />Compañero: {toTitleCase(
-            formated_user.partner_nombre || "",
+            formated_user.partner_nombre || ""
           )}
           {toTitleCase(formated_user.partner_apellidos || "")}</Badge
         >
@@ -127,6 +141,7 @@
           {setToast}
         />
         <AccordionUserItem
+          open={false}
           title="Datos personales"
           items={DATOS_INFO}
           {user}
@@ -136,6 +151,7 @@
           {setToast}
         />
         <AccordionUserItem
+          open={false}
           title="Detalle del último pago"
           items={PAGO_INFO}
           {user}

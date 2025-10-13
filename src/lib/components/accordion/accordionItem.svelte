@@ -36,15 +36,15 @@
   }
 </script>
 
-<AccordionItem {open} headerClass="py-2 px-5">
+<AccordionItem {open} headerClass="py-1.5 px-5">
   {#snippet header()}
-    <p>
+    <p class="text-sm/6">
       {title}
     </p>
   {/snippet}
 
   <div
-    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-2 gap-y-4 text-sm"
+    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-2 gap-y-4 text-sm/6"
   >
     {#each items as item}
       <div class="flex flex-col justify-between space-y-1x">
