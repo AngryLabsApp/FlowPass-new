@@ -106,7 +106,7 @@
             class="flex gap-2 items-center"
           >
             Nuevo Alumno
-            <UserRoundPlus />
+            <UserRoundPlus size="22" />
           </Button>
         </div>
       {/if}
@@ -132,7 +132,7 @@
             onclick={newUserForm}
             class="flex gap-2 items-center"
             >Nuevo Alumno
-            <UserRoundPlus />
+            <UserRoundPlus size="22" />
           </Button>
           <ToolbarButton
             class="inline-flex items-center"

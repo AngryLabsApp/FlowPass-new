@@ -13,6 +13,7 @@
   } from "flowbite-svelte";
   import { AdjustmentsHorizontalSolid } from "flowbite-svelte-icons";
   import MonthPicker from "$lib/components/month_picker/month_picker.svelte";
+  import { FileDown } from "@lucide/svelte";
 
   import { ESTADO_PAGOS } from "$lib/catalog/estados_pagos";
 
@@ -59,8 +60,6 @@
       filter.filterState.date = selectedDate;
     }
   });
-
-
 </script>
 
 {#snippet searchInput(classes: string)}
@@ -85,14 +84,17 @@
 {/snippet}
 
 {#snippet dateSelect(classes: string)}
- <!-- <Datepicker
+  <!-- <Datepicker
     class={classes}
     bind:value={filter.filterState.date}
     onchange={handleDateChange}
     onselect={handleDateChange}
   />
 -->
-  <MonthPicker onChange={filter.onMonthChange} bind:value={filter.filterState.date}></MonthPicker>
+  <MonthPicker
+    onChange={filter.onMonthChange}
+    bind:value={filter.filterState.date}
+  ></MonthPicker>
 {/snippet}
 
 {#snippet filterGroup(layout: "desktop" | "mobile")}
@@ -136,8 +138,14 @@
           <div class="flex items-center gap-3">
             {@render filterGroup("desktop")}
           </div>
-          <Button size="lg" class="" onclick={descargarPagos}>
-            Descargar historial
+          <Button
+            color="secondary"
+            size="lg"
+            class="flex gap-2 items-center"
+            onclick={descargarPagos}
+          >
+            Descargar Historial
+            <FileDown size="22" />
           </Button>
         </div>
       {/if}
@@ -157,8 +165,14 @@
     <div class="flex md:order-2 w-full md:w-auto">
       {#if filter.uiState.filtersCollapsed}
         <div class="flex w-full justify-between md:pl-0 gap-3">
-          <Button size="lg" class="" onclick={descargarPagos}>
-            Descargar historial
+          <Button
+            color="secondary"
+            size="lg"
+            class="flex gap-2 items-center"
+            onclick={descargarPagos}
+          >
+            Descargar Historial
+            <FileDown size="22" />
           </Button>
           <ToolbarButton
             class="inline-flex items-center"
