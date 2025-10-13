@@ -1,6 +1,5 @@
 import type { UserKeys } from "$lib/enums/user_keys";
 import { updateSingleField, updateUserPlan } from "$lib/services/api/users";
-import type { User } from "$lib/types/user";
 
 
 interface UseFormUPdateOptions {
@@ -45,7 +44,7 @@ export function useFormUpdateHook(options: UseFormUPdateOptions = {
 
         try {
             const response = await updateSingleField(id, fields);
-            if (response.response == "Success") {
+            if ((response.response || "").toLocaleLowerCase() == "success" ) {
                 options.setToast("¡Actualizamos con éxito!", true);
                 options.onUpdated();
 
@@ -70,7 +69,7 @@ export function useFormUpdateHook(options: UseFormUPdateOptions = {
 
         try {
             const response = await updateUserPlan(id, fields);
-            if (response.response == "success") {
+            if ((response.response || "").toLocaleLowerCase() == "success" ) {
                 options.setToast("¡Actualizamos con éxito!", true);
                 options.onUpdated();
 
