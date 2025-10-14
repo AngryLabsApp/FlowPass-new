@@ -8,11 +8,20 @@
     TableBody,
     TableBodyRow,
     TableBodyCell,
+    Button,
+    Dropdown,
+    DropdownItem,
   } from "flowbite-svelte";
+  import {
+    ChevronDownOutline,
+    DotsVerticalOutline,
+  } from "flowbite-svelte-icons";
 
   export let onClick: (item: any) => void = () => {};
   export let data: any[] = [];
   export let headers: Column<any>[];
+  export let dropdownActions: boolean = false;
+  const stop = (e: Event) => e.stopPropagation();
 </script>
 
 <Table hoverable={true}>
@@ -20,6 +29,9 @@
     {#each headers as col}
       <TableHeadCell>{col.header}</TableHeadCell>
     {/each}
+    {#if dropdownActions}
+      <TableHeadCell></TableHeadCell>
+    {/if}
   </TableHead>
 
   <TableBody>
@@ -43,6 +55,30 @@
             {/if}
           </TableBodyCell>
         {/each}
+        {#if dropdownActions}
+          <TableBodyCell class="text-right">
+            <!-- contenedor solo para layout, SIN handlers -->
+            <div class="inline-flex items-center justify-end">
+              <Button
+                outline
+                type="button"
+                class="inline-flex items-center justify-center rounded-full p-1 border-none"
+                color="secondary"
+                onclick={stop}
+              >
+                <DotsVerticalOutline class="h-8 w-8" />
+              </Button>
+              <Dropdown simple>
+                <DropdownItem
+                  onclick={(e:any) => {
+                    stop(e);
+                    console.log("asda");
+                  }}>Eliminar</DropdownItem
+                >
+              </Dropdown>
+            </div>
+          </TableBodyCell>
+        {/if}
       </TableBodyRow>
     {/each}
     {#if data.length <= 0}

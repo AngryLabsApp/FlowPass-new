@@ -194,7 +194,7 @@
 {:else if error}
   <p class="text-red-600">{error}</p>
 {:else}
-  <UserTable data={users} onClick={tableOnclick} headers={USER_TABLE_COLUMNS} />
+  <UserTable data={users} onClick={tableOnclick} headers={USER_TABLE_COLUMNS} dropdownActions={true}/>
   <Pagination
     {pagination_values}
     bind:page
