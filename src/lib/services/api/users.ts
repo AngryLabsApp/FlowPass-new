@@ -3,7 +3,7 @@ import type { getUsersResponse } from "$lib/types/api";
 import type { QueryParams } from "$lib/types/queryparams";
 import type { User } from "$lib/types/user";
 import { buildUrl, mapIfPartnerUser } from "$lib/utils/utils";
-import { PUBLIC_USERS_URL, PUBLIC_USER_UPDATE, PUBLIC_USERS_FORM } from '$env/static/public';
+import { PUBLIC_USERS_URL, PUBLIC_USER_UPDATE, PUBLIC_USERS_FORM, PUBLIC_DELETE_USER_URL } from '$env/static/public';
 
 
 
@@ -62,4 +62,23 @@ export async function updateUserPlan(
 
 export function newUserForm() {
   window.open(PUBLIC_USERS_FORM, "_self");
+}
+
+
+export async function deleteUser(
+  id: string
+): Promise<any> {
+
+  const payload = {id};
+  const res:any = await fetchWithAuth(PUBLIC_DELETE_USER_URL, {
+    method: "DELETE", body: JSON.stringify(payload)
+  });
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}`);
+  }
+  let data = await res.json();
+  if (!data.response)
+    throw new Error(`Error al eliminar`);
+  return data;
+
 }

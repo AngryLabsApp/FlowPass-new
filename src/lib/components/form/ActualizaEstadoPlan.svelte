@@ -45,7 +45,6 @@
         type="number"
         name="dias_extra"
         placeholder="0"
-        required
         bind:value={updateItemValues[1].value as number}
       />
     </Label>

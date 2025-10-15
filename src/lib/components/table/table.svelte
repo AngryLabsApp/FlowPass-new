@@ -13,11 +13,11 @@
     DropdownItem,
   } from "flowbite-svelte";
   import {
-    ChevronDownOutline,
     DotsVerticalOutline,
   } from "flowbite-svelte-icons";
 
   export let onClick: (item: any) => void = () => {};
+  export let onDelete: (item: any) => void = () => {};
   export let data: any[] = [];
   export let headers: Column<any>[];
   export let dropdownActions: boolean = false;
@@ -72,8 +72,8 @@
                 <DropdownItem
                   onclick={(e:any) => {
                     stop(e);
-                    console.log("asda");
-                  }}>Eliminar</DropdownItem
+                    onDelete(u);
+                  }}>Eliminar usuario</DropdownItem
                 >
               </Dropdown>
             </div>

@@ -1,6 +1,6 @@
 <script lang="ts">
   import UserModal from "../../../lib/components/modal/modal.svelte";
-  import { onMount } from "svelte";
+  import { onMount, setContext } from "svelte";
   import { getUsers } from "$lib/services/api/users";
   import { Heading } from "flowbite-svelte";
   import Navbar from "../../../lib/components/navbar/navbar.svelte";
@@ -19,13 +19,22 @@
   import { ingresoById } from "$lib/services/api/ingreso";
   import Loader from "$lib/components/loader/loader.svelte";
   import Toast from "$lib/components/toast/toast.svelte";
-    import type { ToastInterface } from "$lib/types/toast";
+  import type { ToastInterface } from "$lib/types/toast";
+  import { LOADING_CTX, TOAST_CTX } from "$lib/hooks/useUIFunctions.svelte";
+  import DeleteUserModal from "$lib/components/modal/delete_user_modal.svelte";
 
   let pagination_values = $state({ total: 1, start: 0, end: 0, totalPages: 1 });
   let page = $state(1);
   let error = $state("");
   let loading = $state(true);
+
+
   let modal_loading = $state({ loading: false, title: "" });
+
+  setContext(LOADING_CTX, { setLoadingModal });
+  setContext(TOAST_CTX,{setToast});
+
+
   let users: User[] = $state([]);
   let planes_catalog: { value: string; name: string }[] = $state([
     { value: "all", name: "Planes: Todos" },
@@ -43,6 +52,7 @@
   });
 
   let openModal: boolean = $state(false);
+  let openDeleteUserModal: boolean = $state(false);
   let selected_user: User = $state({} as User);
   const tableOnclick = (user: User) => {
     openModal = true;
@@ -167,6 +177,11 @@
       show: true,
     };
   }
+
+  function onClickDeleteUser(user: User){
+    openDeleteUserModal = true;
+    selected_user = user;
+  }
 </script>
 
 <Navbar
@@ -188,13 +203,14 @@
     />
   </div>
 </div>
-<UserModal bind:openModal user={selected_user} {registrarIngreso} {setToast} {setLoadingModal} {onUpdateUser}/>
+<DeleteUserModal bind:openModal={openDeleteUserModal} user={selected_user} onDeleted={onUpdateUser}></DeleteUserModal>
+<UserModal bind:openModal user={selected_user} {registrarIngreso} {onUpdateUser}/>
 {#if loading}
   <SkeletonTable rows={10} cellHeights="h-4" headers={USER_TABLE_COLUMNS} />
 {:else if error}
   <p class="text-red-600">{error}</p>
 {:else}
-  <UserTable data={users} onClick={tableOnclick} headers={USER_TABLE_COLUMNS} dropdownActions={true}/>
+  <UserTable data={users} onClick={tableOnclick} onDelete={onClickDeleteUser} headers={USER_TABLE_COLUMNS} dropdownActions={true}/>
   <Pagination
     {pagination_values}
     bind:page

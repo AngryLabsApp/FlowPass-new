@@ -18,22 +18,22 @@
   import { UserKeys } from "$lib/enums/user_keys";
   import { ArrowRight, ClipboardClock } from "@lucide/svelte";
   import { useMediaQuery } from "flowbite-svelte";
+  import { useUi } from "$lib/hooks/useUIFunctions.svelte";
 
   let {
     openModal = $bindable(false),
     user,
     registrarIngreso,
-    setLoadingModal,
-    setToast,
     onUpdateUser,
   } = $props<{
     openModal: boolean;
     user: User;
     registrarIngreso: (user: User) => void;
-    setLoadingModal: (loading: boolean, title?: string) => void;
-    setToast: (title: string, success: boolean) => void;
     onUpdateUser: () => void;
   }>();
+
+  const { setLoadingModal, setToast } = useUi();
+
   // let size: ModalProps["size"] = $state("xs"); // Set default value
   let form_selected: { key: UserKeys; form: any } | null = $state(null);
   let show_form = $state(false);
@@ -113,7 +113,7 @@
         {/if}
         <Badge large color="gray">
           <UsersOutline />Compañero: {toTitleCase(
-            formated_user.partner_nombre || ""
+            formated_user.partner_nombre || "",
           )}
           {toTitleCase(formated_user.partner_apellidos || "")}</Badge
         >
