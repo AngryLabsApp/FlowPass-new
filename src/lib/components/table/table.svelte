@@ -70,6 +70,7 @@
               </Button>
               <Dropdown simple>
                 <DropdownItem
+                  class="hover:bg-red-800 text-red-700 hover:text-red-100"
                   onclick={(e:any) => {
                     stop(e);
                     onDelete(u);
