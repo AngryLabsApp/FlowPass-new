@@ -5,6 +5,7 @@
         CheckCircleSolid,
         ExclamationCircleSolid,
     } from "flowbite-svelte-icons";
+    import { fly } from "svelte/transition";
 
     let {
         toast = $bindable({
@@ -18,7 +19,7 @@
 
     let counter = 6;
     function timeout() {
-        if (--counter > 0) return setTimeout((timeout), 1000);
+        if (--counter > 0) return setTimeout(timeout, 1000);
         toast.show = false;
     }
     $effect(() => {
@@ -30,9 +31,16 @@
 </script>
 
 {#if toast.type == "success"}
-    <Toast color="green" bind:toastStatus={toast.show} position="top-right">
+    <Toast
+        color="green"
+        bind:toastStatus={toast.show}
+        position="top-right"
+        transition={fly}
+        params={{ x: 200 }}
+        class="bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200"
+    >
         {#snippet icon()}
-            <CheckCircleSolid class="h-5 w-5" />
+            <CheckCircleSolid class="h-5 w-5 " />
             <span class="sr-only">Check icon</span>
         {/snippet}
         {toast.text}
@@ -40,6 +48,8 @@
 {/if}
 {#if toast.type == "error"}
     <Toast
+        transition={fly}
+        params={{ x: 200 }}
         position="top-right"
         bind:toastStatus={toast.show}
         color={"red"}
