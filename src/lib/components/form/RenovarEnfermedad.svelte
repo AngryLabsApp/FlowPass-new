@@ -5,9 +5,11 @@
     useFormUpdateHook,
     type UpdateFormItem,
   } from "$lib/hooks/useFormUpdate.svelte";
+    import { getCustomEnv } from "$lib/utils/env_utils";
   import { Button, Card, Label, Textarea } from "flowbite-svelte";
 
   let { user, setLoadingModal, setToast, closeForm }: FormProps = $props();
+  const title = getCustomEnv("patologias_title") || "Enfermedad / Patología";
 
   let updateItemValues: UpdateFormItem[] = $state([
     { key: UserKeys.PATOLOGIAS, value: user.patologias || "" },
@@ -25,7 +27,7 @@
     onsubmit={(e) => actions.onUpdateSingleForm(updateItemValues, user.id, e)}
   >
     <h3 class="text-xl font-medium text-gray-900 dark:text-white">
-      Enfermedad / Patología
+      {title}
     </h3>
     <Label class="space-y-2">
       <Textarea name="enfermedad" placeholder="" class="w-full" bind:value={updateItemValues[0].value as string}/>

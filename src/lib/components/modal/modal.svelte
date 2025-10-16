@@ -73,7 +73,6 @@
   }
 
   function isActivePlan() {
-    console.log(formated_user.estado);
     return formated_user.estado === "Activo";
   }
 

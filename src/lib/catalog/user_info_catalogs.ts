@@ -20,6 +20,7 @@ import {
   DollarOutline,
 } from "flowbite-svelte-icons";
 import WAButton from "$lib/components/button/whatsapp_button.svelte";
+import { getCustomEnv } from "$lib/utils/env_utils";
 
 export const PLAN_INFO: CatalogItem[] = [
   {
@@ -110,7 +111,7 @@ export const DATOS_INFO: CatalogItem[] = [
     editable: true,
   },
   {
-    label: "Enfermedad / Patología",
+    label: getCustomEnv("patologias_title") || "Enfermedad / Patología",
     key: UserKeys.PATOLOGIAS,
     icon: HeartOutline,
     editable: true,

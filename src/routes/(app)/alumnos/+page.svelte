@@ -15,7 +15,7 @@
   import type { DashboardFilters } from "$lib/types/dashboardFilters";
   import { SORT_CATALOG } from "$lib/catalog/sort_catalog";
   import { getPlanes } from "$lib/services/api/planes";
-  import { USER_TABLE_COLUMNS } from "$lib/catalog/user_table_columns";
+  import { getCustomUserTableHeaders } from "$lib/catalog/user_table_columns";
   import { ingresoById } from "$lib/services/api/ingreso";
   import Loader from "$lib/components/loader/loader.svelte";
   import Toast from "$lib/components/toast/toast.svelte";
@@ -27,7 +27,7 @@
   let page = $state(1);
   let error = $state("");
   let loading = $state(true);
-
+  let CUSTOM_HEADERS = getCustomUserTableHeaders();
 
   let modal_loading = $state({ loading: false, title: "" });
 
@@ -206,11 +206,11 @@
 <DeleteUserModal bind:openModal={openDeleteUserModal} user={selected_user} onDeleted={onUpdateUser}></DeleteUserModal>
 <UserModal bind:openModal user={selected_user} {registrarIngreso} {onUpdateUser}/>
 {#if loading}
-  <SkeletonTable rows={10} cellHeights="h-4" headers={USER_TABLE_COLUMNS} />
+  <SkeletonTable rows={10} cellHeights="h-4" headers={CUSTOM_HEADERS} />
 {:else if error}
   <p class="text-red-600">{error}</p>
 {:else}
-  <UserTable data={users} onClick={tableOnclick} onDelete={onClickDeleteUser} headers={USER_TABLE_COLUMNS} dropdownActions={true}/>
+  <UserTable data={users} onClick={tableOnclick} onDelete={onClickDeleteUser} headers={CUSTOM_HEADERS} dropdownActions={true}/>
   <Pagination
     {pagination_values}
     bind:page
