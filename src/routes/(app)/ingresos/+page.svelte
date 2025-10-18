@@ -1,5 +1,7 @@
 <script lang="ts">
   import Loader from "$lib/components/loader/loader.svelte";
+  import Image_GYM from "$lib/assets/push-ups.webp";
+  import Image_Salsa from "$lib/assets/salsa.webp";
   import IngresoModal from "$lib/components/modal/ingreso_modal.svelte";
   import { ingresoByCode } from "$lib/services/api/ingreso";
   import type {
@@ -25,6 +27,7 @@
   } from "flowbite-svelte-icons";
   import { getContext, tick } from "svelte";
   import type { Writable } from "svelte/store";
+  import { getCustomEnv } from "$lib/utils/env_utils";
 
   const lock = getContext<Writable<boolean>>("lock");
   let error_message = $state("");
@@ -189,6 +192,8 @@
   }
 
   const btn_class = "w-full g-5 h-17 text-xl";
+  const Image =
+    getCustomEnv("business_type") == "salsa" ? Image_Salsa : Image_GYM;
 </script>
 
 <div class="grid grid-cols-2 gap-4 mb-5">
@@ -214,7 +219,7 @@
       </Button>
     </div>
     <div class="flex flex-col items-center pb-4">
-      <Avatar size="lg" src="src/lib/assets/push-ups.webp" />
+      <Avatar size="lg" src={Image} />
       <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">
         ¡Bienvenido!
       </h5>
@@ -226,7 +231,7 @@
           bind:elementRef
           type="text"
           placeholder="Ej. 0001"
-          size="lg"
+          class="h-17 text-2xl text-center"
           bind:value={code_value}
           oninput={(e) => onInput(e)}
           onkeydown={(e) => {
