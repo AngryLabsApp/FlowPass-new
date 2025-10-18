@@ -140,7 +140,7 @@
           {setToast}
         />
         <AccordionUserItem
-          open={false}
+          open={true}
           title="Datos personales"
           items={DATOS_INFO}
           {user}
@@ -150,7 +150,7 @@
           {setToast}
         />
         <AccordionUserItem
-          open={false}
+          open={true}
           title="Detalle del último pago"
           items={PAGO_INFO}
           {user}

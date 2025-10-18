@@ -57,14 +57,6 @@ export const PLAN_INFO: CatalogItem[] = [
     icon: ChartMixedDollarOutline,
     editable: false,
   },
- 
-  {
-    label: "Código de ingreso",
-    key: UserKeys.CODIGO_INGRESO,
-    icon: FingerprintOutline,
-    editable: false,
-    actionComponent: WAButton,
-  },
    {
     label: "Días de cortesía",
     key: UserKeys.DIAS_DE_GRACIA,
@@ -74,6 +66,13 @@ export const PLAN_INFO: CatalogItem[] = [
 ];
 
 export const DATOS_INFO: CatalogItem[] = [
+    {
+    label: "Código de ingreso",
+    key: UserKeys.CODIGO_INGRESO,
+    icon: FingerprintOutline,
+    editable: false,
+    actionComponent: WAButton,
+  },
   {
     label: "DNI/Pasaporte/C.E.",
     key: UserKeys.IDENTIFICACION,
