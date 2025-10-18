@@ -16,7 +16,7 @@
   import "../../app.css";
   import { setContext } from "svelte";
   import { writable } from "svelte/store";
-
+  import CLIENT_LOGO from "$lib/assets/client-logos/logo.png";
   import {
     Sidebar,
     SidebarGroup,
@@ -68,6 +68,13 @@
   $effect(() => {
     if (lock) return;
   });
+
+const client = {
+  logo: default_icon,//CLIENT_LOGO,
+  alt: "demo",
+  class: "h-10 w-auto"
+};
+
 </script>
 
 <svelte:head>
@@ -104,7 +111,7 @@
             >FlowPass</span
           >
           &nbsp;+&nbsp;
-          <img src={default_icon} alt="FlowPass" class="h-6 w-6" />
+          <img src={client.logo} alt={client.alt} class={client.class} />
         </SidebarBrand>
         {#each MenuItems as { label, href, icon: Icon }}
           <SidebarItem {label} {href} {spanClass}>
