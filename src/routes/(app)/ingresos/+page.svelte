@@ -72,7 +72,7 @@
     requestAnimationFrame(() =>
       setTimeout(() => {
         elementRef.focus({ preventScroll: true });
-      }, 200),
+      }, 200)
     );
   }
 
@@ -196,128 +196,132 @@
     getCustomEnv("business_type") == "salsa" ? Image_Salsa : Image_GYM;
 </script>
 
-<div class="grid grid-cols-2 gap-4 mb-5">
-  <Heading tag="h3">Ingreso</Heading>
-</div>
+<div class="p-4">
+  <div class="grid grid-cols-2 gap-4 mb-5">
+    <Heading tag="h3">Ingreso</Heading>
+  </div>
 
-<div class="flex items-center justify-center">
-  <Card class="p-4 sm:p-5 md:p-7" size="lg">
-    <div class="flex justify-end">
-      <Button
-        pill={true}
-        outline={true}
-        class="p-2!"
-        size="xl"
-        onclick={() => togleLock()}
-        color="secondary"
-      >
-        {#if $lock}
-          <LockOutline class="text-secondary-700 h-6 w-6" />
-        {:else}
-          <LockOpenOutline class="text-secondary-700 h-6 w-6" />
-        {/if}
-      </Button>
-    </div>
-    <div class="flex flex-col items-center pb-4">
-      <Avatar size="lg" src={Image} />
-      <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">
-        ¡Bienvenido!
-      </h5>
-    </div>
-    <form onsubmit={(e) => onSubmit(e)}>
-      <Label class="space-y-2">
-        <div>Ingresa tu código:</div>
-        <Input
-          bind:elementRef
-          type="text"
-          placeholder="Ej. 0001"
-          class="h-17 text-2xl text-center"
-          bind:value={code_value}
-          oninput={(e) => onInput(e)}
-          onkeydown={(e) => {
-            if (e.key === "Delete") {
-              onClean("all");
-            }
-          }}
-        />
-      </Label>
-      {#if error_message && error_message.length > 0}
-        <Alert color="red" class="mt-2">
-          <span class="font-medium">Ups!</span>
-          {error_message}
-        </Alert>
-      {/if}
-      <div class="flex flex-col space-y-2">
-        <div class="md:grid-cols-2 flex items-center justify-center pt-7 gap-2">
-          {#each ["1", "2", "3"] as str_number}
-            <Button
-              class={btn_class}
-              size="xl"
-              outline
-              onclick={() => onClickPad(str_number)}
-              color="secondary">{str_number}</Button
-            >
-          {/each}
-        </div>
-
-        <div class="md:grid-cols-2 flex items-center justify-center gap-2">
-          {#each ["4", "5", "6"] as str_number}
-            <Button
-              class={btn_class}
-              size="xl"
-              outline
-              onclick={() => onClickPad(str_number)}
-              color="secondary">{str_number}</Button
-            >
-          {/each}
-        </div>
-
-        <div class="md:grid-cols-2 flex items-center justify-center gap-2">
-          {#each ["7", "8", "9"] as str_number}
-            <Button
-              class={btn_class}
-              size="xl"
-              outline
-              onclick={() => onClickPad(str_number)}
-              color="secondary">{str_number}</Button
-            >
-          {/each}
-        </div>
-
-        <div class="md:grid-cols-2 flex items-center justify-center gap-2">
-          <Button
-            class={btn_class}
-            size="xl"
-            outline
-            onclick={() => onClean("all")}
-            color="secondary"><TrashBinOutline /></Button
-          >
-          <Button
-            class={btn_class}
-            size="xl"
-            outline
-            onclick={() => onClickPad("0")}
-            color="secondary">0</Button
-          >
-          <Button
-            class={btn_class}
-            size="xl"
-            outline
-            onclick={() => onClean("single")}
-            color="secondary"><ArrowLeftOutline /></Button
-          >
-        </div>
-      </div>
-      <div class="mt-4 flex space-y-2 lg:mt-6 rtl:space-x-reverse">
+  <div class="flex items-center justify-center">
+    <Card class="p-4 sm:p-5 md:p-7" size="lg">
+      <div class="flex justify-end">
         <Button
+          pill={true}
+          outline={true}
+          class="p-2!"
           size="xl"
-          type="submit"
-          disabled={code_value.length <= 0}
-          class="w-full h-17 text-xl">Registrar ingreso</Button
+          onclick={() => togleLock()}
+          color="secondary"
         >
+          {#if $lock}
+            <LockOutline class="text-secondary-700 h-6 w-6" />
+          {:else}
+            <LockOpenOutline class="text-secondary-700 h-6 w-6" />
+          {/if}
+        </Button>
       </div>
-    </form>
-  </Card>
+      <div class="flex flex-col items-center pb-4">
+        <Avatar size="lg" src={Image} />
+        <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">
+          ¡Bienvenido!
+        </h5>
+      </div>
+      <form onsubmit={(e) => onSubmit(e)}>
+        <Label class="space-y-2">
+          <div>Ingresa tu código:</div>
+          <Input
+            bind:elementRef
+            type="text"
+            placeholder="Ej. 0001"
+            class="h-17 text-2xl text-center"
+            bind:value={code_value}
+            oninput={(e) => onInput(e)}
+            onkeydown={(e) => {
+              if (e.key === "Delete") {
+                onClean("all");
+              }
+            }}
+          />
+        </Label>
+        {#if error_message && error_message.length > 0}
+          <Alert color="red" class="mt-2">
+            <span class="font-medium">Ups!</span>
+            {error_message}
+          </Alert>
+        {/if}
+        <div class="flex flex-col space-y-2">
+          <div
+            class="md:grid-cols-2 flex items-center justify-center pt-7 gap-2"
+          >
+            {#each ["1", "2", "3"] as str_number}
+              <Button
+                class={btn_class}
+                size="xl"
+                outline
+                onclick={() => onClickPad(str_number)}
+                color="secondary">{str_number}</Button
+              >
+            {/each}
+          </div>
+
+          <div class="md:grid-cols-2 flex items-center justify-center gap-2">
+            {#each ["4", "5", "6"] as str_number}
+              <Button
+                class={btn_class}
+                size="xl"
+                outline
+                onclick={() => onClickPad(str_number)}
+                color="secondary">{str_number}</Button
+              >
+            {/each}
+          </div>
+
+          <div class="md:grid-cols-2 flex items-center justify-center gap-2">
+            {#each ["7", "8", "9"] as str_number}
+              <Button
+                class={btn_class}
+                size="xl"
+                outline
+                onclick={() => onClickPad(str_number)}
+                color="secondary">{str_number}</Button
+              >
+            {/each}
+          </div>
+
+          <div class="md:grid-cols-2 flex items-center justify-center gap-2">
+            <Button
+              class={btn_class}
+              size="xl"
+              outline
+              onclick={() => onClean("all")}
+              color="secondary"><TrashBinOutline /></Button
+            >
+            <Button
+              class={btn_class}
+              size="xl"
+              outline
+              onclick={() => onClickPad("0")}
+              color="secondary">0</Button
+            >
+            <Button
+              class={btn_class}
+              size="xl"
+              outline
+              onclick={() => onClean("single")}
+              color="secondary"><ArrowLeftOutline /></Button
+            >
+          </div>
+        </div>
+        <div class="mt-4 flex space-y-2 lg:mt-6 rtl:space-x-reverse">
+          <Button
+            size="xl"
+            type="submit"
+            disabled={code_value.length <= 0}
+            class="w-full h-17 text-xl">Registrar ingreso</Button
+          >
+        </div>
+      </form>
+    </Card>
+  </div>
+  <IngresoModal bind:openModal user={user_selected}></IngresoModal>
+  <Loader bind:openModal={loading} title={"Registrando ingreso"}></Loader>
 </div>
-<IngresoModal bind:openModal user={user_selected}></IngresoModal>
-<Loader bind:openModal={loading} title={"Registrando ingreso"}></Loader>
