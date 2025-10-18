@@ -75,7 +75,9 @@
   <title>FlowPass</title>
 </svelte:head>
 
-<SidebarButton onclick={demoSidebarUi.toggle} class="mb-2" />
+<div class="bg-gray-50">
+  <SidebarButton onclick={demoSidebarUi.toggle} class="mb-2" />
+</div>
 <div class="relative h-screen">
   {#if !$lock}
     <Sidebar
@@ -125,9 +127,7 @@
       </SidebarGroup>
     </Sidebar>
   {/if}
-  <div class="h-full overflow-auto {!$lock && 'px-4 md:ml-64'}">
-    <div class="rounded-lg p-4">
-      <slot />
-    </div>
+  <div class="h-full overflow-auto {!$lock && 'md:ml-64'}">
+    <slot />
   </div>
 </div>

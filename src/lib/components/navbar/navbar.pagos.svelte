@@ -115,7 +115,7 @@
   {/if}
 {/snippet}
 
-<Navbar class="px-0 py-0 sm:px-0 mb-4 w-full" breakpoint="lg">
+<Navbar class="px-0 py-0 sm:px-0 w-full" breakpoint="lg">
   {#snippet children({ hidden, toggle })}
     <div
       class="order-0 w-full relative"

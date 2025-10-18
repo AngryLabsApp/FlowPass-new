@@ -32,7 +32,7 @@
     end_date: fmtYearMonth(new Date()),
     search: "",
   };
-  let card_payment_text = "Ingresos totales"
+  let card_payment_text = "Ingresos totales";
 
   onMount(async () => {
     fetchPagos();
@@ -124,52 +124,56 @@
   }
 </script>
 
-<Navbar
-  onSearch={(key: FilterKeys, val: string | Date) => {
-    setValue(key, val);
-  }}
-  bind:selectedDate
-/>
-
-<Card class="p-5 flex gap-0.5 justify-center w-1/6" size="xs">
-  {#if loading_total}
-    <Skeleton size="sm" class="my-2" />
-  {:else}
-    <div class="bg-primary-200 p-2 w-fit rounded-md">
-      <Wallet class="h-10 w-10 text-primary-900  dark:text-gray-400" />
-    </div>
-    <span>
-      <h5
-        class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white"
-      >
-        {CurrencyKeys.PEN}{" "}{total_by_month}
-      </h5>
-    </span>
-    <p class="font-normal text-sm text-gray-500 dark:text-gray-400">
-      {card_payment_text.toUpperCase()}
-    </p>
-    <p class="text-secondary-600 inline-flex items-center">
-      {toTitleCase(
-        new Date(selectedDate).toLocaleString("es-ES", { month: "long" })
-      )}
-      {" "}
-      {new Date(selectedDate).getFullYear()}
-    </p>
-  {/if}
-</Card>
-
-<div class="grid grid-cols-2 gap-4 mb-5 mt-5">
-  <Heading tag="h3">Pagos</Heading>
-</div>
-{#if loading}
-  <SkeletonTable rows={10} cellHeights="h-4" headers={PAGOS_TABLE_COLUMNS} />
-{:else if error}
-  <p class="text-red-600">{error}</p>
-{:else}
-  <Table data={pagos} onClick={tableOnclick} headers={PAGOS_TABLE_COLUMNS} />
-  <Pagination
-    {pagination_values}
-    bind:page
-    onSearch={(key: FilterKeys, val: string) => setValue(key, val)}
+<div class="w-full p-4 bg-gray-50 shadow-xs">
+  <Navbar
+    onSearch={(key: FilterKeys, val: string | Date) => {
+      setValue(key, val);
+    }}
+    bind:selectedDate
   />
-{/if}
+</div>
+
+<div class="p-4">
+  <Card class="p-5 flex gap-0.5 justify-center w-1/6" size="xs">
+    {#if loading_total}
+      <Skeleton size="sm" class="my-2" />
+    {:else}
+      <div class="bg-primary-200 p-2 w-fit rounded-md">
+        <Wallet class="h-10 w-10 text-primary-900  dark:text-gray-400" />
+      </div>
+      <span>
+        <h5
+          class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white"
+        >
+          {CurrencyKeys.PEN}{" "}{total_by_month}
+        </h5>
+      </span>
+      <p class="font-normal text-sm text-gray-500 dark:text-gray-400">
+        {card_payment_text.toUpperCase()}
+      </p>
+      <p class="text-secondary-600 inline-flex items-center">
+        {toTitleCase(
+          new Date(selectedDate).toLocaleString("es-ES", { month: "long" })
+        )}
+        {" "}
+        {new Date(selectedDate).getFullYear()}
+      </p>
+    {/if}
+  </Card>
+
+  <div class="grid grid-cols-2 gap-4 mb-5 mt-5">
+    <Heading tag="h3">Pagos</Heading>
+  </div>
+  {#if loading}
+    <SkeletonTable rows={10} cellHeights="h-4" headers={PAGOS_TABLE_COLUMNS} />
+  {:else if error}
+    <p class="text-red-600">{error}</p>
+  {:else}
+    <Table data={pagos} onClick={tableOnclick} headers={PAGOS_TABLE_COLUMNS} />
+    <Pagination
+      {pagination_values}
+      bind:page
+      onSearch={(key: FilterKeys, val: string) => setValue(key, val)}
+    />
+  {/if}
+</div>

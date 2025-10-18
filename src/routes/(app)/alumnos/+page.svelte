@@ -32,18 +32,17 @@
   let modal_loading = $state({ loading: false, title: "" });
 
   setContext(LOADING_CTX, { setLoadingModal });
-  setContext(TOAST_CTX,{setToast});
-
+  setContext(TOAST_CTX, { setToast });
 
   let users: User[] = $state([]);
   let planes_catalog: { value: string; name: string }[] = $state([
     { value: "all", name: "Planes: Todos" },
   ]);
   let toast: ToastInterface = $state({
-        type: "success",
-        text: "",
-        show: false,
-    });
+    type: "success",
+    text: "",
+    show: false,
+  });
 
   onMount(async () => {
     const planes = await getPlanes();
@@ -157,14 +156,17 @@
         fetchAlumnos();
       }
     } catch (error) {
-      setToast("Hubo un problema al actualizar. Reintenta en unos segundos.", false);
+      setToast(
+        "Hubo un problema al actualizar. Reintenta en unos segundos.",
+        false
+      );
     } finally {
       setLoadingModal(false);
     }
   };
 
-  function onUpdateUser(){
-      fetchAlumnos();
+  function onUpdateUser() {
+    fetchAlumnos();
   }
 
   function setLoadingModal(loading: boolean, title?: string) {
@@ -178,45 +180,65 @@
     };
   }
 
-  function onClickDeleteUser(user: User){
+  function onClickDeleteUser(user: User) {
     openDeleteUserModal = true;
     selected_user = user;
   }
 </script>
 
-<Navbar
-  onSearch={(key: FilterKeys, val: string | Date) => setValue(key, val)}
-  PLANES_CATALOG={planes_catalog}
-/>
-<div class="grid grid-cols-2 gap-4 mb-5">
-  <Heading tag="h3">Alumnos</Heading>
-  <div class="flex items-center gap-3 justify-end">
-    <Label for="order-by" class="mb-0">Ordenar por:</Label>
-    <Select
-      id="order-by"
-      class="w-full max-w-xs"
-      items={SORT_CATALOG}
-      bind:value={sort_type}
-      onchange={() => {
-        setValue(FilterKeys.SORT, sort_type);
-      }}
-    />
-  </div>
-</div>
-<DeleteUserModal bind:openModal={openDeleteUserModal} user={selected_user} onDeleted={onUpdateUser}></DeleteUserModal>
-<UserModal bind:openModal user={selected_user} {registrarIngreso} {onUpdateUser}/>
-{#if loading}
-  <SkeletonTable rows={10} cellHeights="h-4" headers={CUSTOM_HEADERS} />
-{:else if error}
-  <p class="text-red-600">{error}</p>
-{:else}
-  <UserTable data={users} onClick={tableOnclick} onDelete={onClickDeleteUser} headers={CUSTOM_HEADERS} dropdownActions={true}/>
-  <Pagination
-    {pagination_values}
-    bind:page
-    onSearch={(key: FilterKeys, val: string) => setValue(key, val)}
+<div class="w-full p-4 bg-gray-50 shadow-xs">
+  <Navbar
+    onSearch={(key: FilterKeys, val: string | Date) => setValue(key, val)}
+    PLANES_CATALOG={planes_catalog}
   />
-{/if}
-<Loader bind:openModal={modal_loading.loading} title={modal_loading.title}
-></Loader>
-<Toast bind:toast={toast}></Toast>
+</div>
+
+<div class="p-4">
+  <div class="grid grid-cols-2 gap-4 mb-5">
+    <Heading tag="h3">Alumnos</Heading>
+    <div class="flex items-center gap-3 justify-end">
+      <Label for="order-by" class="mb-0">Ordenar por:</Label>
+      <Select
+        id="order-by"
+        class="w-full max-w-xs"
+        items={SORT_CATALOG}
+        bind:value={sort_type}
+        onchange={() => {
+          setValue(FilterKeys.SORT, sort_type);
+        }}
+      />
+    </div>
+  </div>
+  <DeleteUserModal
+    bind:openModal={openDeleteUserModal}
+    user={selected_user}
+    onDeleted={onUpdateUser}
+  ></DeleteUserModal>
+  <UserModal
+    bind:openModal
+    user={selected_user}
+    {registrarIngreso}
+    {onUpdateUser}
+  />
+  {#if loading}
+    <SkeletonTable rows={10} cellHeights="h-4" headers={CUSTOM_HEADERS} />
+  {:else if error}
+    <p class="text-red-600">{error}</p>
+  {:else}
+    <UserTable
+      data={users}
+      onClick={tableOnclick}
+      onDelete={onClickDeleteUser}
+      headers={CUSTOM_HEADERS}
+      dropdownActions={true}
+    />
+    <Pagination
+      {pagination_values}
+      bind:page
+      onSearch={(key: FilterKeys, val: string) => setValue(key, val)}
+    />
+  {/if}
+  <Loader bind:openModal={modal_loading.loading} title={modal_loading.title}
+  ></Loader>
+  <Toast bind:toast></Toast>
+</div>
