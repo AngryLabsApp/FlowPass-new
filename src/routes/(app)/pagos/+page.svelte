@@ -145,7 +145,7 @@
         {CurrencyKeys.PEN}{" "}{total_by_month}
       </h5>
     </span>
-    <p class="font-normal text-gray-500 dark:text-gray-400">
+    <p class="font-normal text-sm text-gray-500 dark:text-gray-400">
       {card_payment_text.toUpperCase()}
     </p>
     <p class="text-secondary-600 inline-flex items-center">
