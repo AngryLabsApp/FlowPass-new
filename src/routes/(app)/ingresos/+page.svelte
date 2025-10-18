@@ -202,7 +202,7 @@
   </div>
 
   <div class="flex items-center justify-center">
-    <Card class="p-4 sm:p-5 md:p-7" size="lg">
+    <Card class="p-4 sm:p-5 md:p-7 transition-colors duration-500 ease-in-out {error_message && error_message.length > 0 ? "bg-red-100" :""}" size="lg">
       <div class="flex justify-end">
         <Button
           pill={true}
@@ -226,7 +226,7 @@
         </h5>
       </div>
       <form onsubmit={(e) => onSubmit(e)}>
-        <Label class="space-y-2">
+        <Label class="space-y-2 text-xl">
           <div>Ingresa tu código:</div>
           <Input
             bind:elementRef
@@ -243,7 +243,7 @@
           />
         </Label>
         {#if error_message && error_message.length > 0}
-          <Alert color="red" class="mt-2">
+          <Alert color="red" class="bg-red-200 mt-2 h-auto text-xl text-center">
             <span class="font-medium">Ups!</span>
             {error_message}
           </Alert>
