@@ -26,7 +26,7 @@
   import { getContext, tick } from "svelte";
   import type { Writable } from "svelte/store";
 
-  const lock = getContext<Writable<boolean>>('lock');
+  const lock = getContext<Writable<boolean>>("lock");
   let error_message = $state("");
   let openModal = $state(false);
   let code_value = $state("");
@@ -69,7 +69,7 @@
     requestAnimationFrame(() =>
       setTimeout(() => {
         elementRef.focus({ preventScroll: true });
-      }, 200)
+      }, 200),
     );
   }
 
@@ -183,10 +183,12 @@
     }, duration);
   }
 
-  function togleLock(){
-    lock.update(v => !v);
+  function togleLock() {
+    lock.update((v) => !v);
     focusInputSafely();
   }
+
+  const btn_class = "w-full g-5 h-17 text-xl";
 </script>
 
 <div class="grid grid-cols-2 gap-4 mb-5">
@@ -196,7 +198,14 @@
 <div class="flex items-center justify-center">
   <Card class="p-4 sm:p-5 md:p-7" size="lg">
     <div class="flex justify-end">
-      <Button pill={true} outline={true} class="p-2!" size="xl" onclick={()=> togleLock() } color="secondary">
+      <Button
+        pill={true}
+        outline={true}
+        class="p-2!"
+        size="xl"
+        onclick={() => togleLock()}
+        color="secondary"
+      >
         {#if $lock}
           <LockOutline class="text-secondary-700 h-6 w-6" />
         {:else}
@@ -233,37 +242,73 @@
           {error_message}
         </Alert>
       {/if}
-      <div class="md:grid-cols-2 flex items-center justify-center pt-7">
-        <Button size="xl" outline onclick={() => onClickPad("1")} color="secondary">1</Button>
-        <Button size="xl" outline onclick={() => onClickPad("2")} color="secondary">2</Button>
-        <Button size="xl" outline onclick={() => onClickPad("3")} color="secondary">3</Button>
-      </div>
+      <div class="flex flex-col space-y-2">
+        <div class="md:grid-cols-2 flex items-center justify-center pt-7 gap-2">
+          {#each ["1", "2", "3"] as str_number}
+            <Button
+              class={btn_class}
+              size="xl"
+              outline
+              onclick={() => onClickPad(str_number)}
+              color="secondary">{str_number}</Button
+            >
+          {/each}
+        </div>
 
-      <div class="md:grid-cols-2 flex items-center justify-center">
-        <Button size="xl" outline onclick={() => onClickPad("4")} color="secondary">4</Button>
-        <Button size="xl" outline onclick={() => onClickPad("5")} color="secondary">5</Button>
-        <Button size="xl" outline onclick={() => onClickPad("6")} color="secondary">6</Button>
-      </div>
+        <div class="md:grid-cols-2 flex items-center justify-center gap-2">
+          {#each ["4", "5", "6"] as str_number}
+            <Button
+              class={btn_class}
+              size="xl"
+              outline
+              onclick={() => onClickPad(str_number)}
+              color="secondary">{str_number}</Button
+            >
+          {/each}
+        </div>
 
-      <div class="md:grid-cols-2 flex items-center justify-center">
-        <Button size="xl" outline onclick={() => onClickPad("7")} color="secondary">7</Button>
-        <Button size="xl" outline onclick={() => onClickPad("8")} color="secondary">8</Button>
-        <Button size="xl" outline onclick={() => onClickPad("9")} color="secondary">9</Button>
-      </div>
+        <div class="md:grid-cols-2 flex items-center justify-center gap-2">
+          {#each ["7", "8", "9"] as str_number}
+            <Button
+              class={btn_class}
+              size="xl"
+              outline
+              onclick={() => onClickPad(str_number)}
+              color="secondary">{str_number}</Button
+            >
+          {/each}
+        </div>
 
-      <div class="md:grid-cols-2 flex items-center justify-center">
-        <Button size="xl" outline onclick={() => onClean("all")} color="secondary"
-          ><TrashBinOutline /></Button
-        >
-        <Button size="xl" outline onclick={() => onClickPad("0")} color="secondary">0</Button>
-        <Button size="xl" outline onclick={() => onClean("single")} color="secondary"
-          ><ArrowLeftOutline /></Button
-        >
+        <div class="md:grid-cols-2 flex items-center justify-center gap-2">
+          <Button
+            class={btn_class}
+            size="xl"
+            outline
+            onclick={() => onClean("all")}
+            color="secondary"><TrashBinOutline /></Button
+          >
+          <Button
+            class={btn_class}
+            size="xl"
+            outline
+            onclick={() => onClickPad("0")}
+            color="secondary">0</Button
+          >
+          <Button
+            class={btn_class}
+            size="xl"
+            outline
+            onclick={() => onClean("single")}
+            color="secondary"><ArrowLeftOutline /></Button
+          >
+        </div>
       </div>
-
       <div class="mt-4 flex space-y-2 lg:mt-6 rtl:space-x-reverse">
-        <Button size="xl" type="submit" disabled={code_value.length <= 0}
-          >Registrar ingreso</Button
+        <Button
+          size="xl"
+          type="submit"
+          disabled={code_value.length <= 0}
+          class="w-full h-17 text-xl">Registrar ingreso</Button
         >
       </div>
     </form>
