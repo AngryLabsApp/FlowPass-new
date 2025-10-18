@@ -66,7 +66,7 @@
   <Search
     size="md"
     class={classes}
-    placeholder="Buscar..."
+    placeholder="Buscar por nombre, email o código"
     bind:value={filter.filterState.query}
     bind:elementRef={filter.refs.input.current}
   />
