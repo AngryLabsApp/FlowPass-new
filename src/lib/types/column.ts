@@ -7,6 +7,9 @@ export type Column<T> = {
   /** clase opcional para la celda */
   class?: string;
 
+  /** class para el header*/
+  header_class?: string;
+
   icon?: (row: T) => any;
   /** si necesitas un valor custom (gana sobre key) */
   accessor?: (row: T) => unknown;

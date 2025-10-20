@@ -225,13 +225,16 @@
   {:else if error}
     <p class="text-red-600">{error}</p>
   {:else}
-    <UserTable
-      data={users}
-      onClick={tableOnclick}
-      onDelete={onClickDeleteUser}
-      headers={CUSTOM_HEADERS}
-      dropdownActions={true}
-    />
+    <div class="mb-4">
+      <UserTable
+        data={users}
+        onClick={tableOnclick}
+        onDelete={onClickDeleteUser}
+        headers={CUSTOM_HEADERS}
+        dropdownActions={true}
+      />
+    </div>
+
     <Pagination
       {pagination_values}
       bind:page

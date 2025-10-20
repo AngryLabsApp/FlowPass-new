@@ -27,7 +27,7 @@
 <Table hoverable={true}>
   <TableHead>
     {#each headers as col}
-      <TableHeadCell>{col.header}</TableHeadCell>
+      <TableHeadCell class={col.header_class}>{col.header}</TableHeadCell>
     {/each}
     {#if dropdownActions}
       <TableHeadCell></TableHeadCell>
@@ -36,9 +36,9 @@
 
   <TableBody>
     {#each data as u}
-      <TableBodyRow onclick={() => onClick(u)}>
+      <TableBodyRow onclick={() => onClick(u)} class="border-gray-200 [&_td]:py-0.5">
         {#each headers as col}
-          <TableBodyCell class={col.class}>
+          <TableBodyCell class={`${col.class} ${col.header_class || ""}`}>
             {#if col.type === "status" && getValue(u, col) !== ""}
               <span
                 class={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ${statusPillClasses(getValue(u, col))}`}

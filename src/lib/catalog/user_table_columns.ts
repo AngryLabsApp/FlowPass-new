@@ -8,7 +8,7 @@ import { UsersSolid } from "flowbite-svelte-icons";
 export let USER_TABLE_COLUMNS: Column<User>[] = [
   { header: "Nombre(s)", key: "nombre", type: "title" },
   { header: "Apellido(s)", key: "apellidos", type: "title" },
-  { header: "Plan", key: "plan" },
+  { header: "Plan", key: "plan", class: "p-1", header_class:"w-[120px] max-w-[150px] break-words whitespace-normal" },
   {
     header: "Clases realizadas",
     key: "clases_restantes",
@@ -28,11 +28,12 @@ export let USER_TABLE_COLUMNS: Column<User>[] = [
   { header: "Estado de pago", key: "estado_pago", type: "status" },
 ];
 
-
-export const getCustomUserTableHeaders = () =>{
-  const hide_columns= getCustomEnv("hide_columns");
-  if (hide_columns && hide_columns.length > 0){
-    return USER_TABLE_COLUMNS.filter( (item)=> !hide_columns.includes(item.key));
+export const getCustomUserTableHeaders = () => {
+  const hide_columns = getCustomEnv("hide_columns");
+  if (hide_columns && hide_columns.length > 0) {
+    return USER_TABLE_COLUMNS.filter(
+      (item) => !hide_columns.includes(item.key)
+    );
   }
   return USER_TABLE_COLUMNS;
-}
+};
