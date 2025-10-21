@@ -134,7 +134,7 @@
 </div>
 
 <div class="p-4">
-  <Card class="p-5 flex gap-0.5 justify-center w-1/6" size="xs">
+  <Card class="p-5 flex gap-0.5 justify-center w-fit" size="xs">
     {#if loading_total}
       <Skeleton size="sm" class="my-2" />
     {:else}
