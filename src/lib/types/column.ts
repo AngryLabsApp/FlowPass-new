@@ -10,6 +10,9 @@ export type Column<T> = {
   /** class para el header*/
   header_class?: string;
 
+  /** class for manage responsive */
+  responsive?: string;
+
   icon?: (row: T) => any;
   /** si necesitas un valor custom (gana sobre key) */
   accessor?: (row: T) => unknown;

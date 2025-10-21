@@ -12,9 +12,7 @@
     Dropdown,
     DropdownItem,
   } from "flowbite-svelte";
-  import {
-    DotsVerticalOutline,
-  } from "flowbite-svelte-icons";
+  import { DotsVerticalOutline } from "flowbite-svelte-icons";
 
   export let onClick: (item: any) => void = () => {};
   export let onDelete: (item: any) => void = () => {};
@@ -27,7 +25,9 @@
 <Table hoverable={true}>
   <TableHead>
     {#each headers as col}
-      <TableHeadCell class={col.header_class}>{col.header}</TableHeadCell>
+      <TableHeadCell class={`${col.header_class ?? ""} ${col.responsive ?? ""}`}
+        >{col.header}</TableHeadCell
+      >
     {/each}
     {#if dropdownActions}
       <TableHeadCell></TableHeadCell>
@@ -36,9 +36,14 @@
 
   <TableBody>
     {#each data as u}
-      <TableBodyRow onclick={() => onClick(u)} class="border-gray-200 [&_td]:py-0.5">
+      <TableBodyRow
+        onclick={() => onClick(u)}
+        class="border-gray-200 [&_td]:py-0.5"
+      >
         {#each headers as col}
-          <TableBodyCell class={`${col.class} ${col.header_class || ""}`}>
+          <TableBodyCell
+            class={`${col.class ?? ""} ${col.header_class ?? ""} ${col.responsive ?? ""}`}
+          >
             {#if col.type === "status" && getValue(u, col) !== ""}
               <span
                 class={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ${statusPillClasses(getValue(u, col))}`}
@@ -56,7 +61,7 @@
           </TableBodyCell>
         {/each}
         {#if dropdownActions}
-          <TableBodyCell class="text-right">
+          <TableBodyCell class="p-0.5 text-right">
             <!-- contenedor solo para layout, SIN handlers -->
             <div class="inline-flex items-center justify-end">
               <Button
@@ -71,7 +76,7 @@
               <Dropdown simple>
                 <DropdownItem
                   class="hover:bg-red-800 text-red-700 hover:text-red-100"
-                  onclick={(e:any) => {
+                  onclick={(e: any) => {
                     stop(e);
                     onDelete(u);
                   }}>Eliminar usuario</DropdownItem
