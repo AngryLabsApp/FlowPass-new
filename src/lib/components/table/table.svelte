@@ -46,7 +46,7 @@
           >
             {#if col.type === "status" && getValue(u, col) !== ""}
               <span
-                class={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ${statusPillClasses(getValue(u, col))}`}
+                class={`inline-flex items-center rounded-full py-1 px-2 m-1 text-xs font-semibold ${statusPillClasses(getValue(u, col))}`}
               >
                 {getValue(u, col)}
               </span>

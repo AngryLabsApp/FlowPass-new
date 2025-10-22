@@ -169,7 +169,13 @@
   {:else if error}
     <p class="text-red-600">{error}</p>
   {:else}
-    <Table data={pagos} onClick={tableOnclick} headers={PAGOS_TABLE_COLUMNS} />
+    <div class="mb-4">
+      <Table
+        data={pagos}
+        onClick={tableOnclick}
+        headers={PAGOS_TABLE_COLUMNS}
+      />
+    </div>
     <Pagination
       {pagination_values}
       bind:page
