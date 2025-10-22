@@ -104,24 +104,33 @@
 
 <Modal bind:open={openModal} size={modalSize} onclose={() => closeForm()}>
   {#snippet header()}
-    <div class="flex items-center gap-2">
-      {formated_user.full_name}
+    <div class="flex items-center gap-2 flex-wrap">
+      <div>
+        {formated_user.full_name}
+      </div>
+
       {#if formated_user.is_plan_partner}
         {#if formated_user.is_plan_principal}
-          <Badge large color="green">Principal</Badge>
+          <div>
+            <Badge large color="green">Principal</Badge>
+          </div>
         {/if}
-        <Badge large color="gray">
-          <UsersOutline />Compañero: {toTitleCase(
-            formated_user.partner_nombre || "",
-          )}
-          {toTitleCase(formated_user.partner_apellidos || "")}</Badge
-        >
+        <div>
+          <Badge large color="gray">
+            <UsersOutline />Compañero: {toTitleCase(
+              formated_user.partner_nombre || ""
+            )}
+            {toTitleCase(formated_user.partner_apellidos || "")}</Badge
+          >
+        </div>
       {/if}
       {#if isClassLimitFull()}
-        <Badge large color="yellow">
-          <ExclamationCircleOutline />
-          Límite de clases alcanzado ({formated_user.clases_tomadas}/{formated_user.limite_clases})
-        </Badge>
+        <div>
+          <Badge large color="yellow">
+            <ExclamationCircleOutline />
+            Límite de clases alcanzado ({formated_user.clases_tomadas}/{formated_user.limite_clases})
+          </Badge>
+        </div>
       {/if}
     </div>
   {/snippet}
