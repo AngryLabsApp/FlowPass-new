@@ -194,10 +194,10 @@
 </div>
 
 <div class="p-4">
-  <div class="grid grid-cols-2 gap-4 mb-5">
+  <div class="sm:grid sm:grid-cols-2 sm:gap-4 sm:mb-5 flex flex-col gap-1.5 mb-5">
     <Heading tag="h3">Alumnos</Heading>
     <div class="flex items-center gap-3 justify-end">
-      <Label for="order-by" class="mb-0">Ordenar por:</Label>
+      <Label for="order-by" class="sm:w-fit sm:w-max-[150px] sm:mb-0 w-1/2 ">Ordenar por:</Label>
       <Select
         id="order-by"
         class="w-full max-w-xs"
