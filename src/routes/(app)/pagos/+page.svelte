@@ -134,24 +134,26 @@
 </div>
 
 <div class="p-4">
-  <Card class="p-5 flex gap-0.5 justify-center w-fit" size="xs">
+  <Card class="p-3 flex gap-1.5 justify-center w-45" size="xs">
     {#if loading_total}
-      <Skeleton size="sm" class="w-34 h-34" />
+      <Skeleton size="sm" class="w-35" />
     {:else}
-      <div class="bg-primary-200 p-2 w-fit rounded-md">
-        <Wallet class="h-10 w-10 text-primary-900  dark:text-gray-400" />
-      </div>
-      <span>
+      <p class="text-sm text-gray-500 dark:text-gray-400">
+        {card_payment_text.toUpperCase()}
+      </p>
+      <div class="flex justify-start gap-2.5 align-baseline">
+        <div class="bg-primary-200 p-1 w-fit rounded-md">
+          <Wallet class="h-7 w-7 text-primary-900  dark:text-gray-400" />
+        </div>
+
         <h5
-          class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white"
+          class="text-xl font-semibold content-center tracking-tight text-gray-900 dark:text-white"
         >
           {CurrencyKeys.PEN}{" "}{total_by_month}
         </h5>
-      </span>
-      <p class="font-normal text-sm text-gray-500 dark:text-gray-400">
-        {card_payment_text.toUpperCase()}
-      </p>
-      <p class="text-secondary-600 inline-flex items-center">
+      </div>
+
+      <p class="text-sm text-secondary-600 inline-flex items-center">
         {toTitleCase(
           new Date(selectedDate).toLocaleString("es-ES", { month: "long" })
         )}
