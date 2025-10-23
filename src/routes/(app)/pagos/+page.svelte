@@ -136,7 +136,7 @@
 <div class="p-4">
   <Card class="p-5 flex gap-0.5 justify-center w-fit" size="xs">
     {#if loading_total}
-      <Skeleton size="sm" class="my-2" />
+      <Skeleton size="sm" class="w-34 h-34" />
     {:else}
       <div class="bg-primary-200 p-2 w-fit rounded-md">
         <Wallet class="h-10 w-10 text-primary-900  dark:text-gray-400" />
