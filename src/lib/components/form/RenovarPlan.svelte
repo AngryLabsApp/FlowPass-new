@@ -69,7 +69,8 @@
       <Input
         type="number"
         name="monto"
-        placeholder="0.0"
+        step="0.01"
+        placeholder="0.00"
         required
         bind:value={updateItemValues[1].value}
       />
