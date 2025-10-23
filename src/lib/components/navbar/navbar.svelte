@@ -16,7 +16,7 @@
   import { UserRoundPlus } from "@lucide/svelte";
 
   const STYLES = {
-    searchWidthDesktop: "w-[240px]",
+    searchWidthDesktop: "w-[350px]",
     selectWidthDesktop: "min-w-[160px]",
     selectWidthMobile: "w-full min-w-[135px]",
   } as const;

@@ -18,8 +18,8 @@
   import { ESTADO_PAGOS } from "$lib/catalog/estados_pagos";
 
   const STYLES = {
-    searchWidthDesktop: "w-[240px]",
-    selectWidthDesktop: "min-w-[190px]",
+    searchWidthDesktop: "w-[350px]",
+    selectWidthDesktop: "min-w-[200px]",
     selectWidthMobile: "w-full min-w-[150x]",
   } as const;
 
@@ -94,6 +94,7 @@
   <MonthPicker
     onChange={filter.onMonthChange}
     bind:value={filter.filterState.date}
+    class="w-[220px]"
   ></MonthPicker>
 {/snippet}
 

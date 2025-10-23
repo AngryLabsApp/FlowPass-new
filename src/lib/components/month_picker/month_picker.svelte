@@ -170,7 +170,7 @@
   <!-- Fallback: selects -->
   <div bind:this={root} class={`flex items-center gap-2 ${className}`}>
     <select
-      class="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 disabled:bg-gray-100"
+      class="border w-1/2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 disabled:bg-gray-100"
       bind:value={selMonth}
       on:change={onSelectChange}
       {disabled}
@@ -184,7 +184,7 @@
     </select>
 
     <select
-      class="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 disabled:bg-gray-100"
+      class="w-1/2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-400 disabled:bg-gray-100"
       bind:value={selYear}
       on:change={() => {
         const allowed = allowedMonthsFor(selYear);
