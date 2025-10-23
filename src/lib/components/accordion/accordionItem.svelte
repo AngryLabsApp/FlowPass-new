@@ -3,7 +3,6 @@
   import { AccordionItem, Button } from "flowbite-svelte";
   import type { User } from "$lib/types/user";
   import { EditOutline } from "flowbite-svelte-icons";
-  import { UserKeys } from "$lib/enums/user_keys";
   import { CurrencyKeys } from "$lib/enums/currency_keys";
 
   let {
@@ -47,9 +46,9 @@
     class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-2 gap-y-4 text-sm/6"
   >
     {#each items as item}
-      <div class="flex flex-col justify-between space-y-1x">
+      <div class="flex flex-col space-y-1x">
         <div
-          class="flex items-start justify-between gap-1 text-gray-900 dark:text-gray-100 font-semibold"
+          class="flex items-start gap-2 text-gray-900 dark:text-gray-100 font-semibold"
         >
           <div class="flex gap-1">
             <item.icon />
