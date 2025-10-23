@@ -16,7 +16,7 @@
   import "../../app.css";
   import { setContext } from "svelte";
   import { writable } from "svelte/store";
-  import CLIENT_LOGO from "$lib/assets/client-logos/logo.png";
+
   import {
     Sidebar,
     SidebarGroup,
@@ -34,6 +34,7 @@
   } from "flowbite-svelte-icons";
 
   import { KeyRound } from "@lucide/svelte";
+    import { getClientEnv } from "$lib/utils/env_utils";
 
   const spanClass = "flex-1 ms-3 whitespace-nowrap";
   const MenuItems = [
@@ -69,9 +70,12 @@
     if (lock) return;
   });
 
+  const CLIENT_LOGO = getClientEnv("logo");
+  const CLIENT_NAME = getClientEnv("name");
+
 const client = {
-  logo: default_icon,//CLIENT_LOGO,
-  alt: "demo",
+  logo: CLIENT_LOGO || default_icon,
+  alt:  CLIENT_NAME || "demo",
   class: "h-10 w-auto"
 };
 
