@@ -34,7 +34,7 @@
   } from "flowbite-svelte-icons";
 
   import { KeyRound } from "@lucide/svelte";
-    import { getClientEnv } from "$lib/utils/env_utils";
+  import { getClientEnv } from "$lib/utils/env_utils";
 
   const spanClass = "flex-1 ms-3 whitespace-nowrap";
   const MenuItems = [

@@ -1,5 +1,4 @@
-import { PUBLIC_CUSTOM_VARS } from "$env/static/public";
-import { PUBLIC_CLIENT} from "$env/static/public";
+import { PUBLIC_CUSTOM_VARS, PUBLIC_CLIENT } from "$env/static/public";
 
 export function getCustomEnv(field: string){
 
