@@ -37,6 +37,7 @@
   // let size: ModalProps["size"] = $state("xs"); // Set default value
   let form_selected: { key: UserKeys; form: any } | null = $state(null);
   let show_form = $state(false);
+  let show_accordion = $state(true);
 
   const formated_user = $derived.by<User>(() => {
     if (!user?.id) return {} as User;
@@ -48,7 +49,7 @@
   }
   function selectForm(key: UserKeys) {
     if (show_form && form_selected && form_selected.key == key) {
-      show_form = false;
+      // show_form = false;
       return;
     }
     form_selected = {
@@ -56,6 +57,21 @@
       form: getFieldComponent(key, user, setLoadingModal, setToast, onUpdate),
     };
     show_form = true;
+
+    if (isMobile()) {
+      show_accordion = false;
+    }
+  }
+
+  function backToAccordion() {
+    show_accordion = true;
+    show_form = false;
+  }
+
+  function resetModalState() {
+    show_form = false;
+    show_accordion = true;
+    form_selected = null;
   }
 
   function isClassLimitFull() {
@@ -82,12 +98,14 @@
 
   function onUpdate(reload?: boolean) {
     closeForm();
+    resetModalState();
     if (reload) {
       openModal = false;
     }
     onUpdateUser();
   }
 
+  const isMobile = useMediaQuery("(max-width: 767px)"); // mobile
   const isTablet = useMediaQuery("(min-width: 640px)"); // tablet (sm)
   const isDesktop = useMediaQuery("(min-width: 1024px)"); // desktop (lg)
 
@@ -102,7 +120,14 @@
   });
 </script>
 
-<Modal bind:open={openModal} size={modalSize} onclose={() => closeForm()}>
+<Modal
+  bind:open={openModal}
+  size={modalSize}
+  onclose={() => {
+    closeForm();
+    resetModalState();
+  }}
+>
   {#snippet header()}
     <div class="flex items-center gap-2 flex-wrap">
       <div>
@@ -135,8 +160,9 @@
     </div>
   {/snippet}
 
-  <div class="flex items-up justify-between gap-3">
-    {#if user.id && user.id.length > 0}
+  <div class="flex flex-col md:flex-row items-start justify-between gap-3">
+    <!-- Panel Izquierdo -->
+    {#if (!isMobile() || show_accordion) && user.id && user.id.length > 0}
       <Accordion multiple>
         <AccordionUserItem
           open={true}
@@ -170,8 +196,19 @@
         />
       </Accordion>
     {/if}
-    {#if form_selected && show_form}
-      <form_selected.form.component {...form_selected.form.props} />
+
+    <!-- Panel Derecho -->
+    {#if form_selected && show_form && (!isMobile() || !show_accordion)}
+      <div class="w-full md:w-2xl">
+        <button
+          class="text-sm text-gray-500 mb-2 flex items-center gap-1"
+          on:click={backToAccordion}
+        >
+          ← Volver
+        </button>
+
+        <form_selected.form.component {...form_selected.form.props} />
+      </div>
     {/if}
   </div>
 
