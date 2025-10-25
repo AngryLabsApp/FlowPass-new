@@ -24,6 +24,7 @@
   import { ArrowRight, ClipboardClock } from "@lucide/svelte";
   import { useMediaQuery } from "flowbite-svelte";
   import { useUi } from "$lib/hooks/useUIFunctions.svelte";
+  import { ChevronsLeft } from "@lucide/svelte";
 
   // Props
   let {
@@ -198,10 +199,10 @@
     {#if form_selected && show_form && (!isMobile() || !showAccordion)}
       <div class="w-full md:w-2xl">
         <button
-          class="text-sm text-gray-500 mb-2 flex items-center gap-1"
+          class="text-sm text-gray-500 mb-2 flex items-center gap-1 font-black"
           on:click={() => setView("accordion")}
         >
-          ← Volver
+          <ChevronsLeft size="24" /> Volver
         </button>
 
         <form_selected.form.component {...form_selected.form.props} />
@@ -224,6 +225,7 @@
         color="secondary"
         onclick={() => selectForm(UserKeys.PLAN)}
         class="flex gap-2 items-center w-full"
+        disabled={show_form}
       >
         Renovar plan
         <ArrowRight size="18" />
