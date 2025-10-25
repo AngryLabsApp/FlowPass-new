@@ -191,13 +191,13 @@
     focusInputSafely();
   }
 
-  const btn_class = "w-full g-3 sm:g-5 h-15 sm:h-17 text-xl";
+  const btn_class = "w-full g-2 sm:g-5 h-14 sm:h-17 text-md sm:text-xl";
   const Image =
     getCustomEnv("business_type") == "salsa" ? Image_Salsa : Image_GYM;
 </script>
 
 <div class="p-4">
-  <div class="grid grid-cols-2 gap-4 mb-5">
+  <div class="grid grid-cols-2 gap-4 mb-2 sm:mb-5">
     <Heading tag="h3">Ingreso</Heading>
   </div>
 
@@ -218,7 +218,7 @@
           {/if}
         </Button>
       </div>
-      <div class="flex flex-col items-center pb-4">
+      <div class="flex flex-col items-center pb-2 sm:pb-4">
         <Avatar size="lg" src={Image} />
         <h5 class="mb-1 text-md sm:text-xl font-medium text-gray-900 dark:text-white">
           ¡Bienvenido!
@@ -231,7 +231,7 @@
             bind:elementRef
             type="text"
             placeholder="Ej. 0001"
-            class="h-12 sm:h-17 text-xl sm:text-2xl text-center"
+            class="h-10 sm:h-17 text-xl sm:text-2xl text-center"
             bind:value={code_value}
             oninput={(e) => onInput(e)}
             onkeydown={(e) => {
@@ -249,7 +249,7 @@
         {/if}
         <div class="flex flex-col space-y-2">
           <div
-            class="md:grid-cols-2 flex items-center justify-center pt-7 gap-2"
+            class="md:grid-cols-2 flex items-center justify-center pt-3 sm:pt-7 gap-2"
           >
             {#each ["1", "2", "3"] as str_number}
               <Button
@@ -310,12 +310,12 @@
             >
           </div>
         </div>
-        <div class="mt-4 flex space-y-2 lg:mt-6 rtl:space-x-reverse">
+        <div class="mt-3 sm:mt-4 flex space-y-2 lg:mt-6 rtl:space-x-reverse">
           <Button
             size="xl"
             type="submit"
             disabled={code_value.length <= 0}
-            class="w-full h-17 text-xl">Registrar ingreso</Button
+            class="w-full h-10 sm:h-17 text-md sm:text-xl">Registrar ingreso</Button
           >
         </div>
       </form>
