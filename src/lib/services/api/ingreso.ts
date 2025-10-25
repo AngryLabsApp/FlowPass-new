@@ -1,10 +1,10 @@
-import type { IngresoResponse } from "$lib/types/ingresoResponse";
+import type { GetIngresosResponse, IngresoResponse, IngresosHistory } from "$lib/types/ingresoResponse";
 import type { QueryParams } from "$lib/types/queryparams";
 import { buildUrl } from "$lib/utils/utils";
 
 import { fetchWithAuth } from "./base";
 
-import { PUBLIC_USER_UPDATE, PUBLIC_INGRESO_URL} from '$env/static/public';
+import { PUBLIC_USER_UPDATE, PUBLIC_INGRESO_URL, PUBLIC_GET_INGRESOS_URL} from '$env/static/public';
 
 
 export async function ingresoByCode(
@@ -41,5 +41,23 @@ export async function ingresoById(
 
   } else {
     throw new Error("Error al registrar ingreso");
+  }
+}
+
+
+export async function getIngresos(
+  currentAbort: AbortController,
+  queryParams: QueryParams
+): Promise<GetIngresosResponse> {
+  const url = buildUrl(PUBLIC_GET_INGRESOS_URL, queryParams);
+  const res = await fetchWithAuth(url, {}, currentAbort);
+  if (res?.ok) {
+    let data = await res.json();
+    const { total, data: _ingresos } = data[0] || {};
+    let ingresos: IngresosHistory[] = _ingresos || [];
+
+    return { total, ingresos };
+  } else {
+    throw new Error("❌ Error al cargar usuarios");
   }
 }

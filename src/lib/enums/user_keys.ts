@@ -26,6 +26,8 @@ export enum UserKeys {
   MONTO = "monto",
   ESTADO_PAGO = "estado_pago",
 
-  PARTNER_CODE ="partner_code"
+  PARTNER_CODE ="partner_code",
+
+  ULTIMOS_INGRESOS ="ultimos_ingresos"
 
 }

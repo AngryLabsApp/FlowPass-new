@@ -158,6 +158,15 @@
       {/if}
     </div>
   {/snippet}
+   <Button
+            color="secondary"
+            onclick={() => selectForm(UserKeys.ULTIMOS_INGRESOS)}
+            class="flex gap-2 items-center w-full"
+            disabled={show_form}
+          >
+            Ultimos Ingresos
+            <ArrowRight size="18" />
+          </Button>
 
   <div class="flex flex-col md:flex-row items-start justify-between gap-3">
     <!-- Panel Izquierdo -->

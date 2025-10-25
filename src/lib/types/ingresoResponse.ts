@@ -15,3 +15,17 @@ export interface IngresoUser{
     partner_nombre: string;
     partner_apellido: string;
 }
+
+export interface IngresosHistory {
+    clases_tomadas: number;
+    created_at: string;
+    id: string;
+    pago_id: string;
+    plan_id: string;
+    tipo: string;
+}
+
+export interface GetIngresosResponse {
+  total: number;
+  ingresos: IngresosHistory[];
+}

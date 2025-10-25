@@ -13,6 +13,7 @@ import { UserKeys } from "$lib/enums/user_keys";
 import RenovarDeViaje from "$lib/components/form/RenovarDeViaje.svelte";
 import RenovarPatologia from "$lib/components/form/RenovarEnfermedad.svelte";
 import RenovarEstadoPago from "$lib/components/form/RenovarEstadoPago.svelte";
+import UltimosIngresos from "$lib/components/form/UltimosIngresos.svelte";
 
 // Flowbite-Svelte (ajusta según lo que ya uses en tu proyecto)
 import { Input } from "flowbite-svelte";
@@ -91,6 +92,10 @@ export const FORM_COMPONENT_CATALOG: Partial<Record<UserKeys, FormFieldCatalogIt
   },
   [UserKeys.ESTADO_PAGO]: {
     component: RenovarEstadoPago,
+
+  },
+  [UserKeys.ULTIMOS_INGRESOS]: {
+    component: UltimosIngresos,
 
   },
 };
