@@ -25,6 +25,7 @@
   import { useMediaQuery } from "flowbite-svelte";
   import { useUi } from "$lib/hooks/useUIFunctions.svelte";
   import { ChevronsLeft } from "@lucide/svelte";
+  import { fade, fly, slide } from "svelte/transition";
 
   // Props
   let {
@@ -211,25 +212,40 @@
   </div>
 
   {#snippet footer()}
-    <div class="flex justify-between w-full gap-4">
-      <Button
-        onclick={() => registrarIngreso(user)}
-        class="flex gap-2 items-center w-full"
-        disabled={isClassLimitFull() || !userHasPlan() || !isActivePlan()}
-      >
-        <ClipboardClock size="18" />
-        Registrar ingreso
-      </Button>
+    <div
+      class="relative overflow-hidden w-full transition-[min-height] duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
+      style="min-height: {!isMobile() || showAccordion ? '40px' : '0px'};"
+    >
+      {#if !isMobile() || showAccordion}
+        <div
+          in:fly={{
+            y: 24,
+            duration: 320,
+            easing: (t) => 1 - Math.pow(1 - t, 3),
+          }}
+          out:fly={{ y: 24, duration: 260, easing: (t) => t * t }}
+          class="flex justify-between w-full gap-2 backdrop-blur-sm px-2 py-2"
+        >
+          <Button
+            onclick={() => registrarIngreso(user)}
+            class="flex gap-2 items-center w-full"
+            disabled={isClassLimitFull() || !userHasPlan() || !isActivePlan()}
+          >
+            <ClipboardClock size="18" />
+            Registrar ingreso
+          </Button>
 
-      <Button
-        color="secondary"
-        onclick={() => selectForm(UserKeys.PLAN)}
-        class="flex gap-2 items-center w-full"
-        disabled={show_form}
-      >
-        Renovar plan
-        <ArrowRight size="18" />
-      </Button>
+          <Button
+            color="secondary"
+            onclick={() => selectForm(UserKeys.PLAN)}
+            class="flex gap-2 items-center w-full"
+            disabled={show_form}
+          >
+            Renovar plan
+            <ArrowRight size="18" />
+          </Button>
+        </div>
+      {/if}
     </div>
   {/snippet}
 </Modal>
