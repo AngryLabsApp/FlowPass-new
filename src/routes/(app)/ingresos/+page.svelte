@@ -191,7 +191,7 @@
     focusInputSafely();
   }
 
-  const btn_class = "w-full g-5 h-17 text-xl";
+  const btn_class = "w-full g-3 sm:g-5 h-15 sm:h-17 text-xl";
   const Image =
     getCustomEnv("business_type") == "salsa" ? Image_Salsa : Image_GYM;
 </script>
@@ -201,14 +201,13 @@
     <Heading tag="h3">Ingreso</Heading>
   </div>
 
-  <div class="flex items-center justify-center">
-    <Card class="p-4 sm:p-5 md:p-7 transition-colors duration-500 ease-in-out {error_message && error_message.length > 0 ? "bg-red-100" :""}" size="lg">
+  <div class="p-0 sm:px-8 flex items-center justify-center">
+    <Card class="w-100 px-4 py-2 sm:px-8 sm:py-4 transition-colors duration-500 ease-in-out {error_message && error_message.length > 0 ? "bg-red-100" :""}" size="lg">
       <div class="flex justify-end">
         <Button
           pill={true}
           outline={true}
           class="p-2!"
-          size="xl"
           onclick={() => togleLock()}
           color="secondary"
         >
@@ -221,18 +220,18 @@
       </div>
       <div class="flex flex-col items-center pb-4">
         <Avatar size="lg" src={Image} />
-        <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">
+        <h5 class="mb-1 text-md sm:text-xl font-medium text-gray-900 dark:text-white">
           ¡Bienvenido!
         </h5>
       </div>
       <form onsubmit={(e) => onSubmit(e)}>
-        <Label class="space-y-2 text-xl">
+        <Label class="space-y-2 text-md sm:text-xl">
           <div>Ingresa tu código:</div>
           <Input
             bind:elementRef
             type="text"
             placeholder="Ej. 0001"
-            class="h-17 text-2xl text-center"
+            class="h-12 sm:h-17 text-xl sm:text-2xl text-center"
             bind:value={code_value}
             oninput={(e) => onInput(e)}
             onkeydown={(e) => {
