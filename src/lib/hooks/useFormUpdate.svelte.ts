@@ -60,8 +60,9 @@ export function useFormUpdateHook(options: UseFormUPdateOptions = {
         e?.preventDefault();
         const fields: any = {
         };
+
         values.forEach((item) => {
-            if (item.value)
+            if (item.value || item.value === 0)
                 fields[item.key] = { value: item.value };
         });
 
