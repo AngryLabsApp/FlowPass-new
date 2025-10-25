@@ -43,7 +43,8 @@
   {/snippet}
 
   <div
-    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-2 gap-y-4 text-sm/6"
+    class="grid gap-x-3 gap-y-4 text-sm/6
+         [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]"
   >
     {#each items as item}
       <div class="flex flex-col space-y-1x">
