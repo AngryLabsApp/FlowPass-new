@@ -32,13 +32,14 @@
       id: user.id,
       size: 10,
       page: 1,
+      field1:"pago_id",
+      value1: user.pago_id?.toString() || "",
     };
     try {
       loading = true;
       const data = await getIngresos(abort, query_params);
       if (currentAbort !== abort) return;
       ingresos = data;
-      console.log("data", ingresos);
     } catch (error) {
       console.log("ERROR", error);
     } finally {
@@ -63,6 +64,8 @@
         </ListgroupItem>
      {/each}
     </Listgroup>
+      {:else}
+        <p class="text-gray-500 mt-4">No se encontraron ingresos recientes.</p>
     {/if}
 
       

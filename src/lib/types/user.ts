@@ -38,4 +38,6 @@ export interface User {
 
   full_name?: string; // campo virtual, no está en la base de datos
   clases_restantes?: string;
+  plan_id?: string;
+  pago_id?: string;
 }
