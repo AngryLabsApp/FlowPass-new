@@ -24,8 +24,8 @@
   import { ArrowRight, ClipboardClock } from "@lucide/svelte";
   import { useMediaQuery } from "flowbite-svelte";
   import { useUi } from "$lib/hooks/useUIFunctions.svelte";
-  import { ChevronsLeft } from "@lucide/svelte";
-  import { fade, fly, slide } from "svelte/transition";
+  import { ChevronsLeft, CalendarClock } from "@lucide/svelte";
+  import { fly } from "svelte/transition";
 
   // Props
   let {
@@ -79,7 +79,7 @@
       showAccordion = true;
     } else if (mode === "form") {
       show_form = true;
-      showAccordion = !isMobile(); // en desktop deja ambos
+      showAccordion = false; // en desktop deja ambos
     } else {
       // reset
       show_form = false;
@@ -127,7 +127,29 @@
   function isActivePlan() {
     return formated_user.estado === "Activo";
   }
+
+  const stop = (e: Event) => e.stopPropagation();
 </script>
+
+{#snippet buttonLastIngresos()}
+  {#if showAccordion}
+    <div class="p-0 flex justify-end">
+      <Button
+        color="secondary"
+        size="xs"
+        onclick={(e: any) => {
+          stop(e);
+          selectForm(UserKeys.ULTIMOS_INGRESOS);
+        }}
+        class="border flex gap-2 items-center w-45 mr-2 sm:mr-4"
+        disabled={show_form}
+      >
+        Ver últimos ingresos
+        <CalendarClock size="18" />
+      </Button>
+    </div>
+  {/if}
+{/snippet}
 
 <Modal
   bind:open={openModal}
@@ -158,15 +180,6 @@
       {/if}
     </div>
   {/snippet}
-   <Button
-            color="secondary"
-            onclick={() => selectForm(UserKeys.ULTIMOS_INGRESOS)}
-            class="flex gap-2 items-center w-full"
-            disabled={show_form}
-          >
-            Ultimos Ingresos
-            <ArrowRight size="18" />
-          </Button>
 
   <div class="flex flex-col md:flex-row items-start justify-between gap-3">
     <!-- Panel Izquierdo -->
@@ -181,7 +194,9 @@
           {editField}
           {setLoadingModal}
           {setToast}
-        />
+        >
+          {@render buttonLastIngresos()}
+        </AccordionUserItem>
         <AccordionUserItem
           open={true}
           title="Datos personales"
@@ -223,16 +238,16 @@
   {#snippet footer()}
     <div
       class="relative overflow-hidden w-full transition-[min-height] duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
-      style="min-height: {!isMobile() || showAccordion ? '40px' : '0px'};"
+      style="min-height: {showAccordion ? '40px' : '0px'};"
     >
-      {#if !isMobile() || showAccordion}
+      {#if showAccordion}
         <div
           in:fly={{
             y: 24,
-            duration: 320,
+            duration: 160,
             easing: (t) => 1 - Math.pow(1 - t, 3),
           }}
-          out:fly={{ y: 24, duration: 260, easing: (t) => t * t }}
+          out:fly={{ y: 24, duration: 130, easing: (t) => t * t }}
           class="flex justify-between w-full gap-2 backdrop-blur-sm px-2 py-2"
         >
           <Button

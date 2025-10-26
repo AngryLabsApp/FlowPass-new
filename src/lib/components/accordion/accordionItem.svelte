@@ -35,11 +35,17 @@
   }
 </script>
 
-<AccordionItem {open} headerClass="py-1.5 px-5">
+<AccordionItem
+  {open}
+  headerClass="py-1.5 px-5"
+>
   {#snippet header()}
-    <p class="text-sm/6">
-      {title}
-    </p>
+    <div class= "flex w-full justify-between items-center">
+      <p class="text-sm/6">
+        {title}
+      </p>
+      <slot></slot>
+    </div>
   {/snippet}
 
   <div
