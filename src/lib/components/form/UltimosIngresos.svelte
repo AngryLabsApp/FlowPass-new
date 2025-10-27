@@ -116,7 +116,6 @@
     const abort = new AbortController();
     currentAbort = abort;
 
-    console.log("Componente montado, user:", user);
     const query_params: QueryParams = {
       id: user.id,
       size: 20,
