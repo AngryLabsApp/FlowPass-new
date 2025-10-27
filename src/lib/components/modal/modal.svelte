@@ -129,6 +129,12 @@
   }
 
   const stop = (e: Event) => e.stopPropagation();
+
+  function getUserInitials(name: string, lastname: string) {
+    const firstInitial = name ? name.charAt(0).toUpperCase() : "";
+    const lastInitial = lastname ? lastname.charAt(0).toUpperCase() : "";
+    return firstInitial + lastInitial;
+  }
 </script>
 
 {#snippet buttonLastIngresos()}
@@ -158,7 +164,19 @@
 >
   {#snippet header()}
     <div class="flex items-center gap-2 flex-wrap">
-      <div>{formated_user.full_name}</div>
+      <div class="flex gap-3">
+        <div
+          class="border border-green-700 w-12 h-12 rounded-full flex justify-center items-center bg-green-200 text-green-800"
+        >
+          {getUserInitials(formated_user.nombre, formated_user.apellidos)}
+        </div>
+        <div class="">
+          <div>{formated_user.full_name}</div>
+          <div class="text-xs text-gray-400">
+            {formated_user.fecha_alta}
+          </div>
+        </div>
+      </div>
 
       {#if formated_user.is_plan_partner}
         {#if formated_user.is_plan_principal}
