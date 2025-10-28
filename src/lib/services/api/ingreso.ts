@@ -4,7 +4,7 @@ import { buildUrl } from "$lib/utils/utils";
 
 import { fetchWithAuth } from "./base";
 
-import { PUBLIC_USER_UPDATE, PUBLIC_INGRESO_URL, PUBLIC_GET_INGRESOS_URL} from '$env/static/public';
+import { PUBLIC_USER_UPDATE, PUBLIC_INGRESO_URL, PUBLIC_GET_INGRESOS_URL, PUBLIC_UPDATE_INGRESO_URL} from '$env/static/public';
 
 
 export async function ingresoByCode(
@@ -47,21 +47,23 @@ export async function ingresoById(
 export async function updateIngresoById(
   id: string, date: Date
 ): Promise<any> {
-  const url = "";
-  /*const res = await fetchWithAuth(url, {
+  const url = PUBLIC_UPDATE_INGRESO_URL;
+  const res = await fetchWithAuth(url, {
     method: "POST", body: JSON.stringify({
       id: id,
       date: date,
     })
   });
+  console.log("RES UPDATE INGRESO", res);
   if (res?.ok) {
     let data = await res.json();
+      console.log("data UPDATE INGRESO", data);
     return data;
 
   } else {
     throw new Error("Error al registrar ingreso");
   }
-    */
+    
 }
 
 

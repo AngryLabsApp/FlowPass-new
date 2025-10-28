@@ -19,6 +19,7 @@ export interface IngresoUser {
 export interface IngresosHistory {
   clases_tomadas: number;
   created_at: string;
+  check_in: string;
   limite_clases: number;
   id: string;
   pago_id: string;

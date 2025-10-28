@@ -118,14 +118,11 @@
     });
   }
 
-  const updateIngreso = async(ingreso: IngresosHistory, i: number) => {
-    console.log(ingreso, update_ingresos[i]);
-
+  const updateIngreso = async (ingreso: IngresosHistory, i: number) => {
     const [horas, minutos] = update_ingresos[i].time.split(":").map(Number);
-
     const new_date = update_ingresos[i].date;
     new_date.setHours(horas, minutos, 0, 0);
-    console.log("NEW DATE", toLimaDate(new_date));
+    loading = true;
     await updateIngresoById(ingreso.id, new_date);
     await loadIngresos();
   };
@@ -148,7 +145,7 @@
       ingresos = data;
       if (ingresos.total > 0) {
         update_ingresos = ingresos.ingresos.map((ingreso) => {
-          const fecha = toLimaDate(ingreso.created_at);
+          const fecha = toLimaDate(ingreso.check_in);
           const horas = fecha.toLocaleTimeString("es-PE", {
             hour: "2-digit",
             minute: "2-digit",
@@ -193,19 +190,19 @@
         <ListgroupItem class="gap-2 text-base font-semibold">
           <div class="  w-full flex justify-between">
             <div class="flex gap-2 px-2 items-center">
-              <div class="text-2xl">{getLimaDayNumber(ingreso.created_at)}</div>
+              <div class="text-2xl">{getLimaDayNumber(ingreso.check_in)}</div>
               <div class="">
                 <div class="text-sm">
-                  {getLimaMonthYear(ingreso.created_at)}
+                  {getLimaMonthYear(ingreso.check_in)}
                 </div>
-                <div class="text-xs">{getLimaWeekday(ingreso.created_at)}</div>
+                <div class="text-xs">{getLimaWeekday(ingreso.check_in)}</div>
               </div>
             </div>
 
             <div class="flex flex-col items-end">
               <div class="flex gap-2 items-center">
                 <Clock size="16" />
-                <p>{getLimaTime(ingreso.created_at)}</p>
+                <p>{getLimaTime(ingreso.check_in)}</p>
               </div>
               <div class="flex gap-1 items-center text-xs">
                 <Indicator
@@ -233,14 +230,14 @@
             <div class="  w-full flex justify-between">
               <div class="flex gap-2 px-2 items-center">
                 <div class="text-2xl">
-                  {getLimaDayNumber(ingreso.created_at)}
+                  {getLimaDayNumber(ingreso.check_in)}
                 </div>
                 <div class="">
                   <div class="text-sm">
-                    {getLimaMonthYear(ingreso.created_at)}
+                    {getLimaMonthYear(ingreso.check_in)}
                   </div>
                   <div class="text-xs">
-                    {getLimaWeekday(ingreso.created_at)}
+                    {getLimaWeekday(ingreso.check_in)}
                   </div>
                 </div>
               </div>
@@ -248,7 +245,7 @@
               <div class="flex flex-col items-end">
                 <div class="flex gap-2 items-center">
                   <Clock size="16" />
-                  <p>{getLimaTime(ingreso.created_at)}</p>
+                  <p>{getLimaTime(ingreso.check_in)}</p>
                 </div>
                 <div class="flex gap-1 items-center text-xs">
                   <Indicator
