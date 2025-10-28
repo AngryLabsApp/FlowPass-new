@@ -1,10 +1,11 @@
 <script lang="ts">
   import type { FormProps } from "$lib/catalog/form_component_catalog";
-  import { getIngresos } from "$lib/services/api/ingreso";
+  import { getIngresos, updateIngresoById } from "$lib/services/api/ingreso";
   import {
     CheckInType,
     type ColorCheckInType,
     type GetIngresosResponse,
+    type IngresosHistory,
   } from "$lib/types/ingresoResponse";
   import type { QueryParams } from "$lib/types/queryparams";
 
@@ -117,7 +118,18 @@
     });
   }
 
-  onMount(async () => {
+  const updateIngreso = async(ingreso: IngresosHistory, i: number) => {
+    console.log(ingreso, update_ingresos[i]);
+
+    const [horas, minutos] = update_ingresos[i].time.split(":").map(Number);
+
+    const new_date = update_ingresos[i].date;
+    new_date.setHours(horas, minutos, 0, 0);
+    console.log("NEW DATE", toLimaDate(new_date));
+    await updateIngresoById(ingreso.id, new_date);
+    await loadIngresos();
+  };
+  const loadIngresos = async () => {
     currentAbort?.abort();
     const abort = new AbortController();
     currentAbort = abort;
@@ -148,12 +160,14 @@
           };
         });
       }
-
     } catch (error) {
       console.log("ERROR", error);
     } finally {
       if (currentAbort === abort) loading = false;
     }
+  };
+  onMount(async () => {
+    await loadIngresos();
   });
 </script>
 
@@ -265,8 +279,14 @@
 
           Hora:
           <Label class="space-y-2">
-            <Timepicker Icon={ClockOutline} iconClass="text-red-500" bind:value={update_ingresos[i].time}/>
+            <Timepicker
+              Icon={ClockOutline}
+              iconClass="text-red-500"
+              bind:value={update_ingresos[i].time}
+            />
           </Label>
+          <Button pill onclick={() => updateIngreso(ingreso, i)}>Guardar</Button
+          >
         </AccordionItem>
       {/each}
     </Accordion>

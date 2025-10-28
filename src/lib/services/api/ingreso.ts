@@ -44,6 +44,26 @@ export async function ingresoById(
   }
 }
 
+export async function updateIngresoById(
+  id: string, date: Date
+): Promise<any> {
+  const url = "";
+  /*const res = await fetchWithAuth(url, {
+    method: "POST", body: JSON.stringify({
+      id: id,
+      date: date,
+    })
+  });
+  if (res?.ok) {
+    let data = await res.json();
+    return data;
+
+  } else {
+    throw new Error("Error al registrar ingreso");
+  }
+    */
+}
+
 
 export async function getIngresos(
   currentAbort: AbortController,
