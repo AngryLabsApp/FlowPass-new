@@ -20,9 +20,14 @@
     Indicator,
     Badge,
     Tooltip,
+    Accordion,
+    AccordionItem,
+    Datepicker,
+    Timepicker,
   } from "flowbite-svelte";
   import { onMount } from "svelte";
   import { Clock, Info } from "@lucide/svelte";
+  import { ClockOutline } from "flowbite-svelte-icons";
 
   let { user, setLoadingModal, setToast, closeForm }: FormProps = $props();
   let loading = $state(false);
@@ -152,6 +157,7 @@
   {#if loading}
     <ListPlaceholder />
   {:else if ingresos.total > 0}
+    <!--
     <Listgroup active class="w-full">
       {#each ingresos.ingresos as ingreso}
         <ListgroupItem class="gap-2 text-base font-semibold">
@@ -189,6 +195,64 @@
         </ListgroupItem>
       {/each}
     </Listgroup>
+-->
+    <Accordion class="w-full ">
+      {#each ingresos.ingresos as ingreso}
+        <AccordionItem class="[&>button>svg]:hidden " headerClass="py-2">
+          {#snippet header()}
+            <div class="  w-full flex justify-between">
+              <div class="flex gap-2 px-2 items-center">
+                <div class="text-2xl">
+                  {getLimaDayNumber(ingreso.created_at)}
+                </div>
+                <div class="">
+                  <div class="text-sm">
+                    {getLimaMonthYear(ingreso.created_at)}
+                  </div>
+                  <div class="text-xs">
+                    {getLimaWeekday(ingreso.created_at)}
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex flex-col items-end">
+                <div class="flex gap-2 items-center">
+                  <Clock size="16" />
+                  <p>{getLimaTime(ingreso.created_at)}</p>
+                </div>
+                <div class="flex gap-1 items-center text-xs">
+                  <Indicator
+                    size="xs"
+                    color={colorPerTypeOfCheckin(ingreso.tipo as CheckInType)}
+                  />
+                  <div>
+                    {identifyTypeOfCheckIngreso(ingreso.tipo as CheckInType)}
+                  </div>
+                  <Info size="14" absoluteStrokeWidth={true} strokeWidth={2} />
+                  <Tooltip trigger="click" arrow={false}
+                    >{identifyCheckIngresoLabel(ingreso.tipo as CheckInType)}: {ingreso.clases_tomadas}/{ingreso.limite_clases}</Tooltip
+                  >
+                </div>
+              </div>
+            </div>
+          {/snippet}
+          Fecha
+          <Label class="space-y-2">
+            <Datepicker
+              class="w-full"
+              onchange={() => {}}
+              onselect={() => {}}
+              required
+            />
+          </Label>
+
+          Hora:
+          <Label class="space-y-2">
+            <Timepicker Icon={ClockOutline} iconClass="text-red-500" />
+          </Label>
+        </AccordionItem>
+      {/each}
+    </Accordion>
   {:else}
     <p class="text-gray-500 mt-4">No se encontraron ingresos recientes.</p>
   {/if}
