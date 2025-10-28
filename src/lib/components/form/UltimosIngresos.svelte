@@ -34,6 +34,7 @@
 
   let currentAbort: AbortController | null = null;
   let ingresos: GetIngresosResponse = $state({ ingresos: [], total: 0 });
+  let update_ingresos: { date: Date; time: string }[] = $state([]);
 
   function capitalize(str: string): string {
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -133,6 +134,21 @@
       const data = await getIngresos(abort, query_params);
       if (currentAbort !== abort) return;
       ingresos = data;
+      if (ingresos.total > 0) {
+        update_ingresos = ingresos.ingresos.map((ingreso) => {
+          const fecha = toLimaDate(ingreso.created_at);
+          const horas = fecha.toLocaleTimeString("es-PE", {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false, // formato 24h
+          });
+          return {
+            date: fecha,
+            time: horas,
+          };
+        });
+      }
+
     } catch (error) {
       console.log("ERROR", error);
     } finally {
@@ -197,7 +213,7 @@
     </Listgroup>
 -->
     <Accordion class="w-full ">
-      {#each ingresos.ingresos as ingreso}
+      {#each ingresos.ingresos as ingreso, i}
         <AccordionItem class="[&>button>svg]:hidden " headerClass="py-2">
           {#snippet header()}
             <div class="  w-full flex justify-between">
@@ -242,13 +258,14 @@
               class="w-full"
               onchange={() => {}}
               onselect={() => {}}
+              bind:value={update_ingresos[i].date}
               required
             />
           </Label>
 
           Hora:
           <Label class="space-y-2">
-            <Timepicker Icon={ClockOutline} iconClass="text-red-500" />
+            <Timepicker Icon={ClockOutline} iconClass="text-red-500" bind:value={update_ingresos[i].time}/>
           </Label>
         </AccordionItem>
       {/each}
