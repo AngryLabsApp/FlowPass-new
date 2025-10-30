@@ -227,8 +227,8 @@
       {#each ingresos.ingresos as ingreso, i}
         <AccordionItem class="[&>button>svg]:hidden " headerClass="py-2">
           {#snippet header()}
-            <div class="  w-full flex justify-between">
-              <div class="flex gap-2 px-2 items-center">
+            <div class="w-full flex justify-between">
+              <div class="flex gap-2 items-center">
                 <div class="text-2xl">
                   {getLimaDayNumber(ingreso.check_in)}
                 </div>
@@ -263,27 +263,35 @@
               </div>
             </div>
           {/snippet}
-          Fecha
-          <Label class="space-y-2">
-            <Datepicker
-              class="w-full"
-              onchange={() => {}}
-              onselect={() => {}}
-              bind:value={update_ingresos[i].date}
-              required
-            />
-          </Label>
+          <div class="flex flex-col gap-1 text-sm">
+            <div class="">
+              Fecha:
+              <Label class="space-y-2">
+                <Datepicker
+                  class="w-full"
+                  onchange={() => {}}
+                  onselect={() => {}}
+                  bind:value={update_ingresos[i].date}
+                  required
+                />
+              </Label>
+            </div>
 
-          Hora:
-          <Label class="space-y-2">
-            <Timepicker
-              Icon={ClockOutline}
-              iconClass="text-red-500"
-              bind:value={update_ingresos[i].time}
-            />
-          </Label>
-          <Button pill onclick={() => updateIngreso(ingreso, i)}>Guardar</Button
-          >
+            <div class="mb-3">
+              Hora:
+              <Label class="space-y-2">
+                <Timepicker
+                  Icon={ClockOutline}
+                  size="sm"
+                  bind:value={update_ingresos[i].time}
+                />
+              </Label>
+            </div>
+
+            <Button pill onclick={() => updateIngreso(ingreso, i)}
+              >Guardar</Button
+            >
+          </div>
         </AccordionItem>
       {/each}
     </Accordion>
