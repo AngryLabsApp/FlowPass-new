@@ -3,10 +3,10 @@ import type { getUsersResponse } from "$lib/types/api";
 import type { QueryParams } from "$lib/types/queryparams";
 import type { User } from "$lib/types/user";
 import { buildUrl, mapIfPartnerUser } from "$lib/utils/utils";
-import { PUBLIC_USERS_URL, PUBLIC_USER_UPDATE, PUBLIC_USERS_FORM, PUBLIC_DELETE_USER_URL } from '$env/static/public';
+import {PUBLIC_API_URL, PUBLIC_USER_UPDATE, PUBLIC_USERS_FORM, PUBLIC_DELETE_USER_URL } from '$env/static/public';
 
 
-
+const PUBLIC_USERS_URL = PUBLIC_API_URL + "/members";
 export async function getUsers(
   currentAbort: AbortController,
   queryParams: QueryParams
@@ -15,7 +15,9 @@ export async function getUsers(
   const res = await fetchWithAuth(url, {}, currentAbort);
   if (res?.ok) {
     let data = await res.json();
-    const { total, data: _users } = data[0] || {};
+
+    data = data.data ? data : data[0];
+    const { total, data: _users } = data || {};
     let users: User[] = mapIfPartnerUser(_users || []);
 
     return { total, users };

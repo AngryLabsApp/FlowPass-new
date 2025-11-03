@@ -1,9 +1,9 @@
 import type { Plan } from '$lib/types/planes';
 import { fetchWithAuth } from './base';
 
-import { PUBLIC_PLANES_URL} from '$env/static/public';
+import { PUBLIC_API_URL} from '$env/static/public';
 
-
+const PUBLIC_PLANES_URL = PUBLIC_API_URL+"/planes";
 type Reviver = (this: any, key: string, value: any) => any;
 type Replacer = (this: any, key: string, value: any) => any;
 
