@@ -22,6 +22,7 @@
   import type { ToastInterface } from "$lib/types/toast";
   import { LOADING_CTX, TOAST_CTX } from "$lib/hooks/useUIFunctions.svelte";
   import DeleteUserModal from "$lib/components/modal/delete_user_modal.svelte";
+  import BirthDatesRow from "$lib/components/birthdates/birthDatesRow.svelte";
 
   let pagination_values = $state({ total: 1, start: 0, end: 0, totalPages: 1 });
   let page = $state(1);
@@ -194,6 +195,9 @@
 </div>
 
 <div class="p-4">
+
+  <BirthDatesRow></BirthDatesRow>
+
   <div class="sm:grid sm:grid-cols-2 sm:gap-4 sm:mb-5 flex flex-col gap-1.5 mb-5">
     <Heading tag="h3">Alumnos</Heading>
     <div class="flex items-center gap-3 justify-end">
