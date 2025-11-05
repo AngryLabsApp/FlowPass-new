@@ -23,7 +23,10 @@
   import { LOADING_CTX, TOAST_CTX } from "$lib/hooks/useUIFunctions.svelte";
   import DeleteUserModal from "$lib/components/modal/delete_user_modal.svelte";
   import BirthDatesRow from "$lib/components/birthdates/birthDatesRow.svelte";
+import { getCustomEnv } from "$lib/utils/env_utils";
+    import { MODULES } from "$lib/enums/modules_enum";
 
+  const HIDE_MODULES = getCustomEnv("hide_modules")|| [];
   let pagination_values = $state({ total: 1, start: 0, end: 0, totalPages: 1 });
   let page = $state(1);
   let error = $state("");
@@ -195,8 +198,10 @@
 </div>
 
 <div class="p-4">
+  {#if !HIDE_MODULES.includes(MODULES.BIRTHDAY)}
+      <BirthDatesRow></BirthDatesRow>
+  {/if}
 
-  <BirthDatesRow></BirthDatesRow>
 
   <div class="sm:grid sm:grid-cols-2 sm:gap-4 sm:mb-5 flex flex-col gap-1.5 mb-5">
     <Heading tag="h3">Alumnos</Heading>
