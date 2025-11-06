@@ -1,7 +1,6 @@
 import { PUBLIC_CUSTOM_VARS, PUBLIC_CLIENT } from "$env/static/public";
 
 export function getCustomEnv(field: string){
-      console.log("PRINT",PUBLIC_CUSTOM_VARS);
       const data = JSON.parse(PUBLIC_CUSTOM_VARS  || "{}");
       return data[field] || undefined;
 }
