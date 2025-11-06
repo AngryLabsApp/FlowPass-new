@@ -31,6 +31,7 @@
     CashOutline,
     UsersGroupOutline,
     UndoOutline,
+     CogOutline
   } from "flowbite-svelte-icons";
 
   import { KeyRound } from "@lucide/svelte";
@@ -52,6 +53,11 @@
       label: "Pagos",
       href: "/pagos",
       icon: CashOutline,
+    },
+     {
+      label: "Configuración",
+      href: "/configuracion",
+      icon:  CogOutline,
     },
   ];
 

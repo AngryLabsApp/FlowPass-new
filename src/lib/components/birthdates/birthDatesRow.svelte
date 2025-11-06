@@ -104,7 +104,7 @@
     class="flex overflow-x-auto gap-3 p-3 scrollbar-hide snap-x snap-mandatory"
 >
     {#if loading}
-        {#each [1, 2, 3, 4, 5, 6, 7] as repeat}
+        {#each [1, 2] as repeat}
             <Card
                 class="p-3 flex gap-1.5 justify-center w-50 h-40 flex-none"
                 size="xs"
