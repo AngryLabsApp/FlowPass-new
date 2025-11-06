@@ -100,37 +100,56 @@
     };
 </script>
 
-{#if loading}
-    <Card class="p-4 sm:p-5 md:p-7" size="xs">
-        <Skeleton size="sm" class="w-35" />
-    </Card>
-{:else if users.length > 0}
-    {#each users as u}
-        <Card class="p-4 sm:p-5 md:p-7" size="xs">
+<div
+    class="flex overflow-x-auto gap-3 p-3 scrollbar-hide snap-x snap-mandatory"
+>
+    {#if loading}
+        {#each [1, 2, 3, 4, 5, 6, 7] as repeat}
+            <Card
+                class="p-3 flex gap-1.5 justify-center w-50 h-40 flex-none"
+                size="xs"
+            >
+                <Skeleton size="sm" class="w-35" />
+            </Card>
+        {/each}
+    {:else if users.length > 0}
+        {#each users as u}
+            <Card
+                class="p-3 flex gap-1.5 justify-center w-50 h-40 flex-none"
+                size="xs"
+            >
+                <div class="flex flex-col items-center pb-2">
+                    <h5
+                        class="mb-1 text-xl font-medium text-gray-900 dark:text-white"
+                    >
+                        {u.full_name}
+                    </h5>
+                    <span class="text-sm text-gray-500 dark:text-gray-400"
+                        >{getMonth(u.cumpleanos as string)}</span
+                    >
+                    <div
+                        class="mt-4 flex space-x-3 lg:mt-6 rtl:space-x-reverse"
+                    >
+                        Cumple: {getAge(u.cumpleanos as string)} Años!
+                    </div>
+                    <span class="text-sm text-gray-500 dark:text-gray-400"
+                        >{restingDays(u.cumpleanos as string)}</span
+                    >
+                </div>
+            </Card>
+        {/each}
+    {:else}
+        <Card
+            class="p-3 flex gap-1.5 justify-center w-50 h-40 flex-none"
+            size="xs"
+        >
             <div class="flex flex-col items-center pb-4">
                 <h5
                     class="mb-1 text-xl font-medium text-gray-900 dark:text-white"
                 >
-                    {u.full_name}
+                    No hay cumpleaños proximos
                 </h5>
-                <span class="text-sm text-gray-500 dark:text-gray-400"
-                    >{getMonth(u.cumpleanos as string)}</span
-                >
-                <div class="mt-4 flex space-x-3 lg:mt-6 rtl:space-x-reverse">
-                    Cumple: {getAge(u.cumpleanos as string)} Años!
-                </div>
-                <span class="text-sm text-gray-500 dark:text-gray-400"
-                    >{restingDays(u.cumpleanos as string)}</span
-                >
             </div>
         </Card>
-    {/each}
-{:else}
-    <Card class="p-4 sm:p-5 md:p-7" size="xs">
-        <div class="flex flex-col items-center pb-4">
-            <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">
-                No hay cumpleaños proximos
-            </h5>
-        </div>
-    </Card>
-{/if}
+    {/if}
+</div>
