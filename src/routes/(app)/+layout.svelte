@@ -31,12 +31,13 @@
     CashOutline,
     UsersGroupOutline,
     UndoOutline,
-     CogOutline
+    CogOutline,
   } from "flowbite-svelte-icons";
 
   import { KeyRound } from "@lucide/svelte";
-  import { getClientEnv } from "$lib/utils/env_utils";
-
+  import { getClientEnv, getCustomEnv } from "$lib/utils/env_utils";
+  import { MODULES } from "$lib/enums/modules_enum";
+  const HIDE_MODULES = getCustomEnv("hide_modules") || [];
   const spanClass = "flex-1 ms-3 whitespace-nowrap";
   const MenuItems = [
     {
@@ -54,12 +55,15 @@
       href: "/pagos",
       icon: CashOutline,
     },
-     {
+
+  ];
+  if(!HIDE_MODULES.includes(MODULES.CONFIG)){
+    MenuItems.push( {
       label: "Configuración",
       href: "/configuracion",
-      icon:  CogOutline,
-    },
-  ];
+      icon: CogOutline,
+    });
+  }
 
   const demoSidebarUi = uiHelpers();
   let isDemoOpen = $state(false);
@@ -79,12 +83,11 @@
   const CLIENT_LOGO = getClientEnv("logo");
   const CLIENT_NAME = getClientEnv("name");
 
-const client = {
-  logo: CLIENT_LOGO || default_icon,
-  alt:  CLIENT_NAME || "demo",
-  class: "h-10 w-auto"
-};
-
+  const client = {
+    logo: CLIENT_LOGO || default_icon,
+    alt: CLIENT_NAME || "demo",
+    class: "h-10 w-auto",
+  };
 </script>
 
 <svelte:head>
