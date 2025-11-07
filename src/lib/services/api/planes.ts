@@ -123,3 +123,30 @@ function isFresh(cached: Cached, maxAgeMs: number): boolean {
   if (!cached) return false;
   return Date.now() - (cached.ts || 0) < maxAgeMs;
 }
+
+
+export async function getPlanesWithOutCache(): Promise<Plan[]> {
+  const headers: Record<string, string> = {};
+  const res = (await fetchWithAuth(PUBLIC_PLANES_URL, { headers })) as Response;
+  const data: any = await res.json();
+  return data.planes as Plan[];
+}
+
+
+export async function updateOrCreatePlan(
+  plan: Plan
+): Promise<any> {
+  const payload = { ...plan};
+  const method = plan.id ? "PUT" : "POST";
+  const res = await fetchWithAuth(PUBLIC_PLANES_URL, {
+    method, body: JSON.stringify(payload)
+  });
+  if (res?.ok) {
+    let data = await res.json();
+    return data;
+
+  } else {
+    throw new Error("Error al actualizar");
+  }
+
+}

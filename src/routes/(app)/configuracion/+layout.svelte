@@ -23,11 +23,11 @@
           <CogSolid class="h-5 w-5 text-gray-500 dark:text-gray-400" />
         {/snippet}
       </SidebarItem>
-      <SidebarItem label="Notificaciones" href="/">
+   <!--     <SidebarItem label="Notificaciones" href="/">
         {#snippet icon()}
           <BellSolid class="h-5 w-5 text-gray-500 dark:text-gray-400" />
         {/snippet}
-      </SidebarItem>
+      </SidebarItem>-->
      
     </SidebarGroup>
   </Sidebar>

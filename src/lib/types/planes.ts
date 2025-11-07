@@ -5,6 +5,7 @@ export interface Plan {
   amount: number;
   partners: boolean;
   ilimitado: boolean;
+  neverExpires: boolean;
   dias_mes: number;
   limite_clases: number;
   is_free: boolean;
