@@ -158,6 +158,9 @@ export function buildUrl(base: string, params: QueryParams) {
 
 export function fmtClasesRestantes(user: User): string {
   if (user.limite_clases === undefined || user.limite_clases === null) return "-";
+  if (user.limite_clases <= 0){
+     return `${user.clases_tomadas}`;
+  }
   return `${user.clases_tomadas}/${user.limite_clases}`;
 }
 
