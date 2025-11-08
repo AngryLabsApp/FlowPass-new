@@ -1,8 +1,8 @@
 <script lang="ts">
   import UserModal from "../../../lib/components/modal/modal.svelte";
   import { onMount, setContext } from "svelte";
-  import { getUsers } from "$lib/services/api/users";
-  import { Heading } from "flowbite-svelte";
+  import { getUsers, getUsersByBirthDay } from "$lib/services/api/users";
+  import { Button, Heading, Indicator } from "flowbite-svelte";
   import Navbar from "../../../lib/components/navbar/navbar.svelte";
   import Pagination from "../../../lib/components/pagination/pagination.svelte";
   import UserTable from "../../../lib/components/table/table.svelte";
@@ -25,12 +25,15 @@
   import BirthDatesRow from "$lib/components/birthdates/birthDatesRow.svelte";
   import { getCustomEnv } from "$lib/utils/env_utils";
   import { MODULES } from "$lib/enums/modules_enum";
+  import { Gift } from "@lucide/svelte";
 
   const HIDE_MODULES = getCustomEnv("hide_modules") || [];
   let pagination_values = $state({ total: 1, start: 0, end: 0, totalPages: 1 });
   let page = $state(1);
   let error = $state("");
   let loading = $state(true);
+  let showBirthdays = $state(false);
+  let birthdaysOfTheWeek: number = $state(0);
   let CUSTOM_HEADERS = getCustomUserTableHeaders();
 
   let modal_loading = $state({ loading: false, title: "" });
@@ -52,6 +55,10 @@
     const planes = await getPlanes();
     planes_catalog = MapPlanCatalog(planes);
     await fetchAlumnos();
+    // pedir cumpleaños
+    const abort = new AbortController();
+    const members = await getUsersByBirthDay(abort, {});
+    birthdaysOfTheWeek = members.users.length;
   });
 
   let openModal: boolean = $state(false);
@@ -162,7 +169,7 @@
     } catch (error) {
       setToast(
         "Hubo un problema al actualizar. Reintenta en unos segundos.",
-        false,
+        false
       );
     } finally {
       setLoadingModal(false);
@@ -176,6 +183,7 @@
   function setLoadingModal(loading: boolean, title?: string) {
     modal_loading = { loading, title: title || "" };
   }
+
   function setToast(title?: string, success: boolean = true) {
     toast = {
       type: success ? "success" : "error",
@@ -188,6 +196,10 @@
     openDeleteUserModal = true;
     selected_user = user;
   }
+
+  function toggleBirthdays() {
+    showBirthdays = !showBirthdays;
+  }
 </script>
 
 <div class="w-full p-4 bg-gray-50 shadow-xs">
@@ -198,14 +210,31 @@
 </div>
 
 <div class="p-4">
-  {#if !HIDE_MODULES.includes(MODULES.BIRTHDAY)}
-    <BirthDatesRow></BirthDatesRow>
-  {/if}
-
   <div
     class="sm:grid sm:grid-cols-2 sm:gap-4 sm:mb-5 flex flex-col gap-1.5 mb-5"
   >
-    <Heading tag="h3">Alumnos</Heading>
+    <div class="flex flex-col lg:flex-row gap-4">
+      <Heading tag="h3">Alumnos</Heading>
+      <Button
+        onclick={toggleBirthdays}
+        size="sm"
+        color="light"
+        outline
+        class="shrink-0 justify-start gap-1 w-fit overflow-hidden whitespace-nowrap"
+      >
+        {#if showBirthdays}
+          <Gift size={18} /> Ocultar cumples
+        {:else}
+          <Gift size={18} />
+          Ver cumples
+          <Indicator
+            class="p-2 bg-pink-200 text-pink-800 text-xs font-semibold"
+            size="lg">{birthdaysOfTheWeek}</Indicator
+          >
+        {/if}
+      </Button>
+    </div>
+
     <div class="flex items-center gap-3 justify-end">
       <Label for="order-by" class="sm:w-fit sm:w-max-[150px] sm:mb-0 w-1/2 "
         >Ordenar por:</Label
@@ -232,6 +261,14 @@
     {registrarIngreso}
     {onUpdateUser}
   />
+  {#if !HIDE_MODULES.includes(MODULES.BIRTHDAY) && showBirthdays}
+    <div
+      class="w-full mb-5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700
+             rounded-2xl shadow-sm p-2"
+    >
+      <BirthDatesRow />
+    </div>
+  {/if}
   {#if loading}
     <SkeletonTable rows={10} cellHeights="h-4" headers={CUSTOM_HEADERS} />
   {:else if error}

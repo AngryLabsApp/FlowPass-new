@@ -24,7 +24,6 @@
       const members = await getUsersByBirthDay(abort, {});
       userBirthdays = members.users;
 
-      console.log("CUMPLES", members);
       if (currentAbort !== abort) return;
     } catch (err: any) {
       if (err?.name === "AbortError") return;
@@ -49,14 +48,13 @@
       const status = diffDays === 0 ? "hoy" : "proximo";
       const description =
         status === "hoy"
-          ? "🎉 ¡Su cumple es hoy!"
+          ? `🎉 ¡Hoy cumple ${getAge(u.cumpleanos!)}!`
           : `Cumple ${getAge(u.cumpleanos!)} años`;
       const descriptionDiffDays =
         status === "hoy"
-          ? "🎈 Día especial"
+          ? "Día especial 🎈"
           : `Faltan ${diffDays} ${diffDays === 1 ? "día" : "días"} 🎉`;
 
-      console.log("que dice descriptionDiffDays -->", descriptionDiffDays);
       return {
         id: u.id,
         name: `${toTitleCase(u.nombre)} ${toTitleCase(u.apellidos)}`.trim(),
@@ -99,13 +97,13 @@
       bind:this={scrollContainer}
       class="overflow-x-auto scroll-smooth snap-x snap-mandatory px-8 scrollbar-hide scroll-px-8"
     >
-      <Timeline order="horizontal" class="py-2">
+      <Timeline order="horizontal" class="flex py-2">
         {#each birthdays as b, index}
           {@const isLastItem = index === birthdays.length - 1}
           {@const color = getColor(b.status)}
 
           <TimelineItem
-            class="shrink-1 snap-start min-w-[150px] [&>h3]:text-sm [&>h3]:mt-2 [&>time]:text-xs"
+            class="text-wrap shrink-0 snap-start max-w-[150px] [&>h3]:text-sm [&>h3]:mt-2 [&>time]:text-xs"
             title={b.name}
             date={b.dateFormatted}
             {color}
@@ -160,7 +158,9 @@
     </button>
   </div>
 {:else}
-  <p class="text-gray-500 dark:text-gray-400 text-sm mt-3">
-    No hay cumpleaños próximos 🎈
-  </p>
+  <div class="flex items-center justify-center h-16">
+    <p class="text-gray-500 dark:text-gray-400 text-sm">
+      No hay cumpleaños próximos 🎈
+    </p>
+  </div>
 {/if}
