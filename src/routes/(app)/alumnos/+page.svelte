@@ -34,6 +34,7 @@
   let loading = $state(true);
   let showBirthdays = $state(false);
   let birthdaysOfTheWeek: number = $state(0);
+  let userBirthdays: UserBirthday[] = $state([]);
   let CUSTOM_HEADERS = getCustomUserTableHeaders();
 
   let modal_loading = $state({ loading: false, title: "" });
@@ -51,14 +52,19 @@
     show: false,
   });
 
+  const getbirthDays = async () => {
+    console.log("recargando cumples");
+     const abort = new AbortController();
+    const members = await getUsersByBirthDay(abort, {});
+    userBirthdays = members.users;
+    birthdaysOfTheWeek = members.users.length;
+  }
   onMount(async () => {
     const planes = await getPlanes();
     planes_catalog = MapPlanCatalog(planes);
     await fetchAlumnos();
-    // pedir cumpleaños
-    const abort = new AbortController();
-    const members = await getUsersByBirthDay(abort, {});
-    birthdaysOfTheWeek = members.users.length;
+    getbirthDays();
+   
   });
 
   let openModal: boolean = $state(false);
@@ -176,8 +182,10 @@
     }
   };
 
-  function onUpdateUser() {
+  async function onUpdateUser() {
     fetchAlumnos();
+    getbirthDays();
+
   }
 
   function setLoadingModal(loading: boolean, title?: string) {
@@ -266,7 +274,7 @@
       class="w-full mb-5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700
              rounded-2xl shadow-sm p-2"
     >
-      <BirthDatesRow />
+      <BirthDatesRow {userBirthdays} />
     </div>
   {/if}
   {#if loading}

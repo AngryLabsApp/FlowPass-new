@@ -9,28 +9,13 @@
 
   import { Cake, ChevronLeft, ChevronRight } from "@lucide/svelte";
   import { toTitleCase } from "$lib/utils/utils";
-
+  let { userBirthdays}: any = $props();
   let loading = $state(true);
-  let userBirthdays: UserBirthday[] = $state([]);
+
   let currentAbort: AbortController | null = null;
   let scrollContainer: HTMLDivElement;
 
-  onMount(async () => {
-    currentAbort?.abort();
-    const abort = new AbortController();
-    currentAbort = abort;
-    try {
-      loading = true;
-      const members = await getUsersByBirthDay(abort, {});
-      userBirthdays = members.users;
 
-      if (currentAbort !== abort) return;
-    } catch (err: any) {
-      if (err?.name === "AbortError") return;
-    } finally {
-      if (currentAbort === abort) loading = false;
-    }
-  });
 
   function getAge(dateString: string) {
     const birthDate = dayjs(dateString);
