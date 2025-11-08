@@ -1,153 +1,166 @@
 <script lang="ts">
-    import { getUsersByBirthDay } from "$lib/services/api/users";
-    import type { User } from "$lib/types/user";
-    import { fmtUser } from "$lib/utils/utils";
-    import { Avatar, Card, Skeleton } from "flowbite-svelte";
-    import { onMount, setContext } from "svelte";
+  import { getUsersByBirthDay } from "$lib/services/api/users";
+  import type { UserBirthday } from "$lib/types/userBirthday";
+  import { Timeline, TimelineItem } from "flowbite-svelte";
+  import { onMount } from "svelte";
+  import dayjs from "dayjs";
+  import "dayjs/locale/es.js";
+  dayjs.locale("es");
 
-    let loading = $state(true);
-    let users: User[] = $state([]);
-    let currentAbort: AbortController | null = null;
-    onMount(async () => {
-        currentAbort?.abort();
-        const abort = new AbortController();
-        currentAbort = abort;
-        try {
-            loading = true;
-            const members = await getUsersByBirthDay(abort, {});
-            users = members.users.map((item) => fmtUser(item));
+  import { Cake, ChevronLeft, ChevronRight } from "@lucide/svelte";
+  import { toTitleCase } from "$lib/utils/utils";
 
-            console.log("CUMPLES", members);
-            if (currentAbort !== abort) return;
-        } catch (err: any) {
-            if (err?.name === "AbortError") return;
-        } finally {
-            if (currentAbort === abort) loading = false;
-        }
-    });
+  let loading = $state(true);
+  let userBirthdays: UserBirthday[] = $state([]);
+  let currentAbort: AbortController | null = null;
+  let scrollContainer: HTMLDivElement;
 
-    const getAge = (date: string): number => {
-        if (!date) return 0; // manejo básico por si viene vacío o null
+  onMount(async () => {
+    currentAbort?.abort();
+    const abort = new AbortController();
+    currentAbort = abort;
+    try {
+      loading = true;
+      const members = await getUsersByBirthDay(abort, {});
+      userBirthdays = members.users;
 
-        const birthDate = new Date(date);
-        const today = new Date();
+      console.log("CUMPLES", members);
+      if (currentAbort !== abort) return;
+    } catch (err: any) {
+      if (err?.name === "AbortError") return;
+    } finally {
+      if (currentAbort === abort) loading = false;
+    }
+  });
 
-        let age = today.getFullYear() - birthDate.getFullYear();
-        const hasHadBirthdayThisYear =
-            today.getMonth() > birthDate.getMonth() ||
-            (today.getMonth() === birthDate.getMonth() &&
-                today.getDate() >= birthDate.getDate());
+  function getAge(dateString: string) {
+    const birthDate = dayjs(dateString);
+    return dayjs().diff(birthDate, "year");
+  }
 
-        if (!hasHadBirthdayThisYear) {
-            age -= 1;
-        }
+  const today = dayjs();
 
-        return age;
-    };
-    const restingDays = (date: string): string => {
-        if (!date) return "";
+  // 🎈 Convertimos los datos a formato Timeline
+  const birthdays = $derived(
+    userBirthdays.map((u) => {
+      const date = dayjs(u.cumpleanos).year(today.year()).startOf("day");
+      const diffDays = date.diff(today.startOf("day"), "day");
 
-        const today = new Date();
+      const status = diffDays === 0 ? "hoy" : "proximo";
+      const description =
+        status === "hoy"
+          ? "🎉 ¡Su cumple es hoy!"
+          : `Cumple ${getAge(u.cumpleanos!)} años`;
+      const descriptionDiffDays =
+        status === "hoy"
+          ? "🎈 Día especial"
+          : `Faltan ${diffDays} ${diffDays === 1 ? "día" : "días"} 🎉`;
 
-        // Extraemos correctamente los componentes de la fecha (YYYY-MM-DD)
-        const [day, month, year] = date.split("-").map(Number);
+      console.log("que dice descriptionDiffDays -->", descriptionDiffDays);
+      return {
+        id: u.id,
+        name: `${toTitleCase(u.nombre)} ${toTitleCase(u.apellidos)}`.trim(),
+        dateFormatted: date.format("D [de] MMMM"),
+        description,
+        descriptionDiffDays,
+        status,
+        diffDays,
+      };
+    })
+  );
 
-        // Normalizamos la hora (medianoche local)
-        const todayMidnight = new Date(
-            today.getFullYear(),
-            today.getMonth(),
-            today.getDate(),
-        );
+  function getColor(status: string) {
+    return status === "hoy" ? "orange" : "blue";
+  }
 
-        // Creamos la fecha del cumpleaños para este año
-        let nextBirthday = new Date(today.getFullYear(), month - 1, day);
+  function getBadgeClass(status: string) {
+    return status === "hoy"
+      ? "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300"
+      : "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300";
+  }
 
-        // Si ya pasó este año, movemos al siguiente
-        if (nextBirthday < todayMidnight) {
-            nextBirthday = new Date(today.getFullYear() + 1, month - 1, day);
-        }
+  function scrollLeft() {
+    if (scrollContainer) {
+      scrollContainer.scrollBy({ left: -300, behavior: "smooth" });
+    }
+  }
 
-        const diffTime = nextBirthday.getTime() - todayMidnight.getTime();
-        const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
-
-        if (diffDays <= 0) return "Es hoy!";
-        return "Faltan " + diffDays + " días";
-    };
-
-    const getMonth = (date: string): string => {
-        if (!date) return "";
-
-        // Parseamos manualmente para evitar desfases de zona horaria
-        const [day, month, year] = date.split("-").map(Number);
-
-        // Nombres de meses en español
-        const meses = [
-            "Enero",
-            "Febrero",
-            "Marzo",
-            "Abril",
-            "Mayo",
-            "Junio",
-            "Julio",
-            "Agosto",
-            "Septiembre",
-            "Octubre",
-            "Noviembre",
-            "Diciembre",
-        ];
-
-        return `${day} de ${meses[month - 1]}`;
-    };
+  function scrollRight() {
+    if (scrollContainer) {
+      scrollContainer.scrollBy({ left: 300, behavior: "smooth" });
+    }
+  }
 </script>
 
-<div
-    class="flex overflow-x-auto gap-3 p-2 scrollbar-hide snap-x snap-mandatory"
->
-    {#if loading}
-        <Card
-            class="p-3 flex gap-1.5 justify-center w-30 h-30 flex-none text-center"
-            size="xs"
-        >
-            <div class="flex flex-col items-center pb-2">
-                <p class="font-medium">Proximos cumpleaños:</p>
-            </div>
-        </Card>
-        {#each [1, 2] as repeat}
-            <Card
-                class="p-3 flex gap-1.5 justify-center w-30 h-30 flex-none text-center"
-                size="xs"
-            >
-                <Skeleton size="sm" class="w-20 h-27" />
-            </Card>
-        {/each}
-    {/if}
-    {#if users.length > 0}
-        <Card
-            class="p-3 flex gap-1.5 justify-center w-30 h-30 flex-none text-center"
-            size="xs"
-        >
-            <div class="flex flex-col items-center pb-2">
-                <p class="font-medium">Proximos cumpleaños:</p>
-            </div>
-        </Card>
-        {#each users as u}
-            <Card
-                class="p-3 flex gap-1.5 justify-center w-40 h-30 flex-none text-center"
-                size="xs"
-            >
-                <div class="flex flex-col items-center pb-2">
-                    <p class="font-medium">{u.full_name}</p>
-                    <p class="text-sm text-gray-500">
-                        {getAge(u.cumpleanos as string)} años
-                    </p>
-                    <p class="text-sm text-gray-500">
-                        {getMonth(u.cumpleanos as string)}
-                    </p>
-                    <p class="text-sm text-gray-500">
-                        {restingDays(u.cumpleanos as string)}
-                    </p>
+{#if birthdays.length > 0}
+  <div class="relative">
+    <!-- Viewport scrollable -->
+    <div
+      bind:this={scrollContainer}
+      class="overflow-x-auto scroll-smooth snap-x snap-mandatory px-8 scrollbar-hide scroll-px-8"
+    >
+      <Timeline order="horizontal" class="py-2">
+        {#each birthdays as b, index}
+          {@const isLastItem = index === birthdays.length - 1}
+          {@const color = getColor(b.status)}
+
+          <TimelineItem
+            class="shrink-1 snap-start min-w-[150px] [&>h3]:text-sm [&>h3]:mt-2 [&>time]:text-xs"
+            title={b.name}
+            date={b.dateFormatted}
+            {color}
+            isLast={isLastItem}
+          >
+            {#snippet orientationSlot()}
+              <div class="flex items-center">
+                <div
+                  class="bg-pink-200 dark:bg-pink-800 flex h-6 w-6 p-1 shrink-0 items-center justify-center rounded-full ring-0 ring-white sm:ring-8 dark:ring-gray-900"
+                >
+                  <Cake />
                 </div>
-            </Card>
+                {#if !isLastItem}
+                  <div
+                    class="hidden h-0.5 w-full bg-gray-200 sm:flex dark:bg-gray-700"
+                  ></div>
+                {/if}
+              </div>
+            {/snippet}
+
+            <div class="pr-10 h-fit flex flex-col justify-start">
+              <p class="text-xs font-normal text-gray-500 dark:text-gray-400">
+                {b.description}
+              </p>
+
+              <span
+                class="w-fit mt-2 inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium {getBadgeClass(
+                  b.status
+                )}"
+              >
+                {b.descriptionDiffDays}
+              </span>
+            </div>
+          </TimelineItem>
         {/each}
-    {/if}
-</div>
+      </Timeline>
+    </div>
+
+    <!-- Botones de navegación -->
+    <button
+      onclick={scrollLeft}
+      class="absolute left-0 top-1/2 -translate-y-1/2 bg-white/80 dark:bg-gray-800/70 rounded-full shadow p-1 hover:bg-white z-10"
+    >
+      <ChevronLeft size="20" />
+    </button>
+
+    <button
+      onclick={scrollRight}
+      class="absolute right-0 top-1/2 -translate-y-1/2 bg-white/80 dark:bg-gray-800/70 rounded-full shadow p-1 hover:bg-white z-10"
+    >
+      <ChevronRight size="20" />
+    </button>
+  </div>
+{:else}
+  <p class="text-gray-500 dark:text-gray-400 text-sm mt-3">
+    No hay cumpleaños próximos 🎈
+  </p>
+{/if}

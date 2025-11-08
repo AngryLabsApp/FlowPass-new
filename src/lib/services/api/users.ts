@@ -1,10 +1,18 @@
 import { fetchWithAuth } from "$lib/services/api/base";
-import type { getUsersResponse } from "$lib/types/api";
+import type {
+  getUsersBirthdayResponse,
+  getUsersResponse,
+} from "$lib/types/api";
 import type { QueryParams } from "$lib/types/queryparams";
 import type { User } from "$lib/types/user";
+import type { UserBirthday } from "$lib/types/userBirthday";
 import { buildUrl, mapIfPartnerUser } from "$lib/utils/utils";
-import { PUBLIC_API_URL, PUBLIC_USER_UPDATE, PUBLIC_USERS_FORM, PUBLIC_DELETE_USER_URL } from '$env/static/public';
-
+import {
+  PUBLIC_API_URL,
+  PUBLIC_USER_UPDATE,
+  PUBLIC_USERS_FORM,
+  PUBLIC_DELETE_USER_URL,
+} from "$env/static/public";
 
 const PUBLIC_USERS_URL = PUBLIC_API_URL + "/members";
 export async function getUsers(
@@ -29,7 +37,7 @@ export async function getUsers(
 export async function getUsersByBirthDay(
   currentAbort: AbortController,
   queryParams: QueryParams
-): Promise<getUsersResponse> {
+): Promise<getUsersBirthdayResponse> {
   const url = buildUrl(PUBLIC_USERS_URL + "/birthday", queryParams);
   const res = await fetchWithAuth(url, {}, currentAbort);
   if (res?.ok) {
@@ -37,7 +45,7 @@ export async function getUsersByBirthDay(
 
     data = data.data ? data : data[0];
     const { total, data: _users } = data || {};
-    let users: User[] = _users || [];
+    let users: UserBirthday[] = _users || [];
 
     return { total, users };
   } else {
@@ -45,61 +53,48 @@ export async function getUsersByBirthDay(
   }
 }
 
-export async function updateSingleField(
-  id: string, fields: any
-): Promise<any> {
-
+export async function updateSingleField(id: string, fields: any): Promise<any> {
   const payload = { ...fields, id, type: "SINGLE" };
   const res = await fetchWithAuth(PUBLIC_USER_UPDATE, {
-    method: "POST", body: JSON.stringify(payload)
+    method: "POST",
+    body: JSON.stringify(payload),
   });
   if (res?.ok) {
     let data = await res.json();
     return data;
-
   } else {
     throw new Error("Error al actualizar");
   }
-
 }
 
-export async function updateUserPlan(
-  id: string, fields: any
-): Promise<any> {
-
+export async function updateUserPlan(id: string, fields: any): Promise<any> {
   const payload = { ...fields, id };
   const res = await fetchWithAuth(PUBLIC_USER_UPDATE, {
-    method: "POST", body: JSON.stringify(payload)
+    method: "POST",
+    body: JSON.stringify(payload),
   });
   if (res?.ok) {
     let data = await res.json();
     return data;
-
   } else {
     throw new Error("Error al actualizar");
   }
-
 }
 
 export function newUserForm() {
   window.open(PUBLIC_USERS_FORM, "_self");
 }
 
-
-export async function deleteUser(
-  id: string
-): Promise<any> {
-
+export async function deleteUser(id: string): Promise<any> {
   const payload = { id };
   const res: any = await fetchWithAuth(PUBLIC_DELETE_USER_URL, {
-    method: "DELETE", body: JSON.stringify(payload)
+    method: "DELETE",
+    body: JSON.stringify(payload),
   });
   if (!res.ok) {
     throw new Error(`HTTP ${res.status}`);
   }
   let data = await res.json();
-  if (!data.response)
-    throw new Error(`Error al eliminar`);
+  if (!data.response) throw new Error(`Error al eliminar`);
   return data;
-
 }
