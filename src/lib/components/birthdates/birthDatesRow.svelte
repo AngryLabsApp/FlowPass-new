@@ -6,7 +6,8 @@
 
   import { Cake, ChevronLeft, ChevronRight } from "@lucide/svelte";
   import { toTitleCase } from "$lib/utils/utils";
-  let { userBirthdays}: any = $props();
+  let { userBirthdays }: any = $props();
+  console.log("userBirthdays -->", userBirthdays);
   let scrollContainer: HTMLDivElement;
 
   function getAge(dateString: string) {
@@ -18,7 +19,7 @@
 
   // 🎈 Convertimos los datos a formato Timeline
   const birthdays = $derived(
-    userBirthdays.map((u:any) => {
+    userBirthdays.map((u: any) => {
       const date = dayjs(u.cumpleanos).year(today.year()).startOf("day");
       const diffDays = date.diff(today.startOf("day"), "day");
 
@@ -26,7 +27,7 @@
       const description =
         status === "hoy"
           ? `🎉 ¡Hoy cumple ${getAge(u.cumpleanos!)}!`
-          : `Cumple ${getAge(u.cumpleanos!)} años`;
+          : `Cumple ${getAge(u.cumpleanos!) + 1} años`;
       const descriptionDiffDays =
         status === "hoy"
           ? "Día especial 🎈"
