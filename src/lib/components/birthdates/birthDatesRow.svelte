@@ -1,8 +1,5 @@
 <script lang="ts">
-  import { getUsersByBirthDay } from "$lib/services/api/users";
-  import type { UserBirthday } from "$lib/types/userBirthday";
   import { Timeline, TimelineItem } from "flowbite-svelte";
-  import { onMount } from "svelte";
   import dayjs from "dayjs";
   import "dayjs/locale/es.js";
   dayjs.locale("es");
@@ -10,12 +7,7 @@
   import { Cake, ChevronLeft, ChevronRight } from "@lucide/svelte";
   import { toTitleCase } from "$lib/utils/utils";
   let { userBirthdays}: any = $props();
-  let loading = $state(true);
-
-  let currentAbort: AbortController | null = null;
   let scrollContainer: HTMLDivElement;
-
-
 
   function getAge(dateString: string) {
     const birthDate = dayjs(dateString);
@@ -26,7 +18,7 @@
 
   // 🎈 Convertimos los datos a formato Timeline
   const birthdays = $derived(
-    userBirthdays.map((u) => {
+    userBirthdays.map((u:any) => {
       const date = dayjs(u.cumpleanos).year(today.year()).startOf("day");
       const diffDays = date.diff(today.startOf("day"), "day");
 

@@ -26,6 +26,7 @@
   import { getCustomEnv } from "$lib/utils/env_utils";
   import { MODULES } from "$lib/enums/modules_enum";
   import { Gift } from "@lucide/svelte";
+  import type { UserBirthday } from "$lib/types/userBirthday";
 
   const HIDE_MODULES = getCustomEnv("hide_modules") || [];
   let pagination_values = $state({ total: 1, start: 0, end: 0, totalPages: 1 });
