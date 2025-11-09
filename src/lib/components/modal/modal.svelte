@@ -222,9 +222,9 @@
 
     <!-- Panel Derecho -->
     {#if form_selected && show_form && (!isMobile() || !showAccordion)}
-      <div class="w-full md:w-2xl">
+      <div class="w-full flex flex-col items-center gap-2 p-2 lg:p-4">
         <button
-          class="text-sm text-gray-500 mb-2 flex items-center gap-1 font-black"
+          class=" self-start text-sm text-gray-500 mb-2 flex items-center gap-1 font-black"
           onclick={() => setView("accordion")}
         >
           <ChevronsLeft size="24" /> Volver

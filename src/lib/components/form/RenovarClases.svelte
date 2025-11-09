@@ -20,6 +20,8 @@
     GetIngresosResponse,
     IngresosHistory,
   } from "$lib/types/ingresoResponse";
+  import { Sheet, CalendarDays } from "@lucide/svelte";
+
   let { user, setLoadingModal, setToast, closeForm }: FormProps = $props();
   let type = $state("calendar");
   let updateItemValues: UpdateFormItem[] = $state([
@@ -98,7 +100,7 @@
 </script>
 
 <form
-  class="flex flex-col space-y-6"
+  class="flex flex-col space-y-6 w-full"
   onsubmit={(e) => actions.onUpdateSingleForm(updateItemValues, user.id, e)}
 >
   <div class="flex justify-between items-center">
@@ -106,11 +108,11 @@
 
     <ButtonGroup>
       <Button outline color="dark" onclick={() => changeType("calendar")}>
-        <CalendarMonthSolid class="me-2 h-4 w-4" />
+        <CalendarDays class="me-2 h-4 w-4" />
         Calendario
       </Button>
       <Button outline color="dark" onclick={() => changeType("table")}>
-        <TableRowSolid class="me-2 h-4 w-4" />
+        <Sheet class="me-2 h-4 w-4" />
         Tabla
       </Button>
     </ButtonGroup>
