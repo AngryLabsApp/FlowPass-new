@@ -237,10 +237,10 @@
           class="shrink-0 justify-start gap-1 w-fit overflow-hidden whitespace-nowrap"
         >
           {#if showBirthdays}
-            <Gift size={18} /> Ocultar cumples
+            <Gift size={18} /> Ocultar cumpleaños
           {:else}
             <Gift size={18} />
-            Ver cumples
+            Ver cumpleaños
             <Indicator
               class="p-2 bg-pink-200 text-pink-800 text-xs font-semibold"
               size="lg">{birthdaysOfTheWeek}</Indicator
