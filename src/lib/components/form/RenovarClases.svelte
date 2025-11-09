@@ -8,14 +8,18 @@
   import { Button, Label, Input, ButtonGroup } from "flowbite-svelte";
   import IngresosCalendar from "$lib/components/calendar/ingresosCalendar.svelte";
   import TableIngresos from "$lib/components/form/UltimosIngresos.svelte";
-  import {
-    CalendarMonthSolid,
-    TableRowSolid,
-  } from "flowbite-svelte-icons";
+  import { CalendarMonthSolid, TableRowSolid } from "flowbite-svelte-icons";
   import { onMount } from "svelte";
   import type { QueryParams } from "$lib/types/queryparams";
-  import { deleteIngreso, getIngresos, updateOrCreateIngreso } from "$lib/services/api/ingreso";
-  import type { GetIngresosResponse, IngresosHistory } from "$lib/types/ingresoResponse";
+  import {
+    deleteIngreso,
+    getIngresos,
+    updateOrCreateIngreso,
+  } from "$lib/services/api/ingreso";
+  import type {
+    GetIngresosResponse,
+    IngresosHistory,
+  } from "$lib/types/ingresoResponse";
   let { user, setLoadingModal, setToast, closeForm }: FormProps = $props();
   let type = $state("calendar");
   let updateItemValues: UpdateFormItem[] = $state([
@@ -27,10 +31,10 @@
     closeForm(true);
   };
 
-const refreshValues= () =>{
+  const refreshValues = () => {
     user.clases_tomadas = updateItemValues[0].value as number;
     user.limite_clases = updateItemValues[1].value as number;
-}
+  };
 
   const actions = useFormUpdateHook({ setLoadingModal, setToast, onUpdated });
   let loading = $state(false);
@@ -65,49 +69,53 @@ const refreshValues= () =>{
     await loadIngresos();
   });
 
-  const changeType = (_type:string) =>{
+  const changeType = (_type: string) => {
     type = _type;
-  }
+  };
 
-
-  const createUpdateIngreso = async (ingreso: IngresosHistory):Promise<IngresosHistory> => {
+  const createUpdateIngreso = async (
+    ingreso: IngresosHistory
+  ): Promise<IngresosHistory> => {
     setLoadingModal(true, "Registrando nuevo ingreso...");
-    const response = await updateOrCreateIngreso(ingreso) as IngresosHistory;
+    const response = (await updateOrCreateIngreso(ingreso)) as IngresosHistory;
     setLoadingModal(false, "");
     updateItemValues[0].value = response.clases_tomadas;
     refreshValues();
 
     return response;
-  }
+  };
 
   const onDeleteIngreso = async (ingreso_id: string): Promise<any> => {
     setLoadingModal(true, "Eliminando registro...");
-    const response = await deleteIngreso(ingreso_id); 
+    const response = await deleteIngreso(ingreso_id);
     setLoadingModal(false, "");
-    if (response.clases_tomadas){
+    if (response.clases_tomadas) {
       updateItemValues[0].value = response.clases_tomadas;
     }
     refreshValues();
     return response;
-  }
+  };
 </script>
 
 <form
   class="flex flex-col space-y-6"
   onsubmit={(e) => actions.onUpdateSingleForm(updateItemValues, user.id, e)}
 >
-  <h3 class="text-xl font-medium text-gray-900 dark:text-white">Clases</h3>
+  <div class="flex justify-between items-center">
+    <h3 class="text-xl font-medium text-gray-900 dark:text-white">Clases</h3>
 
-  <ButtonGroup>
-    <Button outline color="dark" onclick={()=> changeType("calendar")}>
-      <CalendarMonthSolid class="me-2 h-4 w-4" />
-      Calendario
-    </Button>
-    <Button outline color="dark" onclick={()=> changeType("table")}>
-      <TableRowSolid class="me-2 h-4 w-4" />
-      Tabla
-    </Button>
-  </ButtonGroup>
+    <ButtonGroup>
+      <Button outline color="dark" onclick={() => changeType("calendar")}>
+        <CalendarMonthSolid class="me-2 h-4 w-4" />
+        Calendario
+      </Button>
+      <Button outline color="dark" onclick={() => changeType("table")}>
+        <TableRowSolid class="me-2 h-4 w-4" />
+        Tabla
+      </Button>
+    </ButtonGroup>
+  </div>
+
   <Label class="space-y-2">
     <span>Clases realizadas</span>
     <Input
@@ -132,10 +140,13 @@ const refreshValues= () =>{
   <Button type="submit" class="w-full">Guardar cambios</Button>
 </form>
 {#if type == "calendar"}
-  <IngresosCalendar {...local_props} ingresos={ingresos} loading={loading} createUpdateIngreso={createUpdateIngreso}
+  <IngresosCalendar
+    {...local_props}
+    {ingresos}
+    {loading}
+    {createUpdateIngreso}
     {onDeleteIngreso}
   />
 {:else if type == "table"}
-  <TableIngresos {...local_props} ></TableIngresos>
+  <TableIngresos {...local_props}></TableIngresos>
 {/if}
-
