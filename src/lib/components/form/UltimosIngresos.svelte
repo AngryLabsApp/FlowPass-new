@@ -168,7 +168,7 @@
   });
 </script>
 
-<Card class="p-4 sm:p-6 md:p-8">
+<Card class="p-4 sm:p-6 md:p-8" size="xl">
   <div class="flex flex-col justify-start mb-3">
     <h3
       class="text-md sm:text-xl font-medium text-gray-900 dark:text-white mb-1"
