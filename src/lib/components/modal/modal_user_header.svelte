@@ -7,10 +7,23 @@
   } from "flowbite-svelte-icons";
   import { toTitleCase } from "$lib/utils/utils";
   import type { User } from "$lib/types/user";
+  import type { Plan } from "$lib/types/planes";
 
-  export let formated_user: User;
-  export let getUserInitials: (name: string, lastname: string) => string;
-  export let onEditName: () => void;
+  let {
+    formated_user,
+    getUserInitials,
+    onEditName,
+    plan,
+  }: {
+    formated_user: User;
+    getUserInitials: (name: string, lastname: string) => string;
+    onEditName: () => void;
+    plan: Plan;
+  } = $props();
+
+  $effect(() => {
+    console.log("PLAN", plan);
+  });
 </script>
 
 <div class="flex items-center gap-3 flex-wrap">
@@ -53,7 +66,7 @@
     </Badge>
   {/if}
 
-  {#if formated_user?.clases_tomadas >= formated_user?.limite_clases}
+  {#if !plan?.ilimitado && formated_user?.clases_tomadas >= formated_user?.limite_clases}
     <Badge large color="yellow">
       <ExclamationCircleOutline />
       Límite de clases alcanzado ({formated_user.clases_tomadas}/{formated_user.limite_clases})

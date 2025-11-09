@@ -1,23 +1,13 @@
 <script lang="ts">
   import type { User } from "$lib/types/user";
-  import {
-    Accordion,
-    Badge,
-    Button,
-    Modal,
-    type ModalProps,
-  } from "flowbite-svelte";
-  import { fmtUser, toTitleCase } from "$lib/utils/utils";
+  import { Accordion, Button, Modal, type ModalProps } from "flowbite-svelte";
+  import { fmtUser } from "$lib/utils/utils";
   import AccordionUserItem from "$lib/components/accordion/accordionItem.svelte";
   import {
     DATOS_INFO,
     PAGO_INFO,
     PLAN_INFO,
   } from "$lib/catalog/user_info_catalogs";
-  import {
-    ExclamationCircleOutline,
-    UsersOutline,
-  } from "flowbite-svelte-icons";
   import type { CatalogItem } from "$lib/types/catalogItem";
   import { getFieldComponent } from "$lib/catalog/form_component_catalog";
   import { UserKeys } from "$lib/enums/user_keys";
@@ -27,6 +17,9 @@
   import { ChevronsLeft, CalendarClock } from "@lucide/svelte";
   import { fly } from "svelte/transition";
   import UserModalHeader from "$lib/components/modal/modal_user_header.svelte";
+  import { getCachedPlanes } from "$lib/services/api/planes";
+  import type { Plan } from "$lib/types/planes";
+  import { onMount } from "svelte";
 
   // Props
   let {
@@ -43,6 +36,21 @@
 
   // UI hooks
   const { setLoadingModal, setToast } = useUi();
+
+  let USER_PLAN: Plan = $state({} as Plan);
+  let preview_value = $state(false);
+  onMount(() => {});
+
+  $effect(() => {
+    if (openModal == preview_value) return;
+    preview_value = openModal;
+    if (openModal) {
+      if (user?.plan_id) {
+        const planes = getCachedPlanes();
+        USER_PLAN = planes.find((plan) => plan.id == user.plan_id) as Plan;
+      }
+    }
+  });
 
   // State
   let form_selected: {
@@ -175,6 +183,7 @@
 >
   {#snippet header()}
     <UserModalHeader
+      plan={USER_PLAN as Plan}
       {formated_user}
       {getUserInitials}
       onEditName={() => selectForm(UserKeys.NOMBRE)}
