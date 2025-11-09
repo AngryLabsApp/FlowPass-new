@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@event-calendar/core':
+        specifier: ^4.7.1
+        version: 4.7.1
       '@lucide/svelte':
         specifier: ^0.545.0
         version: 0.545.0(svelte@5.39.6)
@@ -222,6 +225,9 @@ packages:
     engines: {node: '>=18'}
     cpu: [x64]
     os: [win32]
+
+  '@event-calendar/core@4.7.1':
+    resolution: {integrity: sha512-4tb9gB2SjODjuzzKWaZXZ2zw65CpRBXX7shNiop1F9czbOJ/ZDSbW0V9aoKd5t7GvbMg406vtrjRYTMi+UyZVQ==}
 
   '@floating-ui/core@1.7.3':
     resolution: {integrity: sha512-sGnvb5dmrJaKEZ+LDIpguvdX3bDlEllmv4/ClQ9awcmCZrlx5jQyyMWFM5kBI+EyNOCDDiKk8il0zeuX3Zlg/w==}
@@ -888,6 +894,10 @@ packages:
     resolution: {integrity: sha512-bOJXmuwLNaoqPCTWO8mPu/fwxI5peGE5Efe7oo6Cakpz/G60vsnVF6mxbGODaxMUFUKEnjm6XOwHEqOht6cbvw==}
     engines: {node: '>=18'}
 
+  svelte@5.43.4:
+    resolution: {integrity: sha512-tPNp21nDWB0PSHE+VrTvEy9cFtDp2Q+ATxQoFomISEVdikZ1QZ69UqBPz/LlT+Oc8/LYS/COYwDQZrmZEUr+JQ==}
+    engines: {node: '>=18'}
+
   tailwind-merge@3.3.1:
     resolution: {integrity: sha512-gBXpgUm/3rp1lMZZrM/w7D8GKqshif0zAymAhbCyIt8KMe+0v9DQ7cdYLR4FHH/cKpdTXb+A/tKKU3eolfsI+g==}
 
@@ -1085,6 +1095,10 @@ snapshots:
 
   '@esbuild/win32-x64@0.25.10':
     optional: true
+
+  '@event-calendar/core@4.7.1':
+    dependencies:
+      svelte: 5.43.4
 
   '@floating-ui/core@1.7.3':
     dependencies:
@@ -1717,6 +1731,23 @@ snapshots:
       - picomatch
 
   svelte@5.39.6:
+    dependencies:
+      '@jridgewell/remapping': 2.3.5
+      '@jridgewell/sourcemap-codec': 1.5.5
+      '@sveltejs/acorn-typescript': 1.0.5(acorn@8.15.0)
+      '@types/estree': 1.0.8
+      acorn: 8.15.0
+      aria-query: 5.3.2
+      axobject-query: 4.1.0
+      clsx: 2.1.1
+      esm-env: 1.2.2
+      esrap: 2.1.0
+      is-reference: 3.0.3
+      locate-character: 3.0.0
+      magic-string: 0.30.19
+      zimmerframe: 1.1.4
+
+  svelte@5.43.4:
     dependencies:
       '@jridgewell/remapping': 2.3.5
       '@jridgewell/sourcemap-codec': 1.5.5

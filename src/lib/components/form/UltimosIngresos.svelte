@@ -184,45 +184,6 @@
   {#if loading}
     <ListPlaceholder />
   {:else if ingresos.total > 0}
-    <!--
-    <Listgroup active class="w-full">
-      {#each ingresos.ingresos as ingreso}
-        <ListgroupItem class="gap-2 text-base font-semibold">
-          <div class="  w-full flex justify-between">
-            <div class="flex gap-2 px-2 items-center">
-              <div class="text-2xl">{getLimaDayNumber(ingreso.check_in)}</div>
-              <div class="">
-                <div class="text-sm">
-                  {getLimaMonthYear(ingreso.check_in)}
-                </div>
-                <div class="text-xs">{getLimaWeekday(ingreso.check_in)}</div>
-              </div>
-            </div>
-
-            <div class="flex flex-col items-end">
-              <div class="flex gap-2 items-center">
-                <Clock size="16" />
-                <p>{getLimaTime(ingreso.check_in)}</p>
-              </div>
-              <div class="flex gap-1 items-center text-xs">
-                <Indicator
-                  size="xs"
-                  color={colorPerTypeOfCheckin(ingreso.tipo as CheckInType)}
-                />
-                <div>
-                  {identifyTypeOfCheckIngreso(ingreso.tipo as CheckInType)}
-                </div>
-                <Info size="14" absoluteStrokeWidth={true} strokeWidth={2} />
-                <Tooltip trigger="click" arrow={false}
-                  >{identifyCheckIngresoLabel(ingreso.tipo as CheckInType)}: {ingreso.clases_tomadas}/{ingreso.limite_clases}</Tooltip
-                >
-              </div>
-            </div>
-          </div>
-        </ListgroupItem>
-      {/each}
-    </Listgroup>
--->
     <Accordion class="w-full ">
       {#each ingresos.ingresos as ingreso, i}
         <AccordionItem class="[&>button>svg]:hidden " headerClass="py-2">

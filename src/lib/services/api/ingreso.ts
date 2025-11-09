@@ -4,8 +4,46 @@ import { buildUrl } from "$lib/utils/utils";
 
 import { fetchWithAuth } from "./base";
 
-import { PUBLIC_USER_UPDATE, PUBLIC_INGRESO_URL, PUBLIC_GET_INGRESOS_URL, PUBLIC_UPDATE_INGRESO_URL} from '$env/static/public';
+import { PUBLIC_API_URL, PUBLIC_USER_UPDATE, PUBLIC_INGRESO_URL, PUBLIC_GET_INGRESOS_URL, PUBLIC_UPDATE_INGRESO_URL } from '$env/static/public';
 
+
+const PUBLIC_INGRESOS_API_URL = PUBLIC_API_URL + "/ingresos";
+
+
+
+export async function updateOrCreateIngreso(
+  ingreso: IngresosHistory
+): Promise<any> {
+  const payload = { ...ingreso };
+  const method = ingreso.id ? "PUT" : "POST";
+  const res = await fetchWithAuth(PUBLIC_INGRESOS_API_URL, {
+    method, body: JSON.stringify(payload)
+  });
+  if (res?.ok) {
+    let data = await res.json();
+    return data;
+
+  } else {
+    throw new Error("Error al actualizar");
+  }
+}
+
+export async function deleteIngreso(
+  ingreso_id: string
+): Promise<any> {
+  const url = buildUrl(PUBLIC_INGRESOS_API_URL + "/" + ingreso_id, {});
+  const method = "DELETE"
+  const res = await fetchWithAuth(url, {
+    method, body: JSON.stringify({})
+  });
+  if (res?.ok) {
+    let data = await res.json();
+    return data;
+
+  } else {
+    throw new Error("Error al actualizar");
+  }
+}
 
 export async function ingresoByCode(
   queryParams: QueryParams
@@ -57,13 +95,13 @@ export async function updateIngresoById(
   console.log("RES UPDATE INGRESO", res);
   if (res?.ok) {
     let data = await res.json();
-      console.log("data UPDATE INGRESO", data);
+    console.log("data UPDATE INGRESO", data);
     return data;
 
   } else {
     throw new Error("Error al registrar ingreso");
   }
-    
+
 }
 
 
