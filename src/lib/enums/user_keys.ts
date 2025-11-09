@@ -28,6 +28,8 @@ export enum UserKeys {
 
   PARTNER_CODE ="partner_code",
 
-  ULTIMOS_INGRESOS ="ultimos_ingresos"
+  ULTIMOS_INGRESOS ="ultimos_ingresos",
+
+  DELETE ="delete"
 
 }
