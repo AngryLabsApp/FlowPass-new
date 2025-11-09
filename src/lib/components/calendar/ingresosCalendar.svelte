@@ -12,6 +12,7 @@
   import utc from "dayjs/plugin/utc";
   import timezone from "dayjs/plugin/timezone";
   import { ExclamationCircleOutline } from "flowbite-svelte-icons";
+  import { CircleAlert } from "@lucide/svelte";
 
   dayjs.extend(utc);
   dayjs.extend(timezone);
@@ -150,6 +151,13 @@
   <CalendarSkeleton />
 {:else}
   <div class="w-full">
+    <div
+      class="flex items-center gap-1 text-amber-600 text-xs mb-2 bg-amber-50 px-2 py-1 rounded-md border border-amber-600 w-fit"
+    >
+      <span class="rounded-full bg-amber-400 w-2 h-2"></span>
+      Los ingresos del calendario se guardan automáticamente
+    </div>
+
     <Calendar
       plugins={[DayGrid, Interaction]}
       {options}
@@ -159,45 +167,73 @@
 {/if}
 
 <Modal bind:open={openEditEventModal} size="xs" permanent>
-  <div class="text-center">
-    <ExclamationCircleOutline
-      class="mx-auto mb-4 h-12 w-12 text-gray-400 dark:text-gray-200"
-    />
-    <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-      ¿Estás seguro de que deseas eliminar este registro?
-    </h3>
-    <div class="space-x-2">
-      <Button onclick={() => onDeleteEvent()} value="yes" color="red"
-        >Sí, eliminar</Button
+  <div class="flex flex-col items-center text-center">
+    <!-- Icono de advertencia -->
+    <div class="p-2 bg-yellow-100 rounded-full">
+      <CircleAlert size={28} class="text-yellow-500" />
+    </div>
+
+    <!-- Texto -->
+    <div class="mt-3 flex flex-col gap-2">
+      <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">
+        ¿Eliminar este registro de ingreso?
+      </h3>
+
+      <p
+        class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed max-w-xs mx-auto"
       >
+        Esta acción eliminará de forma permanente este registro de asistencia.
+        No podrás deshacerlo.
+      </p>
+    </div>
+
+    <!-- Acciones -->
+    <div class="flex flex-col sm:flex-row gap-2 mt-5 w-full">
+      <Button class="w-full" color="red" onclick={() => onDeleteEvent()}>
+        Eliminar registro
+      </Button>
+
       <Button
-        onclick={() => {
-          openEditEventModal = false;
-        }}
-        value="no"
-        color="alternative">No, Cancelar</Button
+        class="w-full"
+        color="alternative"
+        onclick={() => (openEditEventModal = false)}
       >
+        Cancelar
+      </Button>
     </div>
   </div>
 </Modal>
 
 <Modal bind:open={openLimitEventModal} size="xs" permanent>
-  <div class="text-center">
-    <ExclamationCircleOutline
-      class="mx-auto mb-4 h-12 w-12 text-gray-400 dark:text-gray-200"
-    />
-    <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-      Has alcanzado el límite de clases para este plan. Puedes aumentar el
-      límite o renovar el plan del alumno para continuar.
-    </h3>
-    <div class="space-x-2">
-      <Button
-        onclick={() => {
-          openLimitEventModal = false;
-        }}
-        value="yes"
-        color="red">Cerrar</Button
+  <div class="flex flex-col items-center text-center">
+    <!-- Icono de advertencia -->
+    <div class="p-2 bg-yellow-100 rounded-full">
+      <CircleAlert size={28} class="text-yellow-500" />
+    </div>
+
+    <!-- Texto -->
+    <div class="mt-3 flex flex-col gap-2">
+      <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">
+        Límite de clases alcanzado
+      </h3>
+
+      <p
+        class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed max-w-xs mx-auto"
       >
+        Este alumno ha llegado al límite de clases de su plan. Puedes aumentar
+        el límite o renovar el plan para continuar registrando asistencias.
+      </p>
+    </div>
+
+    <!-- Acciones -->
+    <div class="flex flex-col sm:flex-row gap-2 mt-5 w-full">
+      <Button
+        class="w-full"
+        color="alternative"
+        onclick={() => (openLimitEventModal = false)}
+      >
+        Entendido
+      </Button>
     </div>
   </div>
 </Modal>
