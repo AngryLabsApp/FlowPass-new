@@ -34,6 +34,23 @@ export async function getUsers(
   }
 }
 
+export async function updateUser(
+  member: Partial<User>
+): Promise<any> {
+  const url = buildUrl(PUBLIC_USERS_URL, {});
+  const res = await fetchWithAuth(url, {
+    method: "PUT",
+    body: JSON.stringify(member),
+  });
+  if (res?.ok) {
+    let data = await res.json();
+    return data;
+
+  } else {
+    throw new Error("❌ Error al cargar usuarios");
+  }
+}
+
 export async function getUsersByBirthDay(
   currentAbort: AbortController,
   queryParams: QueryParams

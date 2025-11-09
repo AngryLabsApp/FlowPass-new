@@ -1,5 +1,6 @@
 import type { UserKeys } from "$lib/enums/user_keys";
-import { updateSingleField, updateUserPlan } from "$lib/services/api/users";
+import { updateSingleField, updateUser, updateUserPlan } from "$lib/services/api/users";
+import type { User } from "$lib/types/user";
 
 
 interface UseFormUPdateOptions {
@@ -8,12 +9,6 @@ interface UseFormUPdateOptions {
     onUpdated: () => void,
 }
 
-
-/**
- * ====================================
- * CUSTOM HOOK
- * ====================================
- */
 export interface UpdateFormItem {
     key: UserKeys;
     value: string | number;
@@ -29,8 +24,37 @@ export function useFormUpdateHook(options: UseFormUPdateOptions = {
         throw new Error("Function not implemented.");
     }
 }) {
+    const onUpdateMemberAPI = async (values: UpdateFormItem[], id: string, e?: any) => {
+        e?.preventDefault();
+        console.log(values);
 
-    const onUpdateSingleForm = async (values: UpdateFormItem[], id: string, e?: any) => {
+        const member: any = {
+            id,
+        };
+        values.forEach((item) => {
+            member[item.key] = item.value;
+        });
+        const update_member = member as Partial<User>;
+        options.setLoadingModal(true, "Actualizando información…");
+        try {
+            const response = await updateUser(update_member);
+            if (response?.member?.id) {
+                options.setToast("¡Actualizamos con éxito!", true);
+                options.onUpdated();
+            } console.log("response", response);
+        } catch (error) {
+            options.setToast("Hubo un problema al actualizar. Reintenta en unos segundos.", false);
+        } finally {
+            options.setLoadingModal(false);
+        }
+    };
+
+    const onUpdateSingleForm = async (values: UpdateFormItem[], id: string, e?: any, apiV2?: boolean) => {
+        if (apiV2) {
+            onUpdateMemberAPI(values, id, e);
+            return;
+        }
+
         e?.preventDefault();
         const fields: any = {
         };
@@ -41,10 +65,9 @@ export function useFormUpdateHook(options: UseFormUPdateOptions = {
         });
 
         options.setLoadingModal(true, "Actualizando valores");
-
         try {
             const response = await updateSingleField(id, fields);
-            if ((response.response || "").toLocaleLowerCase() == "success" ) {
+            if ((response.response || "").toLocaleLowerCase() == "success") {
                 options.setToast("¡Actualizamos con éxito!", true);
                 options.onUpdated();
 
@@ -70,7 +93,7 @@ export function useFormUpdateHook(options: UseFormUPdateOptions = {
 
         try {
             const response = await updateUserPlan(id, fields);
-            if ((response.response || "").toLocaleLowerCase() == "success" ) {
+            if ((response.response || "").toLocaleLowerCase() == "success") {
                 options.setToast("¡Actualizamos con éxito!", true);
                 options.onUpdated();
 
