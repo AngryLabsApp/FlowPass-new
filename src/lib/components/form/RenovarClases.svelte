@@ -5,7 +5,7 @@
     useFormUpdateHook,
     type UpdateFormItem,
   } from "$lib/hooks/useFormUpdate.svelte";
-  import { Button, Label, Input, ButtonGroup } from "flowbite-svelte";
+  import { Button, Label, Input, ButtonGroup, Card } from "flowbite-svelte";
   import IngresosCalendar from "$lib/components/calendar/ingresosCalendar.svelte";
   import TableIngresos from "$lib/components/form/UltimosIngresos.svelte";
   import { CalendarMonthSolid, TableRowSolid } from "flowbite-svelte-icons";
@@ -99,56 +99,64 @@
   };
 </script>
 
-<form
-  class="flex flex-col space-y-6 w-full"
-  onsubmit={(e) => actions.onUpdateSingleForm(updateItemValues, user.id, e)}
->
-  <div class="flex justify-between items-center">
-    <h3 class="text-xl font-medium text-gray-900 dark:text-white">Clases</h3>
+<Card size="xl" class="px-8 py-4">
+  <form
+    class="flex flex-col space-y-6 w-full"
+    onsubmit={(e) => actions.onUpdateSingleForm(updateItemValues, user.id, e)}
+  >
+    <div class="flex justify-between items-center">
+      <h3 class="text-xl font-medium text-gray-900 dark:text-white">Clases</h3>
 
-    <ButtonGroup>
-      <Button outline color="dark" onclick={() => changeType("calendar")}>
-        <CalendarDays class="me-2 h-4 w-4" />
-        Calendario
-      </Button>
-      <Button outline color="dark" onclick={() => changeType("table")}>
-        <Sheet class="me-2 h-4 w-4" />
-        Tabla
-      </Button>
-    </ButtonGroup>
-  </div>
+      <ButtonGroup>
+        <Button outline color="dark" onclick={() => changeType("calendar")}>
+          <CalendarDays class="me-2 h-4 w-4" />
+          Calendario
+        </Button>
+        <Button outline color="dark" onclick={() => changeType("table")}>
+          <Sheet class="me-2 h-4 w-4" />
+          Tabla
+        </Button>
+      </ButtonGroup>
+    </div>
 
-  <Label class="space-y-2">
-    <span>Clases realizadas</span>
-    <Input
-      type="number"
-      name="clases_realizadas"
-      placeholder="0"
-      required
-      bind:value={updateItemValues[0].value as number}
-    />
-  </Label>
+    <div class="flex justify-between items-end">
+      <div class="flex gap-4">
+        <Label class="space-y-2">
+          <span>Clases realizadas</span>
+          <Input
+            type="number"
+            name="clases_realizadas"
+            placeholder="0"
+            required
+            bind:value={updateItemValues[0].value as number}
+          />
+        </Label>
 
-  <Label class="space-y-2">
-    <span>Limite de clases</span>
-    <Input
-      type="number"
-      name="limite_calses"
-      placeholder="0"
-      bind:value={updateItemValues[1].value as number}
-    />
-  </Label>
+        <Label class="space-y-2">
+          <span>Limite de clases</span>
+          <Input
+            type="number"
+            name="limite_calses"
+            placeholder="0"
+            bind:value={updateItemValues[1].value as number}
+          />
+        </Label>
+      </div>
+      <Button type="submit" class="w-fit h-10">Guardar cambios</Button>
+    </div>
+  </form>
+</Card>
 
-  <Button type="submit" class="w-full">Guardar cambios</Button>
-</form>
 {#if type == "calendar"}
-  <IngresosCalendar
-    {...local_props}
-    {ingresos}
-    {loading}
-    {createUpdateIngreso}
-    {onDeleteIngreso}
-  />
+  <Card size="xl" class="px-8 py-4">
+    <IngresosCalendar
+      {...local_props}
+      {ingresos}
+      {loading}
+      {createUpdateIngreso}
+      {onDeleteIngreso}
+    />
+  </Card>
 {:else if type == "table"}
   <TableIngresos {...local_props}></TableIngresos>
 {/if}
