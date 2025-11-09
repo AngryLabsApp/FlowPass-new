@@ -26,6 +26,7 @@
   import { useUi } from "$lib/hooks/useUIFunctions.svelte";
   import { ChevronsLeft, CalendarClock } from "@lucide/svelte";
   import { fly } from "svelte/transition";
+  import UserModalHeader from "$lib/components/modal/modal_user_header.svelte"
 
   // Props
   let {
@@ -173,48 +174,7 @@
   onclose={() => setView("reset")}
 >
   {#snippet header()}
-    <div class="flex items-center gap-2 flex-wrap">
-      <div class="flex gap-3">
-        <div class="relative flex items-center">
-          <div
-            class="border border-green-700 w-12 h-12 rounded-full flex justify-center items-center bg-green-200 text-green-800"
-          >
-            {getUserInitials(formated_user.nombre, formated_user.apellidos)}
-          </div>
-          <div
-            class="absolute -right-1 -bottom-1 flex items-center justify-center w-5 h-5 rounded-full bg-white shadow-md hover:shadow-lg transition cursor-pointer hover:bg-gray-100 hover:shadow-xl hover:scale-110"
-          >
-            <Pencil size={10} class="text-gray-700" />
-          </div>
-        </div>
-
-        <div class="">
-          <div>{formated_user.full_name}</div>
-          <div class="text-xs text-gray-400">
-            {formated_user.fecha_alta}
-          </div>
-        </div>
-      </div>
-
-      {#if formated_user.is_plan_partner}
-        {#if formated_user.is_plan_principal}
-          <Badge large color="green">Principal</Badge>
-        {/if}
-        <Badge large color="gray">
-          <UsersOutline />
-          Compañero:
-          {toTitleCase(formated_user.partner_nombre || "")}
-          {toTitleCase(formated_user.partner_apellidos || "")}
-        </Badge>
-      {/if}
-
-      {#if isClassLimitFull()}
-        <Badge large color="yellow">
-          <ExclamationCircleOutline />
-          Límite de clases alcanzado ({formated_user.clases_tomadas}/{formated_user.limite_clases})
-        </Badge>
-      {/if}
-    </div>
+    <UserModalHeader {formated_user} {getUserInitials} />
   {/snippet}
 
   <div class="flex flex-col md:flex-row items-start justify-between gap-3">
@@ -261,7 +221,7 @@
       <div class="w-full md:w-2xl">
         <button
           class="text-sm text-gray-500 mb-2 flex items-center gap-1 font-black"
-          on:click={() => setView("accordion")}
+          onclick={() => setView("accordion")}
         >
           <ChevronsLeft size="24" /> Volver
         </button>

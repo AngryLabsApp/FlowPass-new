@@ -1,4 +1,6 @@
 export enum UserKeys {
+  // USER
+  NAME = "name",
   // PLAN_INFO
   PLAN = "plan",
   CLASES_RESTANTES = "clases_restantes",
