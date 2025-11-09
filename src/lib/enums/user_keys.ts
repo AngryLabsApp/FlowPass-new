@@ -1,6 +1,7 @@
 export enum UserKeys {
   // USER
-  NAME = "name",
+  NOMBRE = "nombre",
+  APELLIDOS = "apellidos",
   // PLAN_INFO
   PLAN = "plan",
   CLASES_RESTANTES = "clases_restantes",
@@ -28,10 +29,9 @@ export enum UserKeys {
   MONTO = "monto",
   ESTADO_PAGO = "estado_pago",
 
-  PARTNER_CODE ="partner_code",
+  PARTNER_CODE = "partner_code",
 
-  ULTIMOS_INGRESOS ="ultimos_ingresos",
+  ULTIMOS_INGRESOS = "ultimos_ingresos",
 
-  DELETE ="delete"
-
+  DELETE = "delete",
 }

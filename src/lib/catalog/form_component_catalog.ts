@@ -46,7 +46,7 @@ export const FORM_COMPONENT_CATALOG: Partial<
   Record<UserKeys, FormFieldCatalogItem>
 > = {
   // === PLAN_INFO ===
-  [UserKeys.NAME]: {
+  [UserKeys.NOMBRE]: {
     component: ActualizaNombresUsuario,
   },
 

@@ -26,7 +26,7 @@
   import { useUi } from "$lib/hooks/useUIFunctions.svelte";
   import { ChevronsLeft, CalendarClock } from "@lucide/svelte";
   import { fly } from "svelte/transition";
-  import UserModalHeader from "$lib/components/modal/modal_user_header.svelte"
+  import UserModalHeader from "$lib/components/modal/modal_user_header.svelte";
 
   // Props
   let {
@@ -174,7 +174,11 @@
   onclose={() => setView("reset")}
 >
   {#snippet header()}
-    <UserModalHeader {formated_user} {getUserInitials} />
+    <UserModalHeader
+      {formated_user}
+      {getUserInitials}
+      onEditName={() => selectForm(UserKeys.NOMBRE)}
+    />
   {/snippet}
 
   <div class="flex flex-col md:flex-row items-start justify-between gap-3">

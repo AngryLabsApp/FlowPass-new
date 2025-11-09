@@ -10,6 +10,7 @@
 
   export let formated_user: User;
   export let getUserInitials: (name: string, lastname: string) => string;
+  export let onEditName: () => void;
 </script>
 
 <div class="flex items-center gap-3 flex-wrap">
@@ -23,7 +24,7 @@
 
     <button
       aria-label="Editar nombre del usuario"
-      onclick={() => console.log("abrir form de editar nombre!")}
+      onclick={() => onEditName()}
       class="absolute -right-1 -bottom-1 flex items-center justify-center w-5 h-5 rounded-full
              bg-white shadow-md cursor-pointer transition-all duration-200
              hover:bg-gray-100 hover:shadow-xl hover:scale-110"
