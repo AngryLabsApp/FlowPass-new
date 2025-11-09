@@ -21,7 +21,7 @@
   import type { CatalogItem } from "$lib/types/catalogItem";
   import { getFieldComponent } from "$lib/catalog/form_component_catalog";
   import { UserKeys } from "$lib/enums/user_keys";
-  import { ArrowRight, ClipboardClock } from "@lucide/svelte";
+  import { ArrowRight, ClipboardClock, Pencil } from "@lucide/svelte";
   import { useMediaQuery } from "flowbite-svelte";
   import { useUi } from "$lib/hooks/useUIFunctions.svelte";
   import { ChevronsLeft, CalendarClock } from "@lucide/svelte";
@@ -44,7 +44,11 @@
   const { setLoadingModal, setToast } = useUi();
 
   // State
-  let form_selected: { key: UserKeys; form: any, full_screen?:boolean } | null = $state(null);
+  let form_selected: {
+    key: UserKeys;
+    form: any;
+    full_screen?: boolean;
+  } | null = $state(null);
   let show_form = $state(false);
   let showAccordion = $state(true);
 
@@ -128,8 +132,8 @@
     return formated_user.estado === "Activo";
   }
 
-  function showPrincipalSeccion(){
-    if (show_form && form_selected?.form?.full_screen){
+  function showPrincipalSeccion() {
+    if (show_form && form_selected?.form?.full_screen) {
       return false;
     }
     return (!isMobile() || showAccordion) && user?.id;
@@ -171,11 +175,19 @@
   {#snippet header()}
     <div class="flex items-center gap-2 flex-wrap">
       <div class="flex gap-3">
-        <div
-          class="border border-green-700 w-12 h-12 rounded-full flex justify-center items-center bg-green-200 text-green-800"
-        >
-          {getUserInitials(formated_user.nombre, formated_user.apellidos)}
+        <div class="relative flex items-center">
+          <div
+            class="border border-green-700 w-12 h-12 rounded-full flex justify-center items-center bg-green-200 text-green-800"
+          >
+            {getUserInitials(formated_user.nombre, formated_user.apellidos)}
+          </div>
+          <div
+            class="absolute -right-1 -bottom-1 flex items-center justify-center w-5 h-5 rounded-full bg-white shadow-md hover:shadow-lg transition cursor-pointer hover:bg-gray-100 hover:shadow-xl hover:scale-110"
+          >
+            <Pencil size={10} class="text-gray-700" />
+          </div>
         </div>
+
         <div class="">
           <div>{formated_user.full_name}</div>
           <div class="text-xs text-gray-400">
