@@ -37,14 +37,14 @@
     openModal: boolean;
     user: User;
     registrarIngreso: (user: User) => void;
-    onUpdateUser: () => void;
+    onUpdateUser: (type?: UserKeys) => void;
   }>();
 
   // UI hooks
   const { setLoadingModal, setToast } = useUi();
 
   // State
-  let form_selected: { key: UserKeys; form: any } | null = $state(null);
+  let form_selected: { key: UserKeys; form: any, full_screen?:boolean } | null = $state(null);
   let show_form = $state(false);
   let showAccordion = $state(true);
 
@@ -106,7 +106,7 @@
 
   function onUpdate(reload?: boolean) {
     setView("accordion");
-    onUpdateUser();
+    onUpdateUser(form_selected?.key);
 
     if (reload) {
       openModal = false;
@@ -128,6 +128,12 @@
     return formated_user.estado === "Activo";
   }
 
+  function showPrincipalSeccion(){
+    if (show_form && form_selected?.form?.full_screen){
+      return false;
+    }
+    return (!isMobile() || showAccordion) && user?.id;
+  }
   const stop = (e: Event) => e.stopPropagation();
 
   function getUserInitials(name: string, lastname: string) {
@@ -201,7 +207,7 @@
 
   <div class="flex flex-col md:flex-row items-start justify-between gap-3">
     <!-- Panel Izquierdo -->
-    {#if (!isMobile() || showAccordion) && user?.id}
+    {#if showPrincipalSeccion()}
       <Accordion multiple>
         <AccordionUserItem
           open={true}

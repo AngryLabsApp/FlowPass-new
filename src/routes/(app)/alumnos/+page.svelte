@@ -27,6 +27,7 @@
   import { MODULES } from "$lib/enums/modules_enum";
   import { Gift } from "@lucide/svelte";
   import type { UserBirthday } from "$lib/types/userBirthday";
+    import { UserKeys } from "$lib/enums/user_keys";
 
   const HIDE_MODULES = getCustomEnv("hide_modules") || [];
   const BIRTHDAYS_MODULE_ACTIVE = !HIDE_MODULES.includes(MODULES.BIRTHDAY);
@@ -184,9 +185,11 @@
     }
   };
 
-  async function onUpdateUser(type?: string) {
+  async function onUpdateUser(type?: UserKeys) {
     fetchAlumnos();
-    getbirthDays();
+    if ([UserKeys.CUMPLEANOS, UserKeys.DELETE].includes(type as UserKeys)){
+      getbirthDays();
+    }
   }
 
   function setLoadingModal(loading: boolean, title?: string) {

@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { UserKeys } from "$lib/enums/user_keys";
     import { useUi } from "$lib/hooks/useUIFunctions.svelte";
     import { deleteUser } from "$lib/services/api/users";
     import type { User } from "$lib/types/user";
@@ -12,19 +13,19 @@
     } = $props<{
         openModal: boolean;
         user: User;
-        onDeleted: () => void;
+        onDeleted: (type?:UserKeys) => void;
     }>();
 
     const { setLoadingModal, setToast } = useUi();
 
-    const onDelete = async () => {
+    const onCLickDelete = async () => {
         setLoadingModal(true, "Eliminando Usuario");
         openModal = false;
 
         try {
             const response = await deleteUser(user.id);
             setToast("Se elimino el usuario con exito!", true);
-            onDeleted();
+            onDeleted(UserKeys.DELETE);
         } catch (error) {
             setToast(
                 "Hubo un problema al eliminar. Reintenta en unos segundos.",
@@ -46,7 +47,7 @@
             {toTitleCase(user.apellidos)}?
         </h3>
         <div class="space-x-2">
-            <Button value="yes" color="red" onclick={() => onDelete()}
+            <Button value="yes" color="red" onclick={() => onCLickDelete()}
                 >Si</Button
             >
             <Button onclick={() => (openModal = false)} color="alternative"
