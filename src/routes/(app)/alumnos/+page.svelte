@@ -27,8 +27,11 @@
   import { MODULES } from "$lib/enums/modules_enum";
   import { Gift } from "@lucide/svelte";
   import type { UserBirthday } from "$lib/types/userBirthday";
+    import { UserKeys } from "$lib/enums/user_keys";
 
   const HIDE_MODULES = getCustomEnv("hide_modules") || [];
+  const BIRTHDAYS_MODULE_ACTIVE = !HIDE_MODULES.includes(MODULES.BIRTHDAY);
+
   let pagination_values = $state({ total: 1, start: 0, end: 0, totalPages: 1 });
   let page = $state(1);
   let error = $state("");
@@ -54,18 +57,17 @@
   });
 
   const getbirthDays = async () => {
-    console.log("recargando cumples");
-     const abort = new AbortController();
+    if (!BIRTHDAYS_MODULE_ACTIVE) return;
+    const abort = new AbortController();
     const members = await getUsersByBirthDay(abort, {});
     userBirthdays = members.users;
     birthdaysOfTheWeek = members.users.length;
-  }
+  };
   onMount(async () => {
     const planes = await getPlanes();
     planes_catalog = MapPlanCatalog(planes);
     await fetchAlumnos();
     getbirthDays();
-   
   });
 
   let openModal: boolean = $state(false);
@@ -176,17 +178,18 @@
     } catch (error) {
       setToast(
         "Hubo un problema al actualizar. Reintenta en unos segundos.",
-        false
+        false,
       );
     } finally {
       setLoadingModal(false);
     }
   };
 
-  async function onUpdateUser() {
+  async function onUpdateUser(type?: UserKeys) {
     fetchAlumnos();
-    getbirthDays();
-
+    if ([UserKeys.CUMPLEANOS, UserKeys.DELETE].includes(type as UserKeys)){
+      getbirthDays();
+    }
   }
 
   function setLoadingModal(loading: boolean, title?: string) {
@@ -224,24 +227,27 @@
   >
     <div class="flex flex-col lg:flex-row gap-4">
       <Heading tag="h3">Alumnos</Heading>
-      <Button
-        onclick={toggleBirthdays}
-        size="sm"
-        color="light"
-        outline
-        class="shrink-0 justify-start gap-1 w-fit overflow-hidden whitespace-nowrap"
-      >
-        {#if showBirthdays}
-          <Gift size={18} /> Ocultar cumples
-        {:else}
-          <Gift size={18} />
-          Ver cumples
-          <Indicator
-            class="p-2 bg-pink-200 text-pink-800 text-xs font-semibold"
-            size="lg">{birthdaysOfTheWeek}</Indicator
-          >
-        {/if}
-      </Button>
+
+      {#if BIRTHDAYS_MODULE_ACTIVE}
+        <Button
+          onclick={toggleBirthdays}
+          size="sm"
+          color="light"
+          outline
+          class="shrink-0 justify-start gap-1 w-fit overflow-hidden whitespace-nowrap"
+        >
+          {#if showBirthdays}
+            <Gift size={18} /> Ocultar cumpleaños
+          {:else}
+            <Gift size={18} />
+            Ver cumpleaños
+            <Indicator
+              class="p-2 bg-pink-200 text-pink-800 text-xs font-semibold"
+              size="lg">{birthdaysOfTheWeek}</Indicator
+            >
+          {/if}
+        </Button>
+      {/if}
     </div>
 
     <div class="flex items-center gap-3 justify-end">
@@ -270,7 +276,7 @@
     {registrarIngreso}
     {onUpdateUser}
   />
-  {#if !HIDE_MODULES.includes(MODULES.BIRTHDAY) && showBirthdays}
+  {#if BIRTHDAYS_MODULE_ACTIVE && showBirthdays}
     <div
       class="w-full mb-5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700
              rounded-2xl shadow-sm p-2"

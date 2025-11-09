@@ -21,11 +21,12 @@
   import type { CatalogItem } from "$lib/types/catalogItem";
   import { getFieldComponent } from "$lib/catalog/form_component_catalog";
   import { UserKeys } from "$lib/enums/user_keys";
-  import { ArrowRight, ClipboardClock } from "@lucide/svelte";
+  import { ArrowRight, ClipboardClock, Pencil } from "@lucide/svelte";
   import { useMediaQuery } from "flowbite-svelte";
   import { useUi } from "$lib/hooks/useUIFunctions.svelte";
   import { ChevronsLeft, CalendarClock } from "@lucide/svelte";
   import { fly } from "svelte/transition";
+  import UserModalHeader from "$lib/components/modal/modal_user_header.svelte";
 
   // Props
   let {
@@ -37,14 +38,18 @@
     openModal: boolean;
     user: User;
     registrarIngreso: (user: User) => void;
-    onUpdateUser: () => void;
+    onUpdateUser: (type?: UserKeys) => void;
   }>();
 
   // UI hooks
   const { setLoadingModal, setToast } = useUi();
 
   // State
-  let form_selected: { key: UserKeys; form: any } | null = $state(null);
+  let form_selected: {
+    key: UserKeys;
+    form: any;
+    full_screen?: boolean;
+  } | null = $state(null);
   let show_form = $state(false);
   let showAccordion = $state(true);
 
@@ -106,7 +111,7 @@
 
   function onUpdate(reload?: boolean) {
     setView("accordion");
-    onUpdateUser();
+    onUpdateUser(form_selected?.key);
 
     if (reload) {
       openModal = false;
@@ -128,6 +133,12 @@
     return formated_user.estado === "Activo";
   }
 
+  function showPrincipalSeccion() {
+    if (show_form && form_selected?.form?.full_screen) {
+      return false;
+    }
+    return (!isMobile() || showAccordion) && user?.id;
+  }
   const stop = (e: Event) => e.stopPropagation();
 
   function getUserInitials(name: string, lastname: string) {
@@ -163,45 +174,16 @@
   onclose={() => setView("reset")}
 >
   {#snippet header()}
-    <div class="flex items-center gap-2 flex-wrap">
-      <div class="flex gap-3">
-        <div
-          class="border border-green-700 w-12 h-12 rounded-full flex justify-center items-center bg-green-200 text-green-800"
-        >
-          {getUserInitials(formated_user.nombre, formated_user.apellidos)}
-        </div>
-        <div class="">
-          <div>{formated_user.full_name}</div>
-          <div class="text-xs text-gray-400">
-            {formated_user.fecha_alta}
-          </div>
-        </div>
-      </div>
-
-      {#if formated_user.is_plan_partner}
-        {#if formated_user.is_plan_principal}
-          <Badge large color="green">Principal</Badge>
-        {/if}
-        <Badge large color="gray">
-          <UsersOutline />
-          Compañero:
-          {toTitleCase(formated_user.partner_nombre || "")}
-          {toTitleCase(formated_user.partner_apellidos || "")}
-        </Badge>
-      {/if}
-
-      {#if isClassLimitFull()}
-        <Badge large color="yellow">
-          <ExclamationCircleOutline />
-          Límite de clases alcanzado ({formated_user.clases_tomadas}/{formated_user.limite_clases})
-        </Badge>
-      {/if}
-    </div>
+    <UserModalHeader
+      {formated_user}
+      {getUserInitials}
+      onEditName={() => selectForm(UserKeys.NOMBRE)}
+    />
   {/snippet}
 
   <div class="flex flex-col md:flex-row items-start justify-between gap-3">
     <!-- Panel Izquierdo -->
-    {#if (!isMobile() || showAccordion) && user?.id}
+    {#if showPrincipalSeccion()}
       <Accordion multiple>
         <AccordionUserItem
           open={true}
@@ -243,7 +225,7 @@
       <div class="w-full md:w-2xl">
         <button
           class="text-sm text-gray-500 mb-2 flex items-center gap-1 font-black"
-          on:click={() => setView("accordion")}
+          onclick={() => setView("accordion")}
         >
           <ChevronsLeft size="24" /> Volver
         </button>

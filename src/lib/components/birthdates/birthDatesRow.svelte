@@ -7,7 +7,6 @@
   import { Cake, ChevronLeft, ChevronRight } from "@lucide/svelte";
   import { toTitleCase } from "$lib/utils/utils";
   let { userBirthdays }: any = $props();
-  console.log("userBirthdays -->", userBirthdays);
   let scrollContainer: HTMLDivElement;
 
   function getAge(dateString: string) {
@@ -137,8 +136,8 @@
   </div>
 {:else}
   <div class="flex items-center justify-center h-16">
-    <p class="text-gray-500 dark:text-gray-400 text-sm">
-      No hay cumpleaños próximos 🎈
+    <p class="text-gray-500 dark:text-gray-400 text-sm text-center">
+      No hay cumpleaños por celebrar en los próximos 5 días 🎈
     </p>
   </div>
 {/if}

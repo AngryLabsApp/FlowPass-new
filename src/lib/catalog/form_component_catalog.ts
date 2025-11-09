@@ -18,7 +18,7 @@ import UltimosIngresos from "$lib/components/form/UltimosIngresos.svelte";
 // Flowbite-Svelte (ajusta según lo que ya uses en tu proyecto)
 import { Input } from "flowbite-svelte";
 import type { User } from "$lib/types/user";
-
+import ActualizaNombresUsuario from "$lib/components/form/ActualizaNombresUsuario.svelte";
 
 /**
  * Estructura de un item de catálogo de field -> componente.
@@ -31,22 +31,27 @@ export type FormFieldCatalogItem = {
 };
 
 export interface FormProps {
-  user: User,
-  setLoadingModal: (loading: boolean, title?: string) => void,
-  setToast: (title: string, success: boolean) => void,
-  closeForm: (reload?: boolean) => void,
-};
+  user: User;
+  setLoadingModal: (loading: boolean, title?: string) => void;
+  setToast: (title: string, success: boolean) => void;
+  closeForm: (reload?: boolean) => void;
+}
 
 /**
  * Catálogo centralizado: key -> componente + props por defecto.
  * Nota: Las opciones (p.ej. de <Select/>) normalmente se pasan en runtime,
  * pero puedes fijar algunas por defecto aquí si te sirve.
  */
-export const FORM_COMPONENT_CATALOG: Partial<Record<UserKeys, FormFieldCatalogItem>> = {
+export const FORM_COMPONENT_CATALOG: Partial<
+  Record<UserKeys, FormFieldCatalogItem>
+> = {
   // === PLAN_INFO ===
+  [UserKeys.NOMBRE]: {
+    component: ActualizaNombresUsuario,
+  },
+
   [UserKeys.PLAN]: {
     component: RenovarPlan,
-
   },
   [UserKeys.CLASES_RESTANTES]: {
     component: RenovarClases,
@@ -56,47 +61,36 @@ export const FORM_COMPONENT_CATALOG: Partial<Record<UserKeys, FormFieldCatalogIt
   },
   [UserKeys.FECHA_INICIO_PLAN]: {
     component: RenovarRechaPLan,
-
   },
   [UserKeys.IDENTIFICACION]: {
     component: RenovarIdentificacion,
-
   },
   [UserKeys.TELEFONO]: {
     component: RenovarTelefono,
-
   },
   [UserKeys.EMAIL]: {
     component: RenovarEmail,
-
   },
   [UserKeys.DIRECCION]: {
     component: RenovarDireccion,
-
   },
   [UserKeys.CUMPLEANOS]: {
     component: RenovarCumple,
-
   },
   [UserKeys.NOTIFICAR]: {
     component: RenovarNotificar,
-
   },
   [UserKeys.DE_VIAJE]: {
     component: RenovarDeViaje,
-
   },
   [UserKeys.PATOLOGIAS]: {
     component: RenovarPatologia,
-
   },
   [UserKeys.ESTADO_PAGO]: {
     component: RenovarEstadoPago,
-
   },
   [UserKeys.ULTIMOS_INGRESOS]: {
     component: UltimosIngresos,
-
   },
 };
 
@@ -109,7 +103,7 @@ export function getFieldComponent(
   user: User,
   setLoadingModal: (loading: boolean, title?: string) => void,
   setToast: (title: string, success: boolean) => void,
-  closeForm: (reload?: boolean) => void,
+  closeForm: (reload?: boolean) => void
 ): FormFieldCatalogItem {
   const item = FORM_COMPONENT_CATALOG[key];
   if (item) {
@@ -117,9 +111,9 @@ export function getFieldComponent(
       user,
       setLoadingModal,
       setToast,
-      closeForm
+      closeForm,
     };
-    return item
-  };
+    return item;
+  }
   return { component: Input };
 }
