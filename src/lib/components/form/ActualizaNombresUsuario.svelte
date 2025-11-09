@@ -30,7 +30,7 @@
   <form
     class="flex flex-col space-y-6"
     onsubmit={(e) =>
-      actions.onUpdateSingleForm(updateItemValues, user.id, e)
+      actions.onUpdateSingleForm(updateItemValues, user.id, e, true)
     }
   >
     <h3 class="text-xl font-medium text-gray-900 dark:text-white">

@@ -26,6 +26,8 @@ import ActualizaNombresUsuario from "$lib/components/form/ActualizaNombresUsuari
  */
 export type FormFieldCatalogItem = {
   component: any;
+  full_screen?: boolean;
+  
   /** Props por defecto que recibirá el componente (placeholder, disabled, etc.) */
   props?: FormProps;
 };
@@ -55,6 +57,8 @@ export const FORM_COMPONENT_CATALOG: Partial<
   },
   [UserKeys.CLASES_RESTANTES]: {
     component: RenovarClases,
+    full_screen: true,
+ 
   },
   [UserKeys.ESTADO]: {
     component: EstadoPLan,
@@ -90,7 +94,8 @@ export const FORM_COMPONENT_CATALOG: Partial<
     component: RenovarEstadoPago,
   },
   [UserKeys.ULTIMOS_INGRESOS]: {
-    component: UltimosIngresos,
+    component: RenovarClases,
+    full_screen: true,
   },
 };
 
