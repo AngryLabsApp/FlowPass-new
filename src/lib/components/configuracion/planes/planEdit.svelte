@@ -1,6 +1,14 @@
 <script lang="ts">
     import type { Plan } from "$lib/types/planes";
-    import { Label, Input, Checkbox, Button, Toggle } from "flowbite-svelte";
+    import { Info } from "@lucide/svelte";
+    import {
+        Label,
+        Input,
+        Checkbox,
+        Button,
+        Toggle,
+        Tooltip,
+    } from "flowbite-svelte";
     import { slide } from "svelte/transition";
 
     let { plan, updatePlan }: { plan: Plan; updatePlan: (plan: Plan) => void } =
@@ -8,6 +16,10 @@
     // estado local reactivo
     let localPlan = $state({
         ...plan,
+    });
+
+    $effect(() => {
+        localPlan = { ...plan };
     });
 
     const onSave = async () => {
@@ -38,7 +50,15 @@
             />
         </div>
         <div>
-            <Label for="costo" class="mb-2">Prioridad</Label>
+            <Label for="costo" class="mb-2"
+                >Prioridad
+                <Info size="14" absoluteStrokeWidth={true} strokeWidth={2} />
+                <Tooltip arrow={false}
+                    >Indica el orden en que aparecerán los planes en el
+                    selector. El orden 1 será el primero en la lista.</Tooltip
+                >
+            </Label>
+
             <Input
                 type="number"
                 id="costo"
@@ -90,9 +110,20 @@
     </div>
     <div class="mb-6 grid gap-6 md:grid-cols-4">
         <div>
-            <Label for="duracion" class="mb-2">¿Permite parejas?</Label>
+            <Label for="duracion" class="mb-2"
+                >¿Permite parejas?
+
+                <Info size="14" absoluteStrokeWidth={true} strokeWidth={2} />
+                <Tooltip arrow={false}
+                    >Permite agrupar a dos personas en un mismo plan. Ambos
+                    comparten el mismo número de ingresos y solo es necesario
+                    registrar el ingreso de uno de ellos.</Tooltip
+                >
+            </Label>
             <Toggle color="red" bind:checked={localPlan.partners}></Toggle>
         </div>
     </div>
-    <Button onclick={() => onSave()}>Actualizar</Button>
+    <Button onclick={() => onSave()}
+        >{localPlan.id ? "Actualizar" : "Crear Plan"}</Button
+    >
 </div>

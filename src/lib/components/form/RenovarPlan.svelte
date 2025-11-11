@@ -11,18 +11,18 @@
   import { getCachedPlanes } from "$lib/services/api/planes";
   import { MapPlanCatalog } from "$lib/utils/utils";
 
-  const getPlan = (plan: string) => {
-    return PLANES.find((item) => item.value == plan);
+  const getPlan = (plan_id: string) => {
+    return PLANES.find((item) => item.id == plan_id);
   };
 
   let { user, setLoadingModal, setToast, closeForm }: FormProps = $props();
 
   const PLANES = getCachedPlanes();
   const PLANES_CATAOGS = MapPlanCatalog(PLANES, true);
-  let requiere_partner_code = $state(getPlan(user.plan)?.partners || false);
+  let requiere_partner_code = $state(getPlan(user.plan_id as string)?.partners || false);
 
   let updateItemValues: UpdateFormItem[] = $state([
-    { key: UserKeys.PLAN, value: user.plan || "" },
+    { key: UserKeys.PLAN, value: user.plan_id || "" },
     { key: UserKeys.MONTO, value: user.monto || 0 },
     { key: UserKeys.DIAS_DE_GRACIA, value: 0 },
     { key: UserKeys.MEDIO_DE_PAGO, value: user.medio_de_pago || "" },

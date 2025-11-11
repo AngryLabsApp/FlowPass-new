@@ -217,7 +217,7 @@
                     {identifyTypeOfCheckIngreso(ingreso.tipo as CheckInType)}
                   </div>
                   <Info size="14" absoluteStrokeWidth={true} strokeWidth={2} />
-                  <Tooltip trigger="click" arrow={false}
+                  <Tooltip  arrow={false}
                     >{identifyCheckIngresoLabel(ingreso.tipo as CheckInType)}: {ingreso.clases_tomadas}/{ingreso.limite_clases}</Tooltip
                   >
                 </div>

@@ -6,6 +6,9 @@ import { PUBLIC_API_URL} from '$env/static/public';
 const PUBLIC_PLANES_URL = PUBLIC_API_URL+"/planes";
 type Reviver = (this: any, key: string, value: any) => any;
 type Replacer = (this: any, key: string, value: any) => any;
+const keyData = 'plans:data';
+const keyEtag = 'plans:etag';
+const keyTs = 'plans:ts';
 
 type Cached = {
   data: any;
@@ -20,9 +23,7 @@ type GetPlanesOpts = {
 
 export function getCachedPlanes(
 ): Plan[] {
-  const keyData = 'plans:data';
-  const keyEtag = 'plans:etag';
-  const keyTs = 'plans:ts';
+
 
   const cached = getCached({ keyData, keyEtag, keyTs });
   return cached?.data;
@@ -31,10 +32,6 @@ export function getCachedPlanes(
 export async function getPlanes(
   { force = false, maxAgeMs = 60 * 60 * 1000 }: GetPlanesOpts = {}
 ): Promise<Plan[]> {
-  const keyData = 'plans:data';
-  const keyEtag = 'plans:etag';
-  const keyTs = 'plans:ts';
-
   const cached = getCached({ keyData, keyEtag, keyTs });
   const headers: Record<string, string> = {};
   if (cached?.etag) headers['If-None-Match'] = cached.etag;
@@ -119,6 +116,26 @@ function setCached({
   storage.setItem(keyTs, String(Date.now()));
 }
 
+function deleteCached({
+  storage = localStorage,
+  keyData,
+  keyEtag,
+  keyTs
+}: {
+  storage?: Storage;
+  keyData: string;
+  keyEtag: string;
+  keyTs: string;
+}): void {
+  try {
+    storage.removeItem(keyData);
+    storage.removeItem(keyEtag);
+    storage.removeItem(keyTs);
+  } catch {
+    // opcional: evitar romper si no existe localStorage (SSR)
+  }
+}
+
 function isFresh(cached: Cached, maxAgeMs: number): boolean {
   if (!cached) return false;
   return Date.now() - (cached.ts || 0) < maxAgeMs;
@@ -143,6 +160,8 @@ export async function updateOrCreatePlan(
   });
   if (res?.ok) {
     let data = await res.json();
+    deleteCached({ keyData, keyEtag, keyTs});
+
     return data;
 
   } else {

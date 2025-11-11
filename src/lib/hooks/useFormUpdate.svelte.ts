@@ -26,7 +26,6 @@ export function useFormUpdateHook(options: UseFormUPdateOptions = {
 }) {
     const onUpdateMemberAPI = async (values: UpdateFormItem[], id: string, e?: any) => {
         e?.preventDefault();
-        console.log(values);
 
         const member: any = {
             id,
@@ -41,7 +40,7 @@ export function useFormUpdateHook(options: UseFormUPdateOptions = {
             if (response?.member?.id) {
                 options.setToast("¡Actualizamos con éxito!", true);
                 options.onUpdated();
-            } console.log("response", response);
+            }
         } catch (error) {
             options.setToast("Hubo un problema al actualizar. Reintenta en unos segundos.", false);
         } finally {

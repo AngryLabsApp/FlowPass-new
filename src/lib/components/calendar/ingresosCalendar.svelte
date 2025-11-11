@@ -11,8 +11,8 @@
   import dayjs from "dayjs";
   import utc from "dayjs/plugin/utc";
   import timezone from "dayjs/plugin/timezone";
-  import { ExclamationCircleOutline } from "flowbite-svelte-icons";
   import { CircleAlert } from "@lucide/svelte";
+  import type { Plan } from "$lib/types/planes";
 
   dayjs.extend(utc);
   dayjs.extend(timezone);
@@ -23,7 +23,9 @@
     loading,
     createUpdateIngreso,
     onDeleteIngreso,
+    plan,
   }: FormProps & {
+    plan: Plan;
     ingresos: GetIngresosResponse;
     loading: boolean;
     createUpdateIngreso: (ingreso: IngresosHistory) => Promise<IngresosHistory>;
@@ -78,6 +80,7 @@
   }
 
   const canCreateNewIngreso = () => {
+    if (plan?.ilimitado) return true;
     if (user.clases_tomadas >= user.limite_clases) {
       openLimitEventModal = true;
       return false;
@@ -91,7 +94,7 @@
     if (!response.success) throw "DELETE_INGRESO_ERROR";
 
     options.events = options.events.filter(
-      (e: any) => e.id !== eventIdSelected
+      (e: any) => e.id !== eventIdSelected,
     );
     eventIdSelected = "";
     openEditEventModal = false;
@@ -107,7 +110,6 @@
     async dateClick(info: any) {
       if (!canCreateNewIngreso()) return;
 
-      const date = normalizeDate(info.dateStr);
       const fechaLima = dayjs.tz(info.dateStr, "YYYY-MM-DD", "America/Lima");
       const fechaUTC = fechaLima.toISOString();
       const newIngreso: IngresosHistory = {
@@ -121,15 +123,17 @@
         plan_id: "",
         tipo: "MANUAL",
       };
-      const ingreso: IngresosHistory = await createUpdateIngreso(newIngreso);
-      if (!ingreso.id) throw "ERROR";
+      try {
+        const ingreso: IngresosHistory = await createUpdateIngreso(newIngreso);
+        if (!ingreso.id) throw "ERROR";
 
-      options.events = [
-        ...options.events,
-        {
-          ...getItemCalendarByTipe(ingreso),
-        },
-      ];
+        options.events = [
+          ...options.events,
+          {
+            ...getItemCalendarByTipe(ingreso),
+          },
+        ];
+      } catch (error) {}
     },
 
     eventClick(info: any) {
@@ -141,7 +145,6 @@
   $effect(() => {
     if (local_loading != loading) {
       local_loading = loading;
-      console.log(ingresos);
       loadIngresos();
     }
   });

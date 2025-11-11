@@ -5,10 +5,16 @@
     useFormUpdateHook,
     type UpdateFormItem,
   } from "$lib/hooks/useFormUpdate.svelte";
-  import { Button, Label, Input, ButtonGroup, Card } from "flowbite-svelte";
+  import {
+    Button,
+    Label,
+    Input,
+    ButtonGroup,
+    Card,
+    Tooltip,
+  } from "flowbite-svelte";
   import IngresosCalendar from "$lib/components/calendar/ingresosCalendar.svelte";
   import TableIngresos from "$lib/components/form/UltimosIngresos.svelte";
-  import { CalendarMonthSolid, TableRowSolid } from "flowbite-svelte-icons";
   import { onMount } from "svelte";
   import type { QueryParams } from "$lib/types/queryparams";
   import {
@@ -21,8 +27,16 @@
     IngresosHistory,
   } from "$lib/types/ingresoResponse";
   import { Sheet, CalendarDays } from "@lucide/svelte";
+  import { getCachedPlanes } from "$lib/services/api/planes";
+  import type { Plan } from "$lib/types/planes";
 
   let { user, setLoadingModal, setToast, closeForm }: FormProps = $props();
+
+  const PLANES = getCachedPlanes();
+  const USER_PLAN: Plan = PLANES.find(
+    (plan) => plan.id == user.plan_id,
+  ) as Plan;
+
   let type = $state("calendar");
   let updateItemValues: UpdateFormItem[] = $state([
     { key: UserKeys.CLASES_TOMADAS, value: user.clases_tomadas || 0 },
@@ -73,25 +87,33 @@
 
   const changeType = (_type: string) => {
     type = _type;
+    if (type == "calendar")
+      loadIngresos();
   };
 
   const createUpdateIngreso = async (
-    ingreso: IngresosHistory
+    ingreso: IngresosHistory,
   ): Promise<IngresosHistory> => {
-    setLoadingModal(true, "Registrando nuevo ingreso...");
-    const response = (await updateOrCreateIngreso(ingreso)) as IngresosHistory;
-    setLoadingModal(false, "");
-    updateItemValues[0].value = response.clases_tomadas;
-    refreshValues();
-
-    return response;
+    try {
+      setLoadingModal(true, "Registrando nuevo ingreso...");
+      const response = (await updateOrCreateIngreso(
+        ingreso,
+      )) as IngresosHistory;
+      setLoadingModal(false, "");
+      updateItemValues[0].value = response.clases_tomadas;
+      refreshValues();
+      return response;
+    } catch (error) {
+      setLoadingModal(false, "");
+    }
+    return {} as IngresosHistory;
   };
 
   const onDeleteIngreso = async (ingreso_id: string): Promise<any> => {
     setLoadingModal(true, "Eliminando registro...");
     const response = await deleteIngreso(ingreso_id);
     setLoadingModal(false, "");
-    if (response.clases_tomadas) {
+    if (response.clases_tomadas >= 0) {
       updateItemValues[0].value = response.clases_tomadas;
     }
     refreshValues();
@@ -131,16 +153,31 @@
             bind:value={updateItemValues[0].value as number}
           />
         </Label>
-
-        <Label class="space-y-2">
-          <span>Limite de clases</span>
-          <Input
-            type="number"
-            name="limite_calses"
-            placeholder="0"
-            bind:value={updateItemValues[1].value as number}
-          />
-        </Label>
+        {#if USER_PLAN?.ilimitado}
+          <Label class="space-y-2">
+            <span>Limite de clases</span>
+            <Input
+              disabled
+              type="text"
+              name="limite_calses"
+              placeholder=""
+              value=""
+            />
+            <Tooltip
+              >El plan "{USER_PLAN.label}" no tiene restricción de clases.</Tooltip
+            >
+          </Label>
+        {:else}
+          <Label class="space-y-2">
+            <span>Limite de clases</span>
+            <Input
+              type="number"
+              name="limite_calses"
+              placeholder="0"
+              bind:value={updateItemValues[1].value as number}
+            />
+          </Label>
+        {/if}
       </div>
       <Button type="submit" class="w-fit h-10">Guardar cambios</Button>
     </div>
@@ -150,6 +187,7 @@
 {#if type == "calendar"}
   <Card size="xl" class="px-8 py-4">
     <IngresosCalendar
+      plan={USER_PLAN}
       {...local_props}
       {ingresos}
       {loading}
