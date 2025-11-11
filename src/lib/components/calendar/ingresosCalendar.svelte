@@ -110,7 +110,6 @@
     async dateClick(info: any) {
       if (!canCreateNewIngreso()) return;
 
-      const date = normalizeDate(info.dateStr);
       const fechaLima = dayjs.tz(info.dateStr, "YYYY-MM-DD", "America/Lima");
       const fechaUTC = fechaLima.toISOString();
       const newIngreso: IngresosHistory = {
@@ -124,15 +123,17 @@
         plan_id: "",
         tipo: "MANUAL",
       };
-      const ingreso: IngresosHistory = await createUpdateIngreso(newIngreso);
-      if (!ingreso.id) throw "ERROR";
+      try {
+        const ingreso: IngresosHistory = await createUpdateIngreso(newIngreso);
+        if (!ingreso.id) throw "ERROR";
 
-      options.events = [
-        ...options.events,
-        {
-          ...getItemCalendarByTipe(ingreso),
-        },
-      ];
+        options.events = [
+          ...options.events,
+          {
+            ...getItemCalendarByTipe(ingreso),
+          },
+        ];
+      } catch (error) {}
     },
 
     eventClick(info: any) {
