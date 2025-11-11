@@ -92,10 +92,8 @@ export async function updateIngresoById(
       date: date,
     })
   });
-  console.log("RES UPDATE INGRESO", res);
   if (res?.ok) {
     let data = await res.json();
-    console.log("data UPDATE INGRESO", data);
     return data;
 
   } else {

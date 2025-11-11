@@ -22,7 +22,7 @@
   } = $props();
 
   $effect(() => {
-    console.log("PLAN", plan);
+    
   });
 </script>
 

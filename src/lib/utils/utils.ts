@@ -179,7 +179,7 @@ export function BuildQueryParams(filters: DashboardFilters): QueryParams {
     counter++;
   }
   if (typeof filters?.plan === "string" && filters.plan.length > 0 && filters.plan.trim() !== "all") {
-    queryParams["field" + counter] = "plan";
+    queryParams["field" + counter] = "plan_id";
     queryParams["value" + counter] = filters.plan;
     counter++;
   }
@@ -216,7 +216,7 @@ export function MapPlanCatalog(planes: Plan[], only_values:boolean = false) {
   const sorted = planes.sort((a, b) => (Number(a.order ?? Infinity) - Number(b.order ?? Infinity)));
   const catalog = sorted.map((item) => {
     return {
-      value: item.value,
+      value: item.id,
       name: item.label
     }
   });

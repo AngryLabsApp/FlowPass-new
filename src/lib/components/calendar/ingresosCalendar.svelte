@@ -144,7 +144,6 @@
   $effect(() => {
     if (local_loading != loading) {
       local_loading = loading;
-      console.log(ingresos);
       loadIngresos();
     }
   });

@@ -40,7 +40,6 @@
   });
 
   const tableOnclick = () => {
-    console.log("Table row clicked");
   };
 
   async function setValue(key: FilterKeys, value: string | Date) {
