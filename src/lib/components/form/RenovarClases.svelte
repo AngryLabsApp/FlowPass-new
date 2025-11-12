@@ -30,7 +30,7 @@
   import { getCachedPlanes } from "$lib/services/api/planes";
   import type { Plan } from "$lib/types/planes";
 
-  let { user, setLoadingModal, setToast, closeForm }: FormProps = $props();
+  let { user, setLoadingModal, setToast, closeForm, refreshUsers }: FormProps = $props();
 
   const PLANES = getCachedPlanes();
   const USER_PLAN: Plan = PLANES.find(
@@ -56,7 +56,7 @@
   let loading = $state(false);
   let currentAbort: AbortController | null = null;
   let ingresos: GetIngresosResponse = $state({ ingresos: [], total: 0 });
-  let local_props = { user, setLoadingModal, setToast, closeForm };
+  let local_props = { user, setLoadingModal, setToast, closeForm, refreshUsers };
   const loadIngresos = async () => {
     currentAbort?.abort();
     const abort = new AbortController();
@@ -102,6 +102,9 @@
       setLoadingModal(false, "");
       updateItemValues[0].value = response.clases_tomadas;
       refreshValues();
+      
+      refreshUsers();
+      
       return response;
     } catch (error) {
       setLoadingModal(false, "");

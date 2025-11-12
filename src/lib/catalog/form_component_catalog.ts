@@ -37,6 +37,7 @@ export interface FormProps {
   setLoadingModal: (loading: boolean, title?: string) => void;
   setToast: (title: string, success: boolean) => void;
   closeForm: (reload?: boolean) => void;
+  refreshUsers: () => void;
 }
 
 /**
@@ -108,7 +109,8 @@ export function getFieldComponent(
   user: User,
   setLoadingModal: (loading: boolean, title?: string) => void,
   setToast: (title: string, success: boolean) => void,
-  closeForm: (reload?: boolean) => void
+  closeForm: (reload?: boolean) => void,
+  refreshUsers: () => void
 ): FormFieldCatalogItem {
   const item = FORM_COMPONENT_CATALOG[key];
   if (item) {
@@ -117,6 +119,7 @@ export function getFieldComponent(
       setLoadingModal,
       setToast,
       closeForm,
+      refreshUsers
     };
     return item;
   }

@@ -111,7 +111,7 @@
 
     form_selected = {
       key,
-      form: getFieldComponent(key, user, setLoadingModal, setToast, onUpdate),
+      form: getFieldComponent(key, user, setLoadingModal, setToast, onUpdate, refreshUser),
     };
 
     setView("form");
@@ -124,6 +124,10 @@
     if (reload) {
       openModal = false;
     }
+  }
+
+  function refreshUser() {
+    onUpdateUser(form_selected?.key);
   }
 
   // Helpers

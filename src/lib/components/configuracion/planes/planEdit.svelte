@@ -71,7 +71,7 @@
     <div class="mb-6 grid gap-6 md:grid-cols-4">
         <div>
             <Label for="duracion" class="mb-2">Duración (días)</Label>
-            <Toggle color="red" bind:checked={localPlan.neverExpires}
+            <Toggle color="red" bind:checked={localPlan.neverExpires} disabled
                 >No expira</Toggle
             >
         </div>
