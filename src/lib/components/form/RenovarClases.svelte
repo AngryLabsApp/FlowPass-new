@@ -95,7 +95,7 @@
     ingreso: IngresosHistory,
   ): Promise<IngresosHistory> => {
     try {
-      setLoadingModal(true, "Registrando nuevo ingreso...");
+      setLoadingModal(true, "Registrando nueva asistencia...");
       const response = (await updateOrCreateIngreso(
         ingreso,
       )) as IngresosHistory;

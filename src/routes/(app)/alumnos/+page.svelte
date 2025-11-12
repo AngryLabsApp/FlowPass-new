@@ -151,17 +151,13 @@
       .trim()
       .toLowerCase();
 
-    // Si el plan no está activo, no permitir registrar
+
     if (estadoPlan !== "activo") {
-      //setCheckInButtonDisabled(true);
       return;
     }
 
-    // Validación: bloquear y mostrar chip desde que llega al límite (>=)
-    const limiteValido = Number.isFinite(limite) && limite > 0; // solo aplica si hay límite positivo
+    const limiteValido = Number.isFinite(limite) && limite > 0;
     if (limiteValido && tomadas >= limite) {
-      //setCheckInWarning(true, `El usuario llegó al máximo de clases que puede tomar (${tomadas}/${limite})`);
-      //setCheckInButtonDisabled(true);
       return;
     }
 
@@ -169,7 +165,7 @@
     setLoadingModal(true, "Registrando ingreso");
     try {
       const response = await ingresoById(user.id, nuevasTomadas);
-      if (response.response == "Success") {
+      if (response?.id) {
         setToast("¡Se registró el ingreso correctamente!", true);
         selected_user.clases_tomadas = nuevasTomadas;
         openModal = false;

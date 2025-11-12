@@ -1,10 +1,9 @@
 import type { GetIngresosResponse, IngresoResponse, IngresosHistory } from "$lib/types/ingresoResponse";
 import type { QueryParams } from "$lib/types/queryparams";
 import { buildUrl } from "$lib/utils/utils";
-
 import { fetchWithAuth } from "./base";
-
-import { PUBLIC_API_URL, PUBLIC_USER_UPDATE, PUBLIC_INGRESO_URL, PUBLIC_GET_INGRESOS_URL, PUBLIC_UPDATE_INGRESO_URL } from '$env/static/public';
+import { PUBLIC_API_URL, PUBLIC_INGRESO_URL, PUBLIC_GET_INGRESOS_URL, PUBLIC_UPDATE_INGRESO_URL } from '$env/static/public';
+import { TIPO_INGRESO } from "$lib/catalog/tipo_ingreso_enum";
 
 
 const PUBLIC_INGRESOS_API_URL = PUBLIC_API_URL + "/ingresos";
@@ -59,27 +58,15 @@ export async function ingresoByCode(
   }
 }
 
-
-
 export async function ingresoById(
   id: string, nuevasTomadas: number
 ): Promise<any> {
-  const url = PUBLIC_USER_UPDATE;
-  const res = await fetchWithAuth(url, {
-    method: "POST", body: JSON.stringify({
-      id: id,
-      type: "SINGLE",
-      clases_tomadas: { value: nuevasTomadas },
-      method: "MANUAL"
-    })
-  });
-  if (res?.ok) {
-    let data = await res.json();
-    return data;
-
-  } else {
-    throw new Error("Error al registrar ingreso");
-  }
+  let ingreso = {
+    member_id: id,
+    clases_tomadas: nuevasTomadas,
+    tipo:TIPO_INGRESO.MANUAL
+  } as IngresosHistory;
+  return await updateOrCreateIngreso(ingreso);
 }
 
 export async function updateIngresoById(

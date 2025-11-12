@@ -46,8 +46,8 @@
       icon: UsersGroupOutline,
     },
     {
-      label: "Ingresos",
-      href: "/ingresos",
+      label: "Asistencias",
+      href: "/asistencias",
       icon: KeyRound,
     },
     {

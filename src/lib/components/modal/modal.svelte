@@ -169,7 +169,7 @@
         class="border flex gap-2 items-center w-45 mr-2 sm:mr-4"
         disabled={show_form}
       >
-        Ver últimos ingresos
+        Ver asistencias
         <CalendarClock size="18" />
       </Button>
     </div>
@@ -265,7 +265,7 @@
             disabled={isClassLimitFull() || !userHasPlan() || !isActivePlan()}
           >
             <ClipboardClock size="18" />
-            Registrar ingreso
+            Registrar Asistencia
           </Button>
 
           <Button

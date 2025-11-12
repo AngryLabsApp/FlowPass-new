@@ -6,7 +6,6 @@
   import { toTitleCase } from "$lib/utils/utils";
   import { TriangleAlert } from "@lucide/svelte";
   import { Button, Modal, P } from "flowbite-svelte";
-  import { ExclamationCircleOutline } from "flowbite-svelte-icons";
   let {
     openModal = $bindable(false),
     user,

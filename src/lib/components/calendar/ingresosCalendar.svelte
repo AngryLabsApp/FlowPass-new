@@ -11,8 +11,11 @@
   import dayjs from "dayjs";
   import utc from "dayjs/plugin/utc";
   import timezone from "dayjs/plugin/timezone";
-  import { CircleAlert } from "@lucide/svelte";
+  import { CircleAlert, CalendarCheck } from "@lucide/svelte";
   import type { Plan } from "$lib/types/planes";
+  import { getCustomEnv } from "$lib/utils/env_utils";
+  import { MODULES } from "$lib/enums/modules_enum";
+  import { TIPO_INGRESO } from "$lib/catalog/tipo_ingreso_enum";
 
   dayjs.extend(utc);
   dayjs.extend(timezone);
@@ -32,21 +35,39 @@
     onDeleteIngreso: (ingreso_id: string) => Promise<any>;
   } = $props();
 
+  const HIDE_MODULES = getCustomEnv("hide_modules") || [];
+  const ABSENCE_MODULE_ACTIVE = !HIDE_MODULES.includes(MODULES.ABSENCE);
+
   let local_loading = true;
   let eventIdSelected = $state("");
   let openEditEventModal = $state(false);
   let openLimitEventModal = $state(false);
+  let openIngresoTypeModal = $state(false);
+  let infoSelected: any = $state({});
 
   let ingresos_calendar: any[] = $state([]);
 
   const getItemCalendarByTipe = (ingreso: IngresosHistory) => {
     const fecha = dayjs(ingreso.check_in).tz("America/Lima");
     const formated = fecha.format("YYYY-MM-DD");
-    const title =
-      ingreso.tipo == "MANUAL" || ingreso.tipo == "SELF"
-        ? "Ingreso"
-        : "Edicion";
-    const color = title == "Ingreso" ? "#3b82f6" : "#22c55e";
+    let title = "";
+    let color ="";
+    switch(ingreso.tipo){
+      case TIPO_INGRESO.MANUAL:
+      case TIPO_INGRESO.SELF:
+        title="Asistió";
+        color="#3b82f6";
+        break;
+      case TIPO_INGRESO.UPDATE:
+        title="Editado";
+        color="#22c55e";
+        break;
+      case TIPO_INGRESO.ABSENCE:
+        title="Faltó";
+        color="#EF4444";
+        break;
+
+    }
 
     return {
       allDay: true, // ⬅️ explícito, evita interpretaciones raras
@@ -73,11 +94,6 @@
       options.events = ingresos_calendar;
     }
   };
-
-  function normalizeDate(date: string): string {
-    // toma solo la parte YYYY-MM-DD
-    return date.split("T")[0];
-  }
 
   const canCreateNewIngreso = () => {
     if (plan?.ilimitado) return true;
@@ -110,30 +126,13 @@
     async dateClick(info: any) {
       if (!canCreateNewIngreso()) return;
 
-      const fechaLima = dayjs.tz(info.dateStr, "YYYY-MM-DD", "America/Lima");
-      const fechaUTC = fechaLima.toISOString();
-      const newIngreso: IngresosHistory = {
-        member_id: user.id,
-        clases_tomadas: user.clases_tomadas + 1,
-        created_at: "",
-        check_in: fechaUTC,
-        limite_clases: user.limite_clases,
-        id: "",
-        pago_id: "",
-        plan_id: "",
-        tipo: "MANUAL",
-      };
-      try {
-        const ingreso: IngresosHistory = await createUpdateIngreso(newIngreso);
-        if (!ingreso.id) throw "ERROR";
-
-        options.events = [
-          ...options.events,
-          {
-            ...getItemCalendarByTipe(ingreso),
-          },
-        ];
-      } catch (error) {}
+      if (ABSENCE_MODULE_ACTIVE) {
+        infoSelected = info;
+        openIngresoTypeModal = true;
+      } else {
+        infoSelected = {};
+        createIngreso(info, TIPO_INGRESO.MANUAL);
+      }
     },
 
     eventClick(info: any) {
@@ -148,6 +147,35 @@
       loadIngresos();
     }
   });
+
+  const createIngreso = async (info: any, tipo: TIPO_INGRESO) => {
+    openIngresoTypeModal = false;
+    const fechaLima = dayjs.tz(info.dateStr, "YYYY-MM-DD", "America/Lima");
+    const fechaUTC = fechaLima.toISOString();
+    const newIngreso: IngresosHistory = {
+      member_id: user.id,
+      clases_tomadas: user.clases_tomadas + 1,
+      created_at: "",
+      check_in: fechaUTC,
+      limite_clases: user.limite_clases,
+      id: "",
+      pago_id: "",
+      plan_id: "",
+      tipo: tipo,
+    };
+    try {
+      const ingreso: IngresosHistory = await createUpdateIngreso(newIngreso);
+      if (!ingreso.id) throw "ERROR";
+
+      options.events = [
+        ...options.events,
+        {
+          ...getItemCalendarByTipe(ingreso),
+        },
+      ];
+    } catch (error) {}
+   
+  };
 </script>
 
 {#if loading}
@@ -158,7 +186,7 @@
       class="flex items-center gap-1 text-amber-600 text-xs mb-2 bg-amber-50 px-2 py-1 rounded-md border border-amber-600 w-fit"
     >
       <span class="rounded-full bg-amber-400 w-2 h-2"></span>
-      Los ingresos del calendario se guardan automáticamente
+      Los asistencias del calendario se guardan automáticamente
     </div>
 
     <Calendar
@@ -236,6 +264,45 @@
         onclick={() => (openLimitEventModal = false)}
       >
         Entendido
+      </Button>
+    </div>
+  </div>
+</Modal>
+
+<Modal bind:open={openIngresoTypeModal} size="xs" permanent>
+  <div class="flex flex-col items-center text-center">
+    <!-- Icono de advertencia -->
+    <div class="p-2 bg-green-100 rounded-full">
+      <CalendarCheck size={28} class="text-green-500" />
+    </div>
+
+    <!-- Texto -->
+    <div class="mt-3 flex flex-col gap-2">
+      <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">
+        Registrar asistencia del alumno
+      </h3>
+    </div>
+
+    <!-- Acciones -->
+    <div class="flex flex-col sm:flex-row gap-2 mt-5 w-full">
+      <Button
+        class="w-full"
+        color="primary"
+        onclick={() => {
+          createIngreso(infoSelected, TIPO_INGRESO.MANUAL);
+        }}
+      >
+        Asistió
+      </Button>
+
+      <Button
+        class="w-full"
+        color="secondary"
+        onclick={() => {
+          createIngreso(infoSelected, TIPO_INGRESO.ABSENCE);
+        }}
+      >
+        Faltó
       </Button>
     </div>
   </div>

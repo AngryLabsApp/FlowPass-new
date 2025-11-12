@@ -2,7 +2,6 @@
   import type { FormProps } from "$lib/catalog/form_component_catalog";
   import { getIngresos, updateIngresoById } from "$lib/services/api/ingreso";
   import {
-    CheckInType,
     type ColorCheckInType,
     type GetIngresosResponse,
     type IngresosHistory,
@@ -29,6 +28,7 @@
   import { onMount } from "svelte";
   import { Clock, Info } from "@lucide/svelte";
   import { ClockOutline } from "flowbite-svelte-icons";
+    import { TIPO_INGRESO } from "$lib/catalog/tipo_ingreso_enum";
 
   let { user, setLoadingModal, setToast, closeForm }: FormProps = $props();
   let loading = $state(false);
@@ -41,39 +41,44 @@
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
-  function identifyTypeOfCheckIngreso(ingreso: CheckInType): string {
+  function identifyTypeOfCheckIngreso(ingreso: TIPO_INGRESO): string {
     switch (ingreso) {
-      case CheckInType.UPDATE:
+      case TIPO_INGRESO.UPDATE:
         return "Editado";
-      case CheckInType.MANUAL:
+      case TIPO_INGRESO.MANUAL:
+      case TIPO_INGRESO.ABSENCE:
         return "Por admin";
-      case CheckInType.SELF:
+      case TIPO_INGRESO.SELF:
         return "Por código";
       default:
         return "";
     }
   }
 
-  function colorPerTypeOfCheckin(ingreso: CheckInType): ColorCheckInType {
+  function colorPerTypeOfCheckin(ingreso: TIPO_INGRESO): ColorCheckInType {
     switch (ingreso) {
-      case CheckInType.UPDATE: // Ingreso editado por admin
+      case TIPO_INGRESO.UPDATE: // Ingreso editado por admin
         return "amber";
-      case CheckInType.MANUAL: // Ingreso por admin
+      case TIPO_INGRESO.MANUAL: // Ingreso por admin
         return "purple";
-      case CheckInType.SELF: // Ingreso por codigo
+      case TIPO_INGRESO.SELF: // Ingreso por codigo
         return "green";
+       case TIPO_INGRESO.ABSENCE: // Ingreso por codigo
+        return "red";
       default:
         return "gray";
     }
   }
 
-  function identifyCheckIngresoLabel(ingreso: CheckInType): string {
+  function identifyCheckIngresoLabel(ingreso: TIPO_INGRESO): string {
     switch (ingreso) {
-      case CheckInType.UPDATE:
+      case TIPO_INGRESO.UPDATE:
         return "Ingreso y/o límite editado";
-      case CheckInType.MANUAL:
-      case CheckInType.SELF:
+      case TIPO_INGRESO.MANUAL:
+      case TIPO_INGRESO.SELF:
         return "Ingreso registrado";
+      case TIPO_INGRESO.ABSENCE:
+        return "Ausencia registrado";
       default:
         return "";
     }
@@ -166,6 +171,22 @@
   onMount(async () => {
     await loadIngresos();
   });
+
+  const getType = (ingreso: IngresosHistory) =>{
+     switch (ingreso.tipo) {
+      case TIPO_INGRESO.UPDATE:
+        return "Editado";
+      case TIPO_INGRESO.ABSENCE:
+        return "Faltó";
+      case TIPO_INGRESO.MANUAL:
+      case TIPO_INGRESO.SELF:
+        return "Asistió";
+    
+      default:
+        return "";
+    }
+
+  }
 </script>
 
 <Card class="p-4 sm:p-6 md:p-8" size="xl">
@@ -173,7 +194,7 @@
     <h3
       class="text-md sm:text-xl font-medium text-gray-900 dark:text-white mb-1"
     >
-      Últimos ingresos
+      Últimas asistencias
     </h3>
     <Badge color="gray" class="flex gap-1 w-fit text-gray-500">
       <Info size="12" />
@@ -202,8 +223,9 @@
                   </div>
                 </div>
               </div>
-
+            
               <div class="flex flex-col items-end">
+               
                 <div class="flex gap-2 items-center">
                   <Clock size="16" />
                   <p>{getLimaTime(ingreso.check_in)}</p>
@@ -211,14 +233,15 @@
                 <div class="flex gap-1 items-center text-xs">
                   <Indicator
                     size="xs"
-                    color={colorPerTypeOfCheckin(ingreso.tipo as CheckInType)}
+                    color={colorPerTypeOfCheckin(ingreso.tipo as TIPO_INGRESO)}
                   />
                   <div>
-                    {identifyTypeOfCheckIngreso(ingreso.tipo as CheckInType)}
+                       {getType(ingreso)}
+                   <!-- {identifyTypeOfCheckIngreso(ingreso.tipo as TIPO_INGRESO)} -->
                   </div>
                   <Info size="14" absoluteStrokeWidth={true} strokeWidth={2} />
                   <Tooltip  arrow={false}
-                    >{identifyCheckIngresoLabel(ingreso.tipo as CheckInType)}: {ingreso.clases_tomadas}/{ingreso.limite_clases}</Tooltip
+                    >{identifyCheckIngresoLabel(ingreso.tipo as TIPO_INGRESO)}: {ingreso.clases_tomadas}/{ingreso.limite_clases}</Tooltip
                   >
                 </div>
               </div>

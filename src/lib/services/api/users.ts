@@ -11,7 +11,6 @@ import {
   PUBLIC_API_URL,
   PUBLIC_USER_UPDATE,
   PUBLIC_USERS_FORM,
-  PUBLIC_DELETE_USER_URL,
 } from "$env/static/public";
 
 const PUBLIC_USERS_URL = PUBLIC_API_URL + "/members";
@@ -104,7 +103,7 @@ export function newUserForm() {
 
 export async function deleteUser(id: string): Promise<any> {
   const payload = { id };
-  const res: any = await fetchWithAuth(PUBLIC_DELETE_USER_URL, {
+  const res: any = await fetchWithAuth(PUBLIC_USERS_URL+ "/" +id, {
     method: "DELETE",
     body: JSON.stringify(payload),
   });
@@ -112,6 +111,6 @@ export async function deleteUser(id: string): Promise<any> {
     throw new Error(`HTTP ${res.status}`);
   }
   let data = await res.json();
-  if (!data.response) throw new Error(`Error al eliminar`);
+  if (!data.success) throw new Error(`Error al eliminar`);
   return data;
 }

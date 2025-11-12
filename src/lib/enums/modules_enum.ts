@@ -1,5 +1,7 @@
 export enum MODULES {
   BIRTHDAY = "birthday",
-  CONFIG="configurations"
+  ABSENCE = "absence",
+  CONFIG="configurations",
+  PAYMENT_REPORT="payment_report"
 
 }

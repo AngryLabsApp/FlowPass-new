@@ -33,11 +33,6 @@ export interface GetIngresosResponse {
   ingresos: IngresosHistory[];
 }
 
-export enum CheckInType {
-  UPDATE = "UPDATE",
-  MANUAL = "MANUAL",
-  SELF = "SELF",
-}
 
 export type ColorCheckInType =
   | "gray"
