@@ -16,7 +16,6 @@
   import { Wallet } from "@lucide/svelte";
   import { CurrencyKeys } from "$lib/enums/currency_keys";
   import { toTitleCase } from "$lib/utils/utils";
-
   let pagination_values = $state({ total: 1, start: 0, end: 0, totalPages: 1 });
   let page = $state(1);
   let error = $state("");

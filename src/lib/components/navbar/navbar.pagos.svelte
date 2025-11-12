@@ -16,7 +16,13 @@
   import { FileDown } from "@lucide/svelte";
 
   import { ESTADO_PAGOS } from "$lib/catalog/estados_pagos";
+  import { MODULES } from "$lib/enums/modules_enum";
+  import { getCustomEnv } from "$lib/utils/env_utils";
 
+  const HIDE_MODULES = getCustomEnv("hide_modules") || [];
+  const PAYMENT_REPORT_MODULE_ACTIVE = !HIDE_MODULES.includes(
+    MODULES.PAYMENT_REPORT,
+  );
   const STYLES = {
     searchWidthDesktop: "w-[350px]",
     selectWidthDesktop: "min-w-[200px]",
@@ -139,15 +145,17 @@
           <div class="flex items-center gap-3">
             {@render filterGroup("desktop")}
           </div>
-          <Button
-            color="secondary"
-            size="lg"
-            class="flex gap-2 items-center"
-            onclick={descargarPagos}
-          >
-            Descargar Historial
-            <FileDown size="22" />
-          </Button>
+          {#if PAYMENT_REPORT_MODULE_ACTIVE}
+            <Button
+              color="secondary"
+              size="lg"
+              class="flex gap-2 items-center"
+              onclick={descargarPagos}
+            >
+              Descargar Historial
+              <FileDown size="22" />
+            </Button>
+          {/if}
         </div>
       {/if}
 
@@ -166,15 +174,17 @@
     <div class="flex md:order-2 w-full md:w-auto">
       {#if filter.uiState.filtersCollapsed}
         <div class="flex w-full justify-between md:pl-0 gap-3">
-          <Button
-            color="secondary"
-            size="lg"
-            class="flex gap-2 items-center"
-            onclick={descargarPagos}
-          >
-            Descargar Historial
-            <FileDown size="22" />
-          </Button>
+          {#if PAYMENT_REPORT_MODULE_ACTIVE}
+            <Button
+              color="secondary"
+              size="lg"
+              class="flex gap-2 items-center"
+              onclick={descargarPagos}
+            >
+              Descargar Historial
+              <FileDown size="22" />
+            </Button>
+          {/if}
           <ToolbarButton
             class="inline-flex items-center"
             onclick={toggle}
