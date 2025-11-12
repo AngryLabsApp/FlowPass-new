@@ -158,7 +158,7 @@
       class="flex items-center gap-1 text-amber-600 text-xs mb-2 bg-amber-50 px-2 py-1 rounded-md border border-amber-600 w-fit"
     >
       <span class="rounded-full bg-amber-400 w-2 h-2"></span>
-      Los ingresos del calendario se guardan automáticamente
+      Los asistencias del calendario se guardan automáticamente
     </div>
 
     <Calendar

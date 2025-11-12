@@ -198,7 +198,7 @@
 
 <div class="p-4">
   <div class="grid grid-cols-2 gap-4 mb-2 sm:mb-5">
-    <Heading tag="h3">Ingreso</Heading>
+    <Heading tag="h3">Asistencias</Heading>
   </div>
 
   <div class="p-0 sm:px-8 flex items-center justify-center">
@@ -315,12 +315,12 @@
             size="xl"
             type="submit"
             disabled={code_value.length <= 0}
-            class="w-full h-10 sm:h-17 text-md sm:text-xl">Registrar ingreso</Button
+            class="w-full h-10 sm:h-17 text-md sm:text-xl">Registrar Asistencia</Button
           >
         </div>
       </form>
     </Card>
   </div>
   <IngresoModal bind:openModal user={user_selected}></IngresoModal>
-  <Loader bind:openModal={loading} title={"Registrando ingreso"}></Loader>
+  <Loader bind:openModal={loading} title={"Registrando Asistencia"}></Loader>
 </div>

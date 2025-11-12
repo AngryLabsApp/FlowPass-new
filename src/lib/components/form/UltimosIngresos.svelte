@@ -173,7 +173,7 @@
     <h3
       class="text-md sm:text-xl font-medium text-gray-900 dark:text-white mb-1"
     >
-      Últimos ingresos
+      Últimas asistencias
     </h3>
     <Badge color="gray" class="flex gap-1 w-fit text-gray-500">
       <Info size="12" />
