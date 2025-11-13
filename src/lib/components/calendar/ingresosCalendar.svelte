@@ -197,7 +197,7 @@
   </div>
 {/if}
 
-<Modal bind:open={openEditEventModal} size="xs" permanent>
+<Modal bind:open={openEditEventModal} size="xs"  outsideclose={false}>
   <div class="flex flex-col items-center text-center">
     <!-- Icono de advertencia -->
     <div class="p-2 bg-yellow-100 rounded-full">
@@ -235,7 +235,7 @@
   </div>
 </Modal>
 
-<Modal bind:open={openLimitEventModal} size="xs" permanent>
+<Modal bind:open={openLimitEventModal} size="xs"  outsideclose={false}>
   <div class="flex flex-col items-center text-center">
     <!-- Icono de advertencia -->
     <div class="p-2 bg-yellow-100 rounded-full">
@@ -269,7 +269,7 @@
   </div>
 </Modal>
 
-<Modal bind:open={openIngresoTypeModal} size="xs" permanent>
+<Modal bind:open={openIngresoTypeModal} size="xs"  outsideclose={false} >
   <div class="flex flex-col items-center text-center">
     <!-- Icono de advertencia -->
     <div class="p-2 bg-green-100 rounded-full">
