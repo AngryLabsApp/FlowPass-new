@@ -41,8 +41,26 @@
   import { ROLES } from "$lib/enums/Roles";
   const HIDE_MODULES = getCustomEnv("hide_modules") || [];
   const spanClass = "flex-1 ms-3 whitespace-nowrap";
-  const isAdmin = hasRole(ROLES.ADMIN);
-  const MenuItems = [
+
+  onMount(async () => {
+    const isAdmin = await hasRole(ROLES.ADMIN);
+    if (isAdmin) {
+      MenuItems.push({
+        label: "Pagos",
+        href: "/pagos",
+        icon: CashOutline,
+      });
+      if (!HIDE_MODULES.includes(MODULES.CONFIG)) {
+        MenuItems.push({
+          label: "Configuración",
+          href: "/configuracion",
+          icon: CogOutline,
+        });
+      }
+    }
+  });
+
+  let MenuItems = $state([
     {
       label: "Alumnos",
       href: "/alumnos",
@@ -53,23 +71,7 @@
       href: "/asistencias",
       icon: KeyRound,
     },
-  ];
-
-  console.log("IS ADMIN", isAdmin);
-  if (isAdmin) {
-    MenuItems.push({
-      label: "Pagos",
-      href: "/pagos",
-      icon: CashOutline,
-    });
-    if (!HIDE_MODULES.includes(MODULES.CONFIG)) {
-      MenuItems.push({
-        label: "Configuración",
-        href: "/configuracion",
-        icon: CogOutline,
-      });
-    }
-  }
+  ]);
 
   const demoSidebarUi = uiHelpers();
   let isDemoOpen = $state(false);

@@ -36,8 +36,9 @@ export function initAuthListener() {
 }
 
 
-export function hasRole(role: ROLES): boolean {
-  const roles = get(userRoles);
+export async function hasRole(role: ROLES): Promise<boolean> {
+  const { data: { session } } = await supabase.auth.getSession();
+  const roles: string[] = session?.user?.app_metadata?.roles || [];
   return roles.includes(role);
 }
 
