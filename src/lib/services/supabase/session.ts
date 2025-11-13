@@ -25,6 +25,7 @@ export function initAuthListener() {
     if (event === 'SIGNED_IN') sessionStore.set(session);
     if (session?.user) {
       const roles: string[] = session?.user?.app_metadata?.roles || [];
+      console.log("ROLES",roles);
       userRoles.set(roles);
       if (roles.length <= 0) {
         goto('/logout');
