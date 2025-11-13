@@ -54,6 +54,8 @@
       icon: KeyRound,
     },
   ];
+
+  console.log("IS ADMIN", isAdmin);
   if (isAdmin) {
     MenuItems.push({
       label: "Pagos",
