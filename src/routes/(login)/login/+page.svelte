@@ -5,12 +5,17 @@
     loginWithEmail,
     sendResetPasswordEmail,
   } from "$lib/services/supabase/auth";
+    import { onMount } from "svelte";
+    import { closeSessionIfExists } from "$lib/services/supabase/session";
 
   let email = "";
   let password = "";
   let loading = false;
   let msg = "";
   let msgType: "success" | "error" | "" = "";
+  onMount(async () => {
+    await closeSessionIfExists();
+  });
 
   async function onSubmit(e: Event) {
     e.preventDefault();
