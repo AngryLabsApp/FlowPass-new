@@ -6,7 +6,6 @@ import {
   UserSettingsOutline,
   CalendarMonthOutline,
   GiftBoxOutline,
-  ChartMixedDollarOutline,
   FingerprintOutline,
   ProfileCardOutline,
   PhoneOutline,
@@ -18,6 +17,7 @@ import {
   MugHotOutline,
   CreditCardOutline,
   DollarOutline,
+  CalendarWeekOutline,
 } from "flowbite-svelte-icons";
 import WAButton from "$lib/components/button/whatsapp_button.svelte";
 import { getCustomEnv } from "$lib/utils/env_utils";
@@ -52,9 +52,9 @@ export const PLAN_INFO: CatalogItem[] = [
     edit_only_with_plan: true,
   },
   {
-    label: "Próximo pago",
+    label: "Fin del plan",
     key: UserKeys.PROXIMA_FECHA_PAGO,
-    icon: ChartMixedDollarOutline,
+    icon: CalendarWeekOutline,
     editable: false,
   },
    {

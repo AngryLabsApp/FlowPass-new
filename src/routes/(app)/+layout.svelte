@@ -3,6 +3,7 @@
   import {
     initAuthListener,
     ensureSessionOrRedirect,
+    hasRole,
   } from "$lib/services/supabase/session";
 
   onMount(async () => {
@@ -37,8 +38,10 @@
   import { KeyRound } from "@lucide/svelte";
   import { getClientEnv, getCustomEnv } from "$lib/utils/env_utils";
   import { MODULES } from "$lib/enums/modules_enum";
+  import { ROLES } from "$lib/enums/Roles";
   const HIDE_MODULES = getCustomEnv("hide_modules") || [];
   const spanClass = "flex-1 ms-3 whitespace-nowrap";
+  const isAdmin = hasRole(ROLES.ADMIN);
   const MenuItems = [
     {
       label: "Alumnos",
@@ -50,19 +53,20 @@
       href: "/asistencias",
       icon: KeyRound,
     },
-    {
+  ];
+  if (isAdmin) {
+    MenuItems.push({
       label: "Pagos",
       href: "/pagos",
       icon: CashOutline,
-    },
-
-  ];
-  if(!HIDE_MODULES.includes(MODULES.CONFIG)){
-    MenuItems.push( {
-      label: "Configuración",
-      href: "/configuracion",
-      icon: CogOutline,
     });
+    if (!HIDE_MODULES.includes(MODULES.CONFIG)) {
+      MenuItems.push({
+        label: "Configuración",
+        href: "/configuracion",
+        icon: CogOutline,
+      });
+    }
   }
 
   const demoSidebarUi = uiHelpers();

@@ -31,7 +31,6 @@
   import type { Plan } from "$lib/types/planes";
 
   let { user, setLoadingModal, setToast, closeForm, refreshUsers }: FormProps = $props();
-
   const PLANES = getCachedPlanes();
   const USER_PLAN: Plan = PLANES.find(
     (plan) => plan.id == user.plan_id,
@@ -154,6 +153,7 @@
             placeholder="0"
             required
             bind:value={updateItemValues[0].value as number}
+            disabled={!user?.plan_id}
           />
         </Label>
         {#if USER_PLAN?.ilimitado}
@@ -165,6 +165,7 @@
               name="limite_calses"
               placeholder=""
               value=""
+              
             />
             <Tooltip
               >El plan "{USER_PLAN.label}" no tiene restricción de clases.</Tooltip
@@ -178,11 +179,12 @@
               name="limite_calses"
               placeholder="0"
               bind:value={updateItemValues[1].value as number}
+              disabled={!user?.plan_id}
             />
           </Label>
         {/if}
       </div>
-      <Button type="submit" class="w-fit h-10">Guardar cambios</Button>
+      <Button type="submit" class="w-fit h-10" disabled={!user?.plan_id}>Guardar cambios</Button>
     </div>
   </form>
 </Card>
