@@ -94,11 +94,12 @@ export async function getIngresos(
   currentAbort: AbortController,
   queryParams: QueryParams
 ): Promise<GetIngresosResponse> {
-  const url = buildUrl(PUBLIC_GET_INGRESOS_URL, queryParams);
+  const url = buildUrl(PUBLIC_INGRESOS_API_URL, queryParams);
   const res = await fetchWithAuth(url, {}, currentAbort);
   if (res?.ok) {
     let data = await res.json();
-    const { total, data: _ingresos } = data[0] || {};
+     data = data.data ? data : data[0];
+    const { total, data: _ingresos } = data || {};
     let ingresos: IngresosHistory[] = _ingresos || [];
 
     return { total, ingresos };
