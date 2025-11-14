@@ -2,7 +2,7 @@
   import UserModal from "../../../lib/components/modal/modal.svelte";
   import { onMount, setContext } from "svelte";
   import { getUsers, getUsersByBirthDay } from "$lib/services/api/users";
-  import { Button, Heading, Indicator } from "flowbite-svelte";
+  import { Button, Heading, Indicator, Tabs, TabItem } from "flowbite-svelte";
   import Navbar from "../../../lib/components/navbar/navbar.svelte";
   import Pagination from "../../../lib/components/pagination/pagination.svelte";
   import UserTable from "../../../lib/components/table/table.svelte";
@@ -25,12 +25,17 @@
   import BirthDatesRow from "$lib/components/birthdates/birthDatesRow.svelte";
   import { getCustomEnv } from "$lib/utils/env_utils";
   import { MODULES } from "$lib/enums/modules_enum";
-  import { Gift } from "@lucide/svelte";
+  import { Blocks, Gift, Users } from "@lucide/svelte";
   import type { UserBirthday } from "$lib/types/userBirthday";
-    import { UserKeys } from "$lib/enums/user_keys";
+  import { UserKeys } from "$lib/enums/user_keys";
 
   const HIDE_MODULES = getCustomEnv("hide_modules") || [];
   const BIRTHDAYS_MODULE_ACTIVE = !HIDE_MODULES.includes(MODULES.BIRTHDAY);
+
+  const TAB_ACTIVE_CLASS =
+    "px-4 py-3 text-sm font-semibold text-[var(--color-primary-700)] border-b-2 border-[var(--color-primary-700)] bg-transparent";
+  const TAB_INACTIVE_CLASS =
+    "px-4 py-3 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:text-[var(--color-gray-400)] hover:border-gray-400";
 
   let pagination_values = $state({ total: 1, start: 0, end: 0, totalPages: 1 });
   let page = $state(1);
@@ -151,7 +156,6 @@
       .trim()
       .toLowerCase();
 
-
     if (estadoPlan !== "activo") {
       return;
     }
@@ -174,7 +178,7 @@
     } catch (error) {
       setToast(
         "Hubo un problema al actualizar. Reintenta en unos segundos.",
-        false,
+        false
       );
     } finally {
       setLoadingModal(false);
@@ -183,7 +187,7 @@
 
   async function onUpdateUser(type?: UserKeys) {
     fetchAlumnos();
-    if ([UserKeys.CUMPLEANOS, UserKeys.DELETE].includes(type as UserKeys)){
+    if ([UserKeys.CUMPLEANOS, UserKeys.DELETE].includes(type as UserKeys)) {
       getbirthDays();
     }
   }
@@ -218,90 +222,131 @@
 </div>
 
 <div class="p-4">
-  <div
-    class="sm:grid sm:grid-cols-2 sm:gap-4 sm:mb-5 flex flex-col gap-1.5 mb-5"
+  <Tabs
+    tabStyle="underline"
+    divider={false}
+    class="flex-wrap gap-4 text-sm font-medium text-gray-500"
+    classes={{
+      active: TAB_ACTIVE_CLASS,
+      content: "mt-6 p-0 bg-transparent"
+    }}
   >
-    <div class="flex flex-col lg:flex-row gap-4">
-      <Heading tag="h3">Alumnos</Heading>
-
-      {#if BIRTHDAYS_MODULE_ACTIVE}
-        <Button
-          onclick={toggleBirthdays}
-          size="sm"
-          color="light"
-          outline
-          class="shrink-0 justify-start gap-1 w-fit overflow-hidden whitespace-nowrap"
+    <TabItem open inactiveClass={TAB_INACTIVE_CLASS}>
+      {#snippet titleSlot()}
+        <div class="flex items-center gap-2">
+          <Users />
+          Alumnos
+        </div>
+      {/snippet}
+      <div>
+        <div
+          class="sm:grid sm:grid-cols-2 sm:gap-4 sm:mb-5 flex flex-col gap-1.5 mb-5"
         >
-          {#if showBirthdays}
-            <Gift size={18} /> Ocultar cumpleaños
-          {:else}
-            <Gift size={18} />
-            Ver cumpleaños
-            <Indicator
-              class="p-2 bg-pink-200 text-pink-800 text-xs font-semibold"
-              size="lg">{birthdaysOfTheWeek}</Indicator
+          <div class="flex flex-col lg:flex-row gap-4">
+            <!-- <Heading tag="h3">Alumnos</Heading> -->
+
+            {#if BIRTHDAYS_MODULE_ACTIVE}
+              <Button
+                onclick={toggleBirthdays}
+                size="sm"
+                color="light"
+                outline
+                class="shrink-0 justify-start gap-1 w-fit overflow-hidden whitespace-nowrap"
+              >
+                {#if showBirthdays}
+                  <Gift size={18} /> Ocultar cumpleaños
+                {:else}
+                  <Gift size={18} />
+                  Ver cumpleaños
+                  <Indicator
+                    class="p-2 bg-pink-200 text-pink-800 text-xs font-semibold"
+                    size="lg">{birthdaysOfTheWeek}</Indicator
+                  >
+                {/if}
+              </Button>
+            {/if}
+          </div>
+
+          <div class="flex items-center gap-3 justify-end">
+            <Label
+              for="order-by"
+              class="sm:w-fit sm:w-max-[150px] sm:mb-0 w-1/2 "
+              >Ordenar por:</Label
             >
-          {/if}
-        </Button>
-      {/if}
-    </div>
+            <Select
+              id="order-by"
+              class="w-full max-w-xs"
+              items={SORT_CATALOG}
+              bind:value={sort_type}
+              onchange={() => {
+                setValue(FilterKeys.SORT, sort_type);
+              }}
+            />
+          </div>
+        </div>
+        <DeleteUserModal
+          bind:openModal={openDeleteUserModal}
+          user={selected_user}
+          onDeleted={onUpdateUser}
+        ></DeleteUserModal>
+        <UserModal
+          bind:openModal
+          user={selected_user}
+          {registrarIngreso}
+          {onUpdateUser}
+        />
+        {#if BIRTHDAYS_MODULE_ACTIVE && showBirthdays}
+          <div
+            class="w-full mb-5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700
+               rounded-2xl shadow-sm p-2"
+          >
+            <BirthDatesRow {userBirthdays} />
+          </div>
+        {/if}
+        {#if loading}
+          <SkeletonTable rows={10} cellHeights="h-4" headers={CUSTOM_HEADERS} />
+        {:else if error}
+          <p class="text-red-600">{error}</p>
+        {:else}
+          <div class="mb-4">
+            <UserTable
+              data={users}
+              onClick={tableOnclick}
+              onDelete={onClickDeleteUser}
+              headers={CUSTOM_HEADERS}
+              dropdownActions={true}
+            />
+          </div>
 
-    <div class="flex items-center gap-3 justify-end">
-      <Label for="order-by" class="sm:w-fit sm:w-max-[150px] sm:mb-0 w-1/2 "
-        >Ordenar por:</Label
-      >
-      <Select
-        id="order-by"
-        class="w-full max-w-xs"
-        items={SORT_CATALOG}
-        bind:value={sort_type}
-        onchange={() => {
-          setValue(FilterKeys.SORT, sort_type);
-        }}
-      />
-    </div>
-  </div>
-  <DeleteUserModal
-    bind:openModal={openDeleteUserModal}
-    user={selected_user}
-    onDeleted={onUpdateUser}
-  ></DeleteUserModal>
-  <UserModal
-    bind:openModal
-    user={selected_user}
-    {registrarIngreso}
-    {onUpdateUser}
-  />
-  {#if BIRTHDAYS_MODULE_ACTIVE && showBirthdays}
-    <div
-      class="w-full mb-5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700
-             rounded-2xl shadow-sm p-2"
-    >
-      <BirthDatesRow {userBirthdays} />
-    </div>
-  {/if}
-  {#if loading}
-    <SkeletonTable rows={10} cellHeights="h-4" headers={CUSTOM_HEADERS} />
-  {:else if error}
-    <p class="text-red-600">{error}</p>
-  {:else}
-    <div class="mb-4">
-      <UserTable
-        data={users}
-        onClick={tableOnclick}
-        onDelete={onClickDeleteUser}
-        headers={CUSTOM_HEADERS}
-        dropdownActions={true}
-      />
-    </div>
+          <Pagination
+            {pagination_values}
+            bind:page
+            onSearch={(key: FilterKeys, val: string) => setValue(key, val)}
+          />
+        {/if}
+        <Loader
+          bind:openModal={modal_loading.loading}
+          title={modal_loading.title}
+        ></Loader>
+        <Toast bind:toast></Toast>
+      </div>
+    </TabItem>
+    <!-- Tab de Grupos -->
+    <TabItem inactiveClass={TAB_INACTIVE_CLASS}>
+      {#snippet titleSlot()}
+        <div class="flex items-center gap-2">
+          <Blocks />
+          Grupos
+        </div>
+      {/snippet}
 
-    <Pagination
-      {pagination_values}
-      bind:page
-      onSearch={(key: FilterKeys, val: string) => setValue(key, val)}
-    />
-  {/if}
-  <Loader bind:openModal={modal_loading.loading} title={modal_loading.title}
-  ></Loader>
-  <Toast bind:toast></Toast>
+      <div class="flex flex-col gap-4">
+        <Heading tag="h3">Grupos</Heading>
+        <p class="text-sm text-gray-500">
+          Gestiona los grupos desde esta sección. Muy pronto podrás ver la
+          información detallada aquí.
+        </p>
+      </div>
+    </TabItem>
+  </Tabs>
 </div>

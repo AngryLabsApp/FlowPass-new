@@ -38,8 +38,7 @@
     fetchTotalMes();
   });
 
-  const tableOnclick = () => {
-  };
+  const tableOnclick = () => {};
 
   async function setValue(key: FilterKeys, value: string | Date) {
     if (key === FilterKeys.SEARCH) {
