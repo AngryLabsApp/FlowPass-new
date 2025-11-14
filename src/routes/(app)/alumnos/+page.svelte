@@ -1,39 +1,31 @@
 <script lang="ts">
-  import UserModal from "../../../lib/components/modal/modal.svelte";
   import { onMount, setContext } from "svelte";
   import { getUsers, getUsersByBirthDay } from "$lib/services/api/users";
-  import { Button, Heading, Indicator, Tabs, TabItem } from "flowbite-svelte";
+  import { Tabs, TabItem } from "flowbite-svelte";
   import Navbar from "../../../lib/components/navbar/navbar.svelte";
-  import Pagination from "../../../lib/components/pagination/pagination.svelte";
-  import UserTable from "../../../lib/components/table/table.svelte";
-  import SkeletonTable from "$lib/components/skeletons/table.svelte";
-  import { Select, Label } from "flowbite-svelte";
   import type { User } from "$lib/types/user";
   import type { QueryParams } from "$lib/types/queryparams";
   import { BuildQueryParams, MapPlanCatalog } from "$lib/utils/utils";
   import { FilterKeys } from "$lib/enums/filter_keys";
   import type { DashboardFilters } from "$lib/types/dashboardFilters";
-  import { SORT_CATALOG } from "$lib/catalog/sort_catalog";
   import { getPlanes } from "$lib/services/api/planes";
   import { getCustomUserTableHeaders } from "$lib/catalog/user_table_columns";
   import { ingresoById } from "$lib/services/api/ingreso";
-  import Loader from "$lib/components/loader/loader.svelte";
-  import Toast from "$lib/components/toast/toast.svelte";
   import type { ToastInterface } from "$lib/types/toast";
   import { LOADING_CTX, TOAST_CTX } from "$lib/hooks/useUIFunctions.svelte";
-  import DeleteUserModal from "$lib/components/modal/delete_user_modal.svelte";
-  import BirthDatesRow from "$lib/components/birthdates/birthDatesRow.svelte";
   import { getCustomEnv } from "$lib/utils/env_utils";
   import { MODULES } from "$lib/enums/modules_enum";
-  import { Blocks, Gift, Users } from "@lucide/svelte";
+  import { Blocks, Users } from "@lucide/svelte";
   import type { UserBirthday } from "$lib/types/userBirthday";
   import { UserKeys } from "$lib/enums/user_keys";
+  import AlumnosTab from "$lib/components/alumnos/AlumnosTab.svelte";
+  import GruposTab from "$lib/components/alumnos/GruposTab.svelte";
 
   const HIDE_MODULES = getCustomEnv("hide_modules") || [];
   const BIRTHDAYS_MODULE_ACTIVE = !HIDE_MODULES.includes(MODULES.BIRTHDAY);
 
   const TAB_ACTIVE_CLASS =
-    "px-4 py-3 text-sm font-semibold text-[var(--color-primary-700)] border-b-2 border-[var(--color-primary-700)] bg-transparent";
+    "px-4 py-3 text-sm font-semibold text-[var(--color-primary-800)] border-b-2 border-[var(--color-primary-800)] bg-transparent";
   const TAB_INACTIVE_CLASS =
     "px-4 py-3 text-sm font-medium text-gray-500 border-b-2 border-transparent hover:text-[var(--color-gray-400)] hover:border-gray-400";
 
@@ -238,100 +230,31 @@
           Alumnos
         </div>
       {/snippet}
-      <div>
-        <div
-          class="sm:grid sm:grid-cols-2 sm:gap-4 sm:mb-5 flex flex-col gap-1.5 mb-5"
-        >
-          <div class="flex flex-col lg:flex-row gap-4">
-            <!-- <Heading tag="h3">Alumnos</Heading> -->
-
-            {#if BIRTHDAYS_MODULE_ACTIVE}
-              <Button
-                onclick={toggleBirthdays}
-                size="sm"
-                color="light"
-                outline
-                class="shrink-0 justify-start gap-1 w-fit overflow-hidden whitespace-nowrap"
-              >
-                {#if showBirthdays}
-                  <Gift size={18} /> Ocultar cumpleaños
-                {:else}
-                  <Gift size={18} />
-                  Ver cumpleaños
-                  <Indicator
-                    class="p-2 bg-pink-200 text-pink-800 text-xs font-semibold"
-                    size="lg">{birthdaysOfTheWeek}</Indicator
-                  >
-                {/if}
-              </Button>
-            {/if}
-          </div>
-
-          <div class="flex items-center gap-3 justify-end">
-            <Label
-              for="order-by"
-              class="sm:w-fit sm:w-max-[150px] sm:mb-0 w-1/2 "
-              >Ordenar por:</Label
-            >
-            <Select
-              id="order-by"
-              class="w-full max-w-xs"
-              items={SORT_CATALOG}
-              bind:value={sort_type}
-              onchange={() => {
-                setValue(FilterKeys.SORT, sort_type);
-              }}
-            />
-          </div>
-        </div>
-        <DeleteUserModal
-          bind:openModal={openDeleteUserModal}
-          user={selected_user}
-          onDeleted={onUpdateUser}
-        ></DeleteUserModal>
-        <UserModal
-          bind:openModal
-          user={selected_user}
-          {registrarIngreso}
-          {onUpdateUser}
-        />
-        {#if BIRTHDAYS_MODULE_ACTIVE && showBirthdays}
-          <div
-            class="w-full mb-5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700
-               rounded-2xl shadow-sm p-2"
-          >
-            <BirthDatesRow {userBirthdays} />
-          </div>
-        {/if}
-        {#if loading}
-          <SkeletonTable rows={10} cellHeights="h-4" headers={CUSTOM_HEADERS} />
-        {:else if error}
-          <p class="text-red-600">{error}</p>
-        {:else}
-          <div class="mb-4">
-            <UserTable
-              data={users}
-              onClick={tableOnclick}
-              onDelete={onClickDeleteUser}
-              headers={CUSTOM_HEADERS}
-              dropdownActions={true}
-            />
-          </div>
-
-          <Pagination
-            {pagination_values}
-            bind:page
-            onSearch={(key: FilterKeys, val: string) => setValue(key, val)}
-          />
-        {/if}
-        <Loader
-          bind:openModal={modal_loading.loading}
-          title={modal_loading.title}
-        ></Loader>
-        <Toast bind:toast></Toast>
-      </div>
+      <AlumnosTab
+        {BIRTHDAYS_MODULE_ACTIVE}
+        {showBirthdays}
+        {toggleBirthdays}
+        {birthdaysOfTheWeek}
+        {sort_type}
+        {setValue}
+        bind:openDeleteUserModal
+        {selected_user}
+        {onUpdateUser}
+        bind:openModal
+        {registrarIngreso}
+        {userBirthdays}
+        {loading}
+        {error}
+        {CUSTOM_HEADERS}
+        {users}
+        {tableOnclick}
+        {onClickDeleteUser}
+        {pagination_values}
+        bind:page
+        {modal_loading}
+        bind:toast
+      />
     </TabItem>
-    <!-- Tab de Grupos -->
     <TabItem inactiveClass={TAB_INACTIVE_CLASS}>
       {#snippet titleSlot()}
         <div class="flex items-center gap-2">
@@ -339,14 +262,7 @@
           Grupos
         </div>
       {/snippet}
-
-      <div class="flex flex-col gap-4">
-        <Heading tag="h3">Grupos</Heading>
-        <p class="text-sm text-gray-500">
-          Gestiona los grupos desde esta sección. Muy pronto podrás ver la
-          información detallada aquí.
-        </p>
-      </div>
+      <GruposTab />
     </TabItem>
   </Tabs>
 </div>
