@@ -1,14 +1,20 @@
 <script lang="ts">
   import GroupModal from "$lib/components/modal/group_modal.svelte";
   import { GRADIENTS } from "$lib/constants/gradients";
-  import { createUpdateGroup, deleteGroup, getGroups } from "$lib/services/api/groups";
+  import {
+    createUpdateGroup,
+    deleteGroup,
+    getGroups,
+  } from "$lib/services/api/groups";
   import { EllipsisVertical, Grid2X2Plus } from "@lucide/svelte";
   import { Button, Card, group, Heading } from "flowbite-svelte";
   import { onMount } from "svelte";
   import type { Group } from "$lib/types/group";
+  import Loader from "../loader/loader.svelte";
 
   let openGroupModal = $state(false);
   let group_data: Group[] = $state([]);
+  let event_loading = $state({ loading: false, title: "" });
 
   const handleCreateGroup = () => {
     openGroupModal = true;
@@ -21,26 +27,44 @@
   };
 
   const createGroup = async (group: Group): Promise<Group> => {
-    const new_group = await createUpdateGroup(group);
-    if (group.id){
-      let index = group_data.findIndex((item) => item.id == group.id);
-      if (index >= 0){
-        group_data[index] = {...new_group};
+    const texto = group.id
+      ? "Actualizando el grupo…"
+      : "Creando tu nuevo grupo…";
+
+    event_loading = { loading: true, title: texto };
+    try {
+      const new_group = await createUpdateGroup(group);
+      event_loading = { loading: false, title: "" };
+      if (group.id) {
+        let index = group_data.findIndex((item) => item.id == group.id);
+        if (index >= 0) {
+          group_data[index] = { ...new_group };
+        }
+      } else {
+        group_data.push(new_group);
       }
-    }else{
-      group_data.push(new_group);
-
+      return new_group;
+    } catch (error) {
+    } finally {
+      event_loading = { loading: false, title: "" };
     }
-    return new_group;
-  }
+    throw "ERROR";
+  };
 
-  const onDeleteGroup = async (group: Group):Promise<boolean> => {
+  const onDeleteGroup = async (group: Group): Promise<boolean> => {
+    event_loading = { loading: true, title: "Eliminando el grupo…" };
+    try {
       const reponse = await deleteGroup(group.id);
-      if(reponse?.success) {
-        group_data = group_data.filter( item => item.id != group.id);
+      if (reponse?.success) {
+        group_data = group_data.filter((item) => item.id != group.id);
       }
       return reponse?.success;
-  }
+    } catch (error) {
+    } finally {
+      event_loading = { loading: false, title: "" };
+    }
+    return false;
+  };
 
   onMount(async () => {
     await fetchGroups();
@@ -80,7 +104,11 @@
       </Button>
     </div>
   </div>
-  <GroupModal bind:openModal={openGroupModal} APIcreateGroup={createGroup} {onDeleteGroup}/>
+  <GroupModal
+    bind:openModal={openGroupModal}
+    APIcreateGroup={createGroup}
+    {onDeleteGroup}
+  />
 </div>
 <div class="">
   <div class="grid lg:grid-cols-3 grid-cols-1 gap-4">
@@ -143,3 +171,6 @@
     {/each}
   </div>
 </div>
+
+<Loader bind:openModal={event_loading.loading} title={event_loading.title}
+></Loader>
