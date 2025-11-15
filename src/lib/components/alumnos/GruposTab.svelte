@@ -11,6 +11,7 @@
   import { onMount } from "svelte";
   import type { Group } from "$lib/types/group";
   import Loader from "../loader/loader.svelte";
+  import { getInitials } from "$lib/utils/utils";
 
   let openGroupModal = $state(false);
   let group_data: Group[] = $state([]);
@@ -41,7 +42,7 @@
           group_data[index] = { ...group_data[index], ...new_group };
         }
       } else {
-        group_data.push({...new_group, member_count:0, members:[] });
+        group_data.push({ ...new_group, member_count: 0, members: [] });
       }
       return new_group;
     } catch (error) {
@@ -70,21 +71,13 @@
     await fetchGroups();
   });
 
-  const MAX_VISIBLE_MEMBERS = 4;
+  const MAX_VISIBLE_MEMBERS = 3;
 
   const getVisibleMembers = (members: string[]) =>
     members.slice(0, MAX_VISIBLE_MEMBERS);
 
   const getExtraMembersCount = (members: string[]) =>
     Math.max(0, members.length - MAX_VISIBLE_MEMBERS);
-
-  const getGroupInitials = (name: string) =>
-    name
-      .split(" ")
-      .filter(Boolean)
-      .slice(0, 2)
-      .map((word) => word.charAt(0).toUpperCase())
-      .join("");
 
   const getGradient = (index: number) =>
     GRADIENTS[index % GRADIENTS.length]?.css ??
@@ -131,7 +124,7 @@
             class="h-16 w-16 rounded-full flex justify-center items-center text-xl font-bold text-white flex-shrink-0 shadow-inner"
             style={`background:${getGradient(index)}`}
           >
-            {getGroupInitials(group.title)}
+            {getInitials(group.title)}
           </div>
 
           <!-- Texto -->
@@ -152,7 +145,7 @@
                       class="h-7 w-7 rounded-full bg-gray-100 border border-white text-[10px] font-medium
                      flex items-center justify-center shadow-sm"
                     >
-                      {member}
+                      {getInitials(member)}
                     </div>
                   {/each}
 

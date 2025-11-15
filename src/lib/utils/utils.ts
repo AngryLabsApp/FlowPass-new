@@ -1,5 +1,8 @@
 import type { Column } from "$lib/types/column";
-import type { DashboardFilters, PagosFilters } from "$lib/types/dashboardFilters";
+import type {
+  DashboardFilters,
+  PagosFilters,
+} from "$lib/types/dashboardFilters";
 import type { Plan } from "$lib/types/planes";
 import type { QueryParams } from "$lib/types/queryparams";
 import type { User } from "$lib/types/user";
@@ -36,7 +39,9 @@ export function fmtDate(value: string) {
 }
 
 export function toTitleCase(str: string) {
-  return str ? str.toLowerCase().replace(/(?:^|\s)\p{L}/gu, (c) => c.toUpperCase()) : "";
+  return str
+    ? str.toLowerCase().replace(/(?:^|\s)\p{L}/gu, (c) => c.toUpperCase())
+    : "";
 }
 
 export function statusPillClasses(value: unknown) {
@@ -145,7 +150,6 @@ export function debounce<T extends (...a: any[]) => void>(fn: T, delay = 350) {
   };
 }
 
-
 export function buildUrl(base: string, params: QueryParams) {
   const url = new URL(base, location.origin);
   Object.entries(params).forEach(([k, v]) => {
@@ -157,9 +161,10 @@ export function buildUrl(base: string, params: QueryParams) {
 }
 
 export function fmtClasesRestantes(user: User): string {
-  if (user.limite_clases === undefined || user.limite_clases === null) return "-";
-  if (user.limite_clases <= 0){
-     return `${user.clases_tomadas}`;
+  if (user.limite_clases === undefined || user.limite_clases === null)
+    return "-";
+  if (user.limite_clases <= 0) {
+    return `${user.clases_tomadas}`;
   }
   return `${user.clases_tomadas}/${user.limite_clases}`;
 }
@@ -178,18 +183,26 @@ export function BuildQueryParams(filters: DashboardFilters): QueryParams {
     queryParams["value" + counter] = filters.search;
     counter++;
   }
-  if (typeof filters?.plan === "string" && filters.plan.length > 0 && filters.plan.trim() !== "all") {
+  if (
+    typeof filters?.plan === "string" &&
+    filters.plan.length > 0 &&
+    filters.plan.trim() !== "all"
+  ) {
     queryParams["field" + counter] = "plan_id";
     queryParams["value" + counter] = filters.plan;
     counter++;
   }
-  if (typeof filters?.estado === "string" && filters.estado.length > 0 && filters.estado.trim() !== "all") {
+  if (
+    typeof filters?.estado === "string" &&
+    filters.estado.length > 0 &&
+    filters.estado.trim() !== "all"
+  ) {
     queryParams["field" + counter] = "estado";
     queryParams["value" + counter] = filters.estado;
     counter++;
   }
   return queryParams;
-};
+}
 
 export function BuildQueryParamsPagos(filters: PagosFilters): QueryParams {
   let queryParams: QueryParams = {
@@ -199,38 +212,42 @@ export function BuildQueryParamsPagos(filters: PagosFilters): QueryParams {
   filters.end_date && (queryParams.end_date = filters.end_date);
   let counter = 1;
   if (typeof filters?.search === "string" && filters.search.length > 0) {
-
     queryParams["field" + counter] = "nombre";
     queryParams["value" + counter] = filters.search;
     counter++;
   }
-  if (typeof filters?.estado_pago === "string" && filters.estado_pago.length > 0 && filters.estado_pago.trim() !== "all") {
+  if (
+    typeof filters?.estado_pago === "string" &&
+    filters.estado_pago.length > 0 &&
+    filters.estado_pago.trim() !== "all"
+  ) {
     queryParams["field" + counter] = "estado_pago";
     queryParams["value" + counter] = filters.estado_pago;
     counter++;
   }
   return queryParams;
-};
+}
 
-export function MapPlanCatalog(planes: Plan[], only_values:boolean = false) {
-  const sorted = planes.sort((a, b) => (Number(a.order ?? Infinity) - Number(b.order ?? Infinity)));
+export function MapPlanCatalog(planes: Plan[], only_values: boolean = false) {
+  const sorted = planes.sort(
+    (a, b) => Number(a.order ?? Infinity) - Number(b.order ?? Infinity)
+  );
   const catalog = sorted.map((item) => {
     return {
       value: item.id,
-      name: item.label
-    }
+      name: item.label,
+    };
   });
-  if (!only_values)
-    catalog.unshift({ value: "all", name: "Planes: Todos" });
+  if (!only_values) catalog.unshift({ value: "all", name: "Planes: Todos" });
   return catalog;
-
 }
 
 export function fmtUser(user: User): User {
   const format = { ...user } as User;
 
-  format.full_name =
-    `${toTitleCase(user?.nombre ?? "")} ${toTitleCase(user?.apellidos ?? "")}`.trim();
+  format.full_name = `${toTitleCase(user?.nombre ?? "")} ${toTitleCase(
+    user?.apellidos ?? ""
+  )}`.trim();
 
   format.id = user.id ?? "";
   format.codigo_ingreso = (user.codigo_ingreso ?? "").replace(/^c-/i, "");
@@ -252,5 +269,16 @@ export function fmtYearMonth(date: Date): string {
 }
 
 export function fmtDateToString(date: Date) {
-  return date.toISOString().split('T')[0];
+  return date.toISOString().split("T")[0];
 }
+
+export const getInitials = (name: string) => {
+  console.log("name: ", name);
+  const newName = name
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((word) => word.charAt(0).toUpperCase())
+    .join("");
+  return newName;
+};
