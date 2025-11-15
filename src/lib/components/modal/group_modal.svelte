@@ -1,10 +1,17 @@
 <script lang="ts">
   import { Button, Input, Label, Modal } from "flowbite-svelte";
   import { Pen, Trash2 } from "@lucide/svelte";
+  import type { Group } from "$lib/types/group";
 
-  type Group = { name: string };
-
-  let { openModal = $bindable(false) } = $props<{ openModal: boolean }>();
+  let {
+    openModal = $bindable(false),
+    APIcreateGroup,
+    onDeleteGroup,
+  } = $props<{
+    openModal: boolean;
+    APIcreateGroup: (group: Group) => Promise<Group>;
+    onDeleteGroup: (group: Group) => Promise<boolean>;
+  }>();
 
   let groupName = $state("");
   let groups: Group[] = $state([]);
@@ -36,7 +43,7 @@
     createGroup();
   }
 
-  function createGroup() {
+  async function createGroup() {
     const formattedName = groupName.trim();
 
     if (!formattedName) {
@@ -44,7 +51,13 @@
       return;
     }
 
-    groups = [...groups, { name: formattedName }];
+    let newGroup: Partial<Group> = {
+      title: formattedName,
+      color: "",
+    };
+    const created = await APIcreateGroup(newGroup as Group);
+    newGroup.id = created.id;
+    groups = [...groups, { ...newGroup } as Group];
     resetForm();
   }
 
@@ -53,9 +66,14 @@
     openModal = false;
   }
 
-  function removeGroup(index: number) {
-    groups = groups.filter((_, currentIndex) => currentIndex !== index);
-    resetEditing();
+  async function removeGroup(index: number) {
+    const group = groups[index];
+
+    const response = await onDeleteGroup(group);
+    if (response) {
+      groups = groups.filter((_, currentIndex) => currentIndex !== index);
+      resetEditing();
+    }
   }
 
   function startEditing(index: number, currentName: string) {
@@ -80,7 +98,7 @@
     saveEditing({ closeOnly: true });
   }
 
-  function saveEditing(options?: { closeOnly?: boolean }) {
+  async function saveEditing(options?: { closeOnly?: boolean }) {
     if (editingIndex === null) return;
     const { closeOnly = false } = options ?? {};
     const trimmed = editingValue.trim();
@@ -89,10 +107,20 @@
       resetEditing();
       return;
     }
+    const group = groups[editingIndex];
+    let newGroup: Partial<Group> = {
+      id: group.id,
+      title: trimmed,
+      color: "",
+    };
+    const edited = await APIcreateGroup(newGroup as Group);
+    console.log(edited);
 
-    groups = groups.map((group, idx) =>
-      idx === editingIndex ? { ...group, name: trimmed } : group
-    );
+    groups[editingIndex].title = trimmed;
+
+    //groups = groups.map((group, idx) =>
+    //  idx === editingIndex ? { ...group, title: trimmed } : group,
+    //);
     resetEditing();
     error = "";
   }
@@ -104,7 +132,7 @@
   class="max-w-lg"
   onclose={resetModalState}
 >
-  <form class="flex flex-col gap-4" onsubmit={(e)=>handleSubmit(e)}>
+  <form class="flex flex-col gap-4" onsubmit={(e) => handleSubmit(e)}>
     <Label class="space-y-2">
       <span class="text-sm font-medium text-gray-700">Nombre del grupo</span>
       <Input
@@ -161,7 +189,7 @@
                     </Button>
                   </div>
                 {:else}
-                  <span class="font-medium truncate">{group.name}</span>
+                  <span class="font-medium truncate">{group.title}</span>
                 {/if}
                 <span class="text-[11px] text-gray-400">Grupo #{i + 1}</span>
               </div>
@@ -170,7 +198,7 @@
                 <button
                   type="button"
                   class="text-gray-500 transition hover:text-gray-800"
-                  onclick={() => startEditing(i, group.name)}
+                  onclick={() => startEditing(i, group.title)}
                 >
                   <Pen size={18} />
                 </button>
