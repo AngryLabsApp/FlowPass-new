@@ -76,8 +76,9 @@
   const getVisibleMembers = (members: string[]) =>
     members.slice(0, MAX_VISIBLE_MEMBERS);
 
-  const getExtraMembersCount = (members: string[]) =>
-    Math.max(0, members.length - MAX_VISIBLE_MEMBERS);
+  const calculateExtraMembers = (membersQuantity: number) => {
+    return membersQuantity - MAX_VISIBLE_MEMBERS;
+  };
 
   const getGradient = (index: number) =>
     GRADIENTS[index % GRADIENTS.length]?.css ??
@@ -111,7 +112,7 @@
     {onDeleteGroup}
   />
 </div>
-<div class="border">
+<div class="">
   <div class="grid lg:grid-cols-3 grid-cols-1 gap-4">
     {#each group_data as group, index}
       <Card
@@ -149,12 +150,12 @@
                     </div>
                   {/each}
 
-                  {#if getExtraMembersCount(group.members) > 0}
+                  {#if group.member_count > MAX_VISIBLE_MEMBERS}
                     <div
                       class="h-7 w-7 rounded-full bg-gray-300 border border-white text-[10px] font-medium
                      flex items-center justify-center shadow-sm"
                     >
-                      +{getExtraMembersCount(group.members)}
+                      +{calculateExtraMembers(group.member_count)}
                     </div>
                   {/if}
                 </div>
