@@ -7,7 +7,14 @@
     getGroups,
   } from "$lib/services/api/groups";
   import { EllipsisVertical, Grid2X2Plus, Users } from "@lucide/svelte";
-  import { Breadcrumb, BreadcrumbItem, Button, Card } from "flowbite-svelte";
+  import {
+    Breadcrumb,
+    BreadcrumbItem,
+    Button,
+    Card,
+    Dropdown,
+    DropdownItem,
+  } from "flowbite-svelte";
   import { onMount } from "svelte";
   import type { Group } from "$lib/types/group";
   import Loader from "../loader/loader.svelte";
@@ -16,6 +23,7 @@
   let openGroupModal = $state(false);
   let group_data: Group[] = $state([]);
   let event_loading = $state({ loading: false, title: "" });
+  const stopEvent = (event: Event) => event.stopPropagation();
 
   const handleCreateGroup = () => {
     openGroupModal = true;
@@ -113,24 +121,26 @@
   />
 </div>
 <div class="">
-  <div class="grid lg:grid-cols-3 grid-cols-1 gap-4">
+  <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
     {#each group_data as group, index}
       <Card
         size="md"
         class="relative p-4 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300"
       >
-        <div class="flex items-start gap-4">
+        <div
+          class="flex flex-col gap-4 pr-0 sm:flex-row sm:items-start sm:gap-4 sm:pr-12"
+        >
           <!-- Avatar Grupo -->
           <div
-            class="h-16 w-16 rounded-full flex justify-center items-center text-xl font-bold text-white flex-shrink-0 shadow-inner"
+            class="h-16 w-16 rounded-full flex justify-center items-center text-xl font-bold text-white shadow-inner mx-auto sm:mx-0 sm:flex-shrink-0"
             style={`background:${getGradient(index)}`}
           >
             {getInitials(group.title)}
           </div>
 
           <!-- Texto -->
-          <div class="flex-1 space-y-1">
-            <p class="text-base font-semibold text-gray-900">
+          <div class="flex-1 space-y-1 text-center sm:text-left">
+            <p class="text-base font-semibold text-gray-900 break-words">
               {group.title}
             </p>
             <p class="text-sm text-gray-600">
@@ -164,10 +174,29 @@
           </div>
 
           <!-- Botón menú -->
-          <EllipsisVertical
-            color="gray"
-            class="absolute right-3 top-3.5 cursor-pointer hover:text-gray-700"
-          />
+          <div
+            class="flex items-center justify-end absolute right-2.5 top-1 mt-2 sm:mt-0 sm:absolute sm:right-3 sm:top-3"
+          >
+            <Button
+              outline
+              type="button"
+              class="inline-flex items-center justify-center rounded-full p-2 border-none"
+              color="secondary"
+              onclick={stopEvent}
+              aria-label="Abrir menú del grupo"
+            >
+              <EllipsisVertical class="h-5 w-5" />
+            </Button>
+            <Dropdown simple trigger="click" placement="bottom-end">
+              <DropdownItem
+                class="hover:bg-red-800 text-red-700 hover:text-red-100"
+                onclick={async (event: MouseEvent) => {
+                  event.stopPropagation();
+                  await onDeleteGroup(group);
+                }}>Eliminar grupo</DropdownItem
+              >
+            </Dropdown>
+          </div>
         </div>
       </Card>
     {/each}

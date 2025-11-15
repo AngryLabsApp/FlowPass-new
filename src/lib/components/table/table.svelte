@@ -79,7 +79,7 @@
                   onclick={(e: any) => {
                     stop(e);
                     onDelete(u);
-                  }}>Eliminar usuario</DropdownItem
+                  }}>Eliminar alumno</DropdownItem
                 >
               </Dropdown>
             </div>
