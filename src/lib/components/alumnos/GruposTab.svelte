@@ -72,10 +72,10 @@
 
   const MAX_VISIBLE_MEMBERS = 4;
 
-  const getVisibleMembers = (members: { initials: string }[]) =>
+  const getVisibleMembers = (members: string[]) =>
     members.slice(0, MAX_VISIBLE_MEMBERS);
 
-  const getExtraMembersCount = (members: { initials: string }[]) =>
+  const getExtraMembersCount = (members: string[]) =>
     Math.max(0, members.length - MAX_VISIBLE_MEMBERS);
 
   const getGroupInitials = (name: string) =>
@@ -132,42 +132,42 @@
               {group.title}
             </p>
             <p class="text-sm text-gray-600">
-              Miembros: <span class="font-medium">{group?.total_members}</span>
+              Miembros: <span class="font-medium">{group?.member_count}</span>
             </p>
 
-            <!-- Avatares 
-            <div class="flex items-center mt-2">
-              <div class="flex -space-x-2">
-
-                {#each getVisibleMembers(group.members) as member}
-                  <div
-                    class="h-7 w-7 rounded-full bg-gray-100 border border-white text-[10px] font-medium
+            <!-- Avatares -->
+            {#if group.member_count > 0}
+              <div class="flex items-center mt-2">
+                <div class="flex -space-x-2">
+                  {#each getVisibleMembers(group.members) as member}
+                    <div
+                      class="h-7 w-7 rounded-full bg-gray-100 border border-white text-[10px] font-medium
                      flex items-center justify-center shadow-sm"
-                  >
-                    {member.initials}
-                  </div>
-                {/each}
+                    >
+                      {member}
+                    </div>
+                  {/each}
 
-                {#if getExtraMembersCount(group.members) > 0}
-                  <div
-                    class="h-7 w-7 rounded-full bg-gray-300 border border-white text-[10px] font-medium
+                  {#if getExtraMembersCount(group.members) > 0}
+                    <div
+                      class="h-7 w-7 rounded-full bg-gray-300 border border-white text-[10px] font-medium
                      flex items-center justify-center shadow-sm"
-                  >
-                    +{getExtraMembersCount(group.members)}
-                  </div>
-                {/if}
+                    >
+                      +{getExtraMembersCount(group.members)}
+                    </div>
+                  {/if}
+                </div>
               </div>
-            </div>
+            {/if}
           </div>
--->
-            <!-- Botón menú -->
-            <EllipsisVertical
-              color="gray"
-              class="absolute right-3 top-3.5 cursor-pointer hover:text-gray-700"
-            />
-          </div>
-        </div></Card
-      >
+
+          <!-- Botón menú -->
+          <EllipsisVertical
+            color="gray"
+            class="absolute right-3 top-3.5 cursor-pointer hover:text-gray-700"
+          />
+        </div>
+      </Card>
     {/each}
   </div>
 </div>

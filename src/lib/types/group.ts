@@ -5,7 +5,8 @@ export interface Group {
     title: string;         // text
     updated_at: string;
     color: string;
-    total_members: number;
+    member_count: number;
+    members: string[];
 }
 
 
