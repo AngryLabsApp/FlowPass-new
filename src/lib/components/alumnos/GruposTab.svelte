@@ -22,11 +22,23 @@
 
   const createGroup = async (group: Group): Promise<Group> => {
     const new_group = await createUpdateGroup(group);
+    if (group.id){
+      let index = group_data.findIndex((item) => item.id == group.id);
+      if (index >= 0){
+        group_data[index] = {...new_group};
+      }
+    }else{
+      group_data.push(new_group);
+
+    }
     return new_group;
   }
 
   const onDeleteGroup = async (group: Group):Promise<boolean> => {
       const reponse = await deleteGroup(group.id);
+      if(reponse?.success) {
+        group_data = group_data.filter( item => item.id != group.id);
+      }
       return reponse?.success;
   }
 
