@@ -18,6 +18,7 @@
   import type { UserKeys } from "$lib/enums/user_keys";
   import type { ToastInterface } from "$lib/types/toast";
   import Grupo from "$lib/components/grupos/grupo.svelte";
+  import GroupsSkeleton from "$lib/components/skeletons/groups.svelte";
   let {
     sort_type,
     setValue,
@@ -64,7 +65,7 @@
     modal_loading: { loading: boolean; title: string };
     toast: ToastInterface;
   } = $props();
-
+  let isLoadingGroups = $state(true);
   let openGroupModal = $state(false);
   let group_data: Group[] = $state([]);
   let event_loading = $state({ loading: false, title: "" });
@@ -86,8 +87,10 @@
   };
 
   const fetchGroups = async () => {
+    isLoadingGroups= true;
     const groups: Group[] = await getGroups();
     group_data = groups as Group[];
+    isLoadingGroups = false;
   };
 
   const createGroup = async (group: Group): Promise<Group> => {
@@ -170,8 +173,11 @@
     {onDeleteGroup}
   />
 </div>
+{#if isLoadingGroups}
+<GroupsSkeleton></GroupsSkeleton>
+{/if}
 
-{#if current_breadcrum_level <= 1}
+{#if !isLoadingGroups && current_breadcrum_level <= 1}
   <div class="">
     <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
       {#each group_data as group, index}
