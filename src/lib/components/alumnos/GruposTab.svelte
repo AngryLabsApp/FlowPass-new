@@ -8,8 +8,6 @@
   } from "$lib/services/api/groups";
   import { EllipsisVertical, Grid2X2Plus, Users } from "@lucide/svelte";
   import {
-    Breadcrumb,
-    BreadcrumbItem,
     Button,
     Card,
     Dropdown,
@@ -19,12 +17,23 @@
   import type { Group } from "$lib/types/group";
   import Loader from "../loader/loader.svelte";
   import { getInitials } from "$lib/utils/utils";
-
+  import BreadCrum from "$lib/components/breadcrum/groupsBreadcrum.svelte";
   let openGroupModal = $state(false);
   let group_data: Group[] = $state([]);
   let event_loading = $state({ loading: false, title: "" });
   const stopEvent = (event: Event) => event.stopPropagation();
+  let current_breadcrum_level = $state(1);
+  let group_selected = $state({ title: "" });
 
+  const selectGroup = (group: Group) => {
+    group_selected = group;
+    current_breadcrum_level = 2;
+  };
+  const setBreadCrumLevel = (level: number) => {
+    if (level <= 0) level = 1;
+
+    current_breadcrum_level = level;
+  };
   const handleCreateGroup = () => {
     openGroupModal = true;
   };
@@ -32,7 +41,6 @@
   const fetchGroups = async () => {
     const groups: Group[] = await getGroups();
     group_data = groups as Group[];
-    console.log(groups);
   };
 
   const createGroup = async (group: Group): Promise<Group> => {
@@ -94,17 +102,12 @@
 </script>
 
 <div class="flex flex-col gap-4">
-  <Breadcrumb aria-label="Ruta de navegación de grupos" class="px-0 py-0">
-    <BreadcrumbItem href="/" home>
-      {#snippet icon()}
-        <Users class="me-2 h-4 w-4" />
-      {/snippet}
-      Lista de Grupos</BreadcrumbItem
-    >
-    <BreadcrumbItem href="/alumnos"
-      >Info detallada del grupo xxx
-    </BreadcrumbItem>
-  </Breadcrumb>
+  <BreadCrum
+    maxItems={current_breadcrum_level}
+    groupName={group_selected.title}
+    setLevel={setBreadCrumLevel}
+  ></BreadCrum>
+
   <div class="flex mb-4 justify-end">
     <Button
       class="w-fit flex gap-2 items-center"
@@ -120,12 +123,16 @@
     {onDeleteGroup}
   />
 </div>
+
+{#if current_breadcrum_level <= 1}
+
 <div class="">
   <div class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
     {#each group_data as group, index}
       <Card
         size="md"
         class="relative p-4 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300"
+        onclick={()=>{selectGroup(group)}}
       >
         <div
           class="flex flex-col gap-4 pr-0 sm:flex-row sm:items-start sm:gap-4 sm:pr-12"
@@ -202,6 +209,8 @@
     {/each}
   </div>
 </div>
+
+{/if}
 
 <Loader bind:openModal={event_loading.loading} title={event_loading.title}
 ></Loader>
