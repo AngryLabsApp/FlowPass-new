@@ -262,7 +262,25 @@
           Grupos
         </div>
       {/snippet}
-      <GruposTab />
+      <GruposTab 
+        {sort_type}
+        {setValue}
+        bind:openDeleteUserModal
+        {selected_user}
+        {onUpdateUser}
+        bind:openModal
+        {registrarIngreso}
+        {loading}
+        {error}
+        {CUSTOM_HEADERS}
+        {users}
+        {tableOnclick}
+        {onClickDeleteUser}
+        {pagination_values}
+        bind:page
+        {modal_loading}
+        bind:toast
+        />
     </TabItem>
   </Tabs>
 </div>
