@@ -6,8 +6,8 @@
     deleteGroup,
     getGroups,
   } from "$lib/services/api/groups";
-  import { EllipsisVertical, Grid2X2Plus } from "@lucide/svelte";
-  import { Button, Card, group, Heading } from "flowbite-svelte";
+  import { EllipsisVertical, Grid2X2Plus, Users } from "@lucide/svelte";
+  import { Breadcrumb, BreadcrumbItem, Button, Card } from "flowbite-svelte";
   import { onMount } from "svelte";
   import type { Group } from "$lib/types/group";
   import Loader from "../loader/loader.svelte";
@@ -92,17 +92,25 @@
 </script>
 
 <div class="flex flex-col gap-4">
-  <div class="flex justify-between mb-4">
-    <Heading tag="h3">Grupos de tus Alumnos</Heading>
-    <div class="flex gap-4 items-center w-fit">
-      <Button
-        class="w-fit flex gap-2 items-center"
-        onclick={() => handleCreateGroup()}
-      >
-        Crear Grupo
-        <Grid2X2Plus size={20} />
-      </Button>
-    </div>
+  <Breadcrumb aria-label="Ruta de navegación de grupos" class="px-0 py-0">
+    <BreadcrumbItem href="/" home>
+      {#snippet icon()}
+        <Users class="me-2 h-4 w-4" />
+      {/snippet}
+      Lista de Grupos</BreadcrumbItem
+    >
+    <BreadcrumbItem href="/alumnos"
+      >Info detallada del grupo xxx
+    </BreadcrumbItem>
+  </Breadcrumb>
+  <div class="flex mb-4 justify-end">
+    <Button
+      class="w-fit flex gap-2 items-center"
+      onclick={() => handleCreateGroup()}
+    >
+      Crear Grupo
+      <Grid2X2Plus size={20} />
+    </Button>
   </div>
   <GroupModal
     bind:openModal={openGroupModal}
@@ -110,7 +118,7 @@
     {onDeleteGroup}
   />
 </div>
-<div class="">
+<div class="border">
   <div class="grid lg:grid-cols-3 grid-cols-1 gap-4">
     {#each group_data as group, index}
       <Card
