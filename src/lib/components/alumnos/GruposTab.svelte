@@ -38,10 +38,10 @@
       if (group.id) {
         let index = group_data.findIndex((item) => item.id == group.id);
         if (index >= 0) {
-          group_data[index] = { ...new_group };
+          group_data[index] = { ...group_data[index], ...new_group };
         }
       } else {
-        group_data.push(new_group);
+        group_data.push({...new_group, member_count:0, members:[] });
       }
       return new_group;
     } catch (error) {
